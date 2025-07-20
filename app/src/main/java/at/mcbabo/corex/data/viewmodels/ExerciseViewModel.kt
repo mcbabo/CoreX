@@ -19,45 +19,37 @@ import javax.inject.Inject
 class ExerciseViewModel @Inject constructor(
     private val exerciseRepository: ExerciseRepository
 ) : ViewModel() {
-
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery = _searchQuery.asStateFlow()
+    // Cache the muscle groups immediately
+    private val _muscleGroups = MutableStateFlow<List<String>>(emptyList())
+    val muscleGroups = _muscleGroups.asStateFlow()
 
     private val _selectedMuscleGroup = MutableStateFlow<String?>(null)
     val selectedMuscleGroup = _selectedMuscleGroup.asStateFlow()
 
-    // Get all exercises with real-time filtering
+    // Get all exercises WITHOUT filtering - let the screen handle filtering
+    val allExercises: Flow<List<ExerciseModel>> = exerciseRepository.getAllExercises()
+
+    // Keep the filtered version if you need it elsewhere
     val exercises: Flow<List<ExerciseModel>> = combine(
-        exerciseRepository.getAllExercises(),
-        searchQuery,
+        allExercises,
         selectedMuscleGroup
-    ) { exercises, query, muscleGroup ->
+    ) { exercises, muscleGroup ->
         exercises.filter { exercise ->
-            val matchesSearch = if (query.isBlank()) {
-                true
-            } else {
-                exercise.name.contains(query, ignoreCase = true) ||
-                        exercise.muscleGroup.contains(query, ignoreCase = true)
-            }
-
-            val matchesMuscleGroup = muscleGroup?.let {
-                exercise.muscleGroup == it
-            } != false
-
-            matchesSearch && matchesMuscleGroup
+            muscleGroup?.let { exercise.muscleGroup == it } != false
         }
     }
 
-    // Get muscle groups for filter dropdown
-    val muscleGroups: Flow<List<String>> = flow {
-        emit(exerciseRepository.getAllMuscleGroups())
-    }.flowOn(Dispatchers.IO)
-
-    // Get custom exercises only
     val customExercises: Flow<List<ExerciseModel>> = exerciseRepository.getCustomExercises()
 
-    fun searchExercises(query: String) {
-        _searchQuery.value = query
+    init {
+        // Load muscle groups immediately when ViewModel is created
+        loadMuscleGroups()
+    }
+
+    private fun loadMuscleGroups() {
+        viewModelScope.launch {
+            _muscleGroups.value = exerciseRepository.getAllMuscleGroups()
+        }
     }
 
     fun filterByMuscleGroup(muscleGroup: String?) {
@@ -65,10 +57,9 @@ class ExerciseViewModel @Inject constructor(
     }
 
     fun clearFilters() {
-        _searchQuery.value = ""
         _selectedMuscleGroup.value = null
     }
-
+    
     fun createCustomExercise(name: String, muscleGroup: String, description: String? = null) {
         viewModelScope.launch {
             exerciseRepository.createCustomExercise(name, muscleGroup, description)

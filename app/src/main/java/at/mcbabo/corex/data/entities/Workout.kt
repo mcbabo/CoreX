@@ -19,7 +19,7 @@ data class Workout(
 data class WorkoutSummary(
     val id: Long,
     val name: String,
-    val weekday: String,
+    val weekday: Int,
     val isActive: Boolean,
     val exerciseCount: Int
 )

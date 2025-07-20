@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -33,7 +33,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,16 +46,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import at.mcbabo.corex.data.entities.Workout
 import at.mcbabo.corex.data.entities.WorkoutExercise
+import at.mcbabo.corex.data.models.WorkoutModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.ui.components.SwipeableWorkoutExerciseCard
 import at.mcbabo.corex.ui.components.bottomsheets.WorkoutExerciseDetailBottomSheet
+import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -72,6 +75,8 @@ fun WorkoutScreen(
     var selectedExercise by remember { mutableStateOf<WorkoutExercise?>(null) }
     var showBottomSheet by remember { mutableStateOf(false) }
 
+    val openAlertDialog = remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -80,7 +85,8 @@ fun WorkoutScreen(
                         Text(workout?.workout?.name ?: "")
                         workout?.workout?.weekday?.let { weekday ->
                             Text(
-                                text = weekday,
+                                text = DayOfWeek.of(weekday)
+                                    .getDisplayName(TextStyle.FULL, Locale.getDefault()),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -128,16 +134,15 @@ fun WorkoutScreen(
                                 text = { Text("Delete Workout") },
                                 onClick = {
                                     showMenu = false
-                                    // Show delete confirmation
+                                    openAlertDialog.value = true
                                 }
                             )
                         }
                     }
                 }
             )
-        },
-
-        ) { paddingValues ->
+        }
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -260,6 +265,30 @@ fun WorkoutScreen(
             )
         }
     }
+
+    if (openAlertDialog.value) {
+        DeleteWorkoutDialog(
+            onDismissRequest = {
+                openAlertDialog.value = false
+            },
+            onConfirmation = {
+                workoutViewModel.deleteWorkout(
+                    WorkoutModel(
+                        workout?.workout?.id ?: 0,
+                        workout?.workout?.name ?: "",
+                        workout?.workout?.weekday ?: 0,
+                        true
+                    )
+                )
+                openAlertDialog.value = false
+                navController.popBackStack()
+            },
+            dialogTitle = "Delete Workout",
+            dialogText = "If you delete this workout, all associated exercises will also be removed. Are you sure you want to proceed?",
+            icon = Icons.Default.Info
+        )
+    }
+
 }
 
 @Composable
@@ -348,53 +377,44 @@ fun EmptyExercisesState(
     }
 }
 
+
 @Composable
-fun RecordWeightDialog(
-    onDismiss: () -> Unit,
-    onRecord: (Float, String?) -> Unit
+fun DeleteWorkoutDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    icon: ImageVector,
 ) {
-    var weight by remember { mutableStateOf("") }
-    var notes by remember { mutableStateOf("") }
-
     AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Record Weight") },
+        icon = {
+            Icon(icon, contentDescription = dialogTitle)
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
         text = {
-            Column {
-                OutlinedTextField(
-                    value = weight,
-                    onValueChange = { weight = it },
-                    label = { Text("Weight (kg)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = notes,
-                    onValueChange = { notes = it },
-                    label = { Text("Notes (optional)") },
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 2
-                )
-            }
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    weight.toFloatOrNull()?.let { weightValue ->
-                        onRecord(weightValue, notes.takeIf { it.isNotBlank() })
-                    }
-                },
-                enabled = weight.toFloatOrNull() != null
+                    onConfirmation()
+                }
             ) {
-                Text("Record")
+                Text("Confirm")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Dismiss")
             }
         }
     )

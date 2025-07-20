@@ -29,7 +29,7 @@ class WorkoutViewModel @Inject constructor(
 
     suspend fun createWorkoutWithExercises(
         name: String,
-        weekday: String,
+        weekday: Int,
         exercises: List<ExerciseModel>
     ): Result<Long> {
         return try {
@@ -43,7 +43,7 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    fun createWorkout(name: String, weekday: String) {
+    fun createWorkout(name: String, weekday: Int) {
         viewModelScope.launch {
             val workout = WorkoutModel(
                 name = name,
@@ -136,7 +136,7 @@ class WorkoutViewModel @Inject constructor(
 
     fun getWorkoutSummaries(): Flow<List<WorkoutSummary>> = workoutRepository.getWorkoutSummaries()
 
-    suspend fun createWorkoutAndGetId(name: String, weekday: String): Long {
+    suspend fun createWorkoutAndGetId(name: String, weekday: Int): Long {
         val workout = WorkoutModel(
             name = name,
             weekday = weekday,

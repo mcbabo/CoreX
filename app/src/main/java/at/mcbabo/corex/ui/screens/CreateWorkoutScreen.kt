@@ -1,20 +1,15 @@
 package at.mcbabo.corex.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.DropdownMenuItem
@@ -29,12 +24,12 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,16 +38,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
-import at.mcbabo.corex.ui.components.ExerciseAvatar
 import at.mcbabo.corex.ui.components.ExerciseListItem
+import at.mcbabo.corex.ui.components.SelectedExerciseItem
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -64,37 +62,42 @@ fun CreateWorkoutScreen(
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
     // Workout basic info
-    var workoutName by remember { mutableStateOf("") }
-    var selectedWeekday by remember { mutableStateOf("Monday") }
-    var isCreating by remember { mutableStateOf(false) }
-
-    // Exercise selection
-    val allExercises by exerciseViewModel.exercises.collectAsState(initial = emptyList())
-    var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
-
-    // Search and filter
-    var searchQuery by remember { mutableStateOf("") }
-    var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
-    val muscleGroups by exerciseViewModel.muscleGroups.collectAsState(initial = emptyList())
-
-    // Filter available exercises
-    val availableExercises = allExercises.filter { exercise ->
-        val isNotSelected = !selectedExercises.any { it.id == exercise.id }
-        val matchesSearch = if (searchQuery.isBlank()) {
-            true
-        } else {
-            exercise.name.contains(searchQuery, ignoreCase = true) ||
-                    exercise.muscleGroup.contains(searchQuery, ignoreCase = true)
+    val weekdays = remember {
+        DayOfWeek.entries.associateWith {
+            it.getDisplayName(TextStyle.FULL, Locale.getDefault())
         }
-        val matchesMuscleGroup = selectedMuscleGroup?.let {
-            exercise.muscleGroup == it
-        } != false
-
-        isNotSelected && matchesSearch && matchesMuscleGroup
     }
 
-    val weekdays =
-        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+    var selectedDayOfWeek by remember { mutableStateOf<DayOfWeek?>(LocalDate.now().dayOfWeek) }
+    val selectedWeekday = selectedDayOfWeek?.let { weekdays[it] } ?: ""
+
+    var workoutName by remember { mutableStateOf("") }
+    var isCreating by remember { mutableStateOf(false) }
+
+    val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
+    val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
+
+    // Local state for the screen's filtering (separate from ViewModel's filtering)
+    var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
+    var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
+
+    // Optimized filtering with derivedStateOf
+    val availableExercises by remember {
+        derivedStateOf {
+            if (allExercises.isEmpty()) return@derivedStateOf emptyList()
+
+            val selectedIds = selectedExercises.map { it.id }.toSet()
+
+            allExercises.asSequence()
+                .filter { it.id !in selectedIds }
+                .filter { exercise ->
+                    selectedMuscleGroup?.let { exercise.muscleGroup == it } != false
+                }
+                .toList()
+        }
+    }
+
+    val isLoading = allExercises.isEmpty() && muscleGroups.isEmpty()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -120,7 +123,7 @@ fun CreateWorkoutScreen(
                                 coroutineScope.launch {
                                     workoutViewModel.createWorkoutWithExercises(
                                         workoutName,
-                                        selectedWeekday,
+                                        selectedDayOfWeek?.value ?: LocalDate.now().dayOfWeek.value,
                                         selectedExercises
                                     ).onSuccess {
                                         navController.popBackStack()
@@ -141,8 +144,16 @@ fun CreateWorkoutScreen(
                     }
                 }
             )
-        },
-        content = { innerPadding ->
+        }
+    ) { innerPadding ->
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                LoadingIndicator()
+            }
+        } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -195,17 +206,18 @@ fun CreateWorkoutScreen(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            weekdays.forEach { weekday ->
+                            weekdays.forEach { (dayOfWeek, name) ->
                                 DropdownMenuItem(
-                                    text = { Text(weekday) },
+                                    text = { Text(name) },
                                     onClick = {
-                                        selectedWeekday = weekday
+                                        selectedDayOfWeek = dayOfWeek
                                         expanded = false
                                     }
                                 )
                             }
                         }
                     }
+
                 }
 
                 Column(
@@ -311,14 +323,13 @@ fun CreateWorkoutScreen(
                         }
                     }
 
-                    // Available Exercises List
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         if (availableExercises.isEmpty()) {
                             item {
                                 Text(
-                                    text = if (searchQuery.isNotBlank() || selectedMuscleGroup != null) {
+                                    text = if (selectedMuscleGroup != null) {
                                         "No exercises match your filters"
                                     } else {
                                         "All exercises have been added"
@@ -341,43 +352,6 @@ fun CreateWorkoutScreen(
                         }
                     }
                 }
-            }
-        }
-    )
-}
-
-@Composable
-fun SelectedExerciseItem(
-    exercise: ExerciseModel,
-    onRemove: () -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .size(90.dp)
-            .clickable(
-                onClick = onRemove,
-            ),
-        shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.secondaryContainer,
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(12.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                ExerciseAvatar(exercise.name)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    exercise.name,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    style = MaterialTheme.typography.bodySmall,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
             }
         }
     }

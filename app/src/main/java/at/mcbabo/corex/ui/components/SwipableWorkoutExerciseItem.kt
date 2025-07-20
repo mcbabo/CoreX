@@ -36,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import at.mcbabo.corex.data.entities.WorkoutExercise
-import at.mcbabo.corex.ui.screens.RecordWeightDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

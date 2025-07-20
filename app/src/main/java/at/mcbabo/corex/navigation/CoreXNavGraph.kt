@@ -13,6 +13,7 @@ import at.mcbabo.corex.ui.motion.EmphasizeEasing
 import at.mcbabo.corex.ui.screens.CreateWorkoutScreen
 import at.mcbabo.corex.ui.screens.ExercisesScreen
 import at.mcbabo.corex.ui.screens.HomeScreen
+import at.mcbabo.corex.ui.screens.SettingsScreen
 import at.mcbabo.corex.ui.screens.WorkoutScreen
 
 const val DURATION_ENTER = 400
@@ -62,15 +63,13 @@ fun CoreXNavGraph(
         ) { backStackEntry ->
             ExercisesScreen(navController)
         }
-        /*
-        animatedComposable(
-            route = Screen.Exercise.route,
-            arguments = listOf(navArgument("exerciseId") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val exerciseId = backStackEntry.arguments?.getLong("exerciseId") ?: 0
-            ExerciseScreen(navController, exerciseId)
-        }
 
+        animatedComposable(
+            route = Screen.Settings.route
+        ) { backStackEntry ->
+            SettingsScreen(navController)
+        }
+        /*
         animatedComposable(
             route = Screen.WorkoutDetail.route,
             arguments = listOf(navArgument("workoutId") { type = NavType.LongType })

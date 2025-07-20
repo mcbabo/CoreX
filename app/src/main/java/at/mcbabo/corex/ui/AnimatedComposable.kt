@@ -1,6 +1,5 @@
 package at.mcbabo.corex.ui
 
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Spring
@@ -9,8 +8,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -23,8 +20,6 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import at.mcbabo.corex.ui.motion.EmphasizeEasing
-import at.mcbabo.corex.ui.motion.EmphasizedAccelerate
-import at.mcbabo.corex.ui.motion.EmphasizedDecelerate
 import at.mcbabo.corex.ui.motion.materialSharedAxisXIn
 import at.mcbabo.corex.ui.motion.materialSharedAxisXOut
 
@@ -46,47 +41,12 @@ fun NavGraphBuilder.animatedComposable(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    usePredictiveBack: Boolean = Build.VERSION.SDK_INT >= 34,
     content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
 ) {
-    if (usePredictiveBack) {
-        animatedComposablePredictiveBack(route, arguments, deepLinks, content)
-    } else {
-        animatedComposableLegacy(route, arguments, deepLinks, content)
-    }
+    animatedComposablePredictiveBack(route, arguments, deepLinks, content)
 }
 
 fun NavGraphBuilder.animatedComposablePredictiveBack(
-    route: String,
-    arguments: List<NamedNavArgument> = emptyList(),
-    deepLinks: List<NavDeepLink> = emptyList(),
-    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
-) =
-    composable(
-        route = route,
-        arguments = arguments,
-        deepLinks = deepLinks,
-        enterTransition = { materialSharedAxisXIn(initialOffsetX = { (it * 0.15f).toInt() }) },
-        exitTransition = {
-            materialSharedAxisXOut(targetOffsetX = { -(it * initialOffset).toInt() })
-        },
-        popEnterTransition = {
-            scaleIn(
-                animationSpec = tween(durationMillis = 350, easing = EmphasizedDecelerate),
-                initialScale = 0.9f,
-            ) + materialSharedAxisXIn(initialOffsetX = { -(it * initialOffset).toInt() })
-        },
-        popExitTransition = {
-            materialSharedAxisXOut(targetOffsetX = { (it * initialOffset).toInt() }) +
-                    scaleOut(
-                        targetScale = 0.9f,
-                        animationSpec = tween(durationMillis = 350, easing = EmphasizedAccelerate),
-                    )
-        },
-        content = content,
-    )
-
-fun NavGraphBuilder.animatedComposableLegacy(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),

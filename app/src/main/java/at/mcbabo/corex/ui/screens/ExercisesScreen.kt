@@ -77,37 +77,36 @@ fun ExercisesScreen(
                     }
                 }
             )
-        },
-        content = { paddingValues ->
-            LazyColumn(
-                modifier = Modifier.padding(paddingValues),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (showFilters) {
-                    item {
-                        FilterChips(
-                            muscleGroups = muscleGroups,
-                            selectedGroup = exerciseViewModel.selectedMuscleGroup.collectAsState().value,
-                            onGroupSelected = { exerciseViewModel.filterByMuscleGroup(it) },
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                    }
-                }
-
-                items(exercises) { exercise ->
-                    ExerciseListItem(
-                        exercise = exercise,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        onClick = {
-                            selectedExercise = exercise
-                            showBottomSheet = true
-                        },
-                        onLongPress = { /* Handle long press */ }
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            if (showFilters) {
+                item {
+                    FilterChips(
+                        muscleGroups = muscleGroups,
+                        selectedGroup = exerciseViewModel.selectedMuscleGroup.collectAsState().value,
+                        onGroupSelected = { exerciseViewModel.filterByMuscleGroup(it) },
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
             }
+
+            items(exercises) { exercise ->
+                ExerciseListItem(
+                    exercise = exercise,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    onClick = {
+                        selectedExercise = exercise
+                        showBottomSheet = true
+                    },
+                    onLongPress = { /* Handle long press */ }
+                )
+            }
         }
-    )
+    }
 
     if (showBottomSheet && selectedExercise != null) {
         ModalBottomSheet(
