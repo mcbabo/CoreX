@@ -30,7 +30,7 @@ private val fadeTween = tween<Float>(durationMillis = DURATION_EXIT)
 private val fadeSpec = fadeTween
 
 @Composable
-fun GymNavGraph(
+fun CoreXNavGraph(
     navController: NavHostController,
     startDestination: Screen = Screen.Home
 ) {

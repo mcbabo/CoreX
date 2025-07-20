@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.Path
 import at.mcbabo.corex.navigation.DURATION_ENTER
 
-
 fun PathInterpolator.toEasing(): Easing {
     return Easing { f -> this.getInterpolation(f) }
 }

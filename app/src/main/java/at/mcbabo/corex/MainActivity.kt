@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import at.mcbabo.corex.navigation.GymNavGraph
+import at.mcbabo.corex.navigation.CoreXNavGraph
 import at.mcbabo.corex.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
             AppTheme(darkTheme = isSystemInDarkTheme()) {
                 navController = rememberNavController()
                 DismissKeyboard {
-                    GymNavGraph(navController = navController)
+                    CoreXNavGraph(navController = navController)
                 }
             }
         }
