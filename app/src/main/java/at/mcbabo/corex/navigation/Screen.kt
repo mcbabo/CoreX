@@ -14,11 +14,10 @@ sealed class Screen(val route: String) {
     }
 
     // SETTINGS
-    object SettingsGraph : Screen(route = "settings_graph") // Graph route
+    object SettingsGraph : Screen(route = "settings_graph")
 
     object Settings : Screen(route = "settings_screen")
     object GeneralSettings : Screen(route = "general_settings_screen")
     object AppearanceSettings : Screen(route = "appearance_settings_screen")
     object UnitsSettings : Screen(route = "units_settings_screen")
-
 }
