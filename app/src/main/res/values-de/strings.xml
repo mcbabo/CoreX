@@ -42,4 +42,6 @@
     <string name="general_desc">Allgemeine Einstellungen ändern</string>
     <string name="appearance_desc">Aussehen der App ändern</string>
     <string name="units_desc">Wähle zwischen verschiedenen Einheiten</string>
+    <string name="no_workouts">Keine Workouts bisher</string>
+    <string name="not_workouts_desc">Um zu starten, klicke auf den Button unten rechts um ein Workout zu erstellen.</string>
 </resources>

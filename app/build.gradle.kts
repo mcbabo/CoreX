@@ -91,6 +91,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.compose.remember.setting)
+    implementation(libs.androidx.appcompat)
+
+    implementation(libs.accompanist.drawablepainter)
+
+    implementation(libs.androidx.core.splashscreen)
 }
 
 hilt {

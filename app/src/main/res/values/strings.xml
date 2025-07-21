@@ -41,4 +41,6 @@
     <string name="general_desc">Manage general settings</string>
     <string name="appearance_desc">Manage the look of the app</string>
     <string name="units_desc">Change between different units</string>
+    <string name="no_workouts">No workouts yet</string>
+    <string name="not_workouts_desc">Start by creating a new workout using the button below.</string>
 </resources>
