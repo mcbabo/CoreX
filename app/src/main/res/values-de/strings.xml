@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CoreX</string>
+    <string name="my_workouts">Meine Workouts</string>
+    <string name="workouts">Workouts</string>
+    <string name="exercise">Übung</string>
+    <string name="exercises">Übungen</string>
+    <string name="sets">Sets</string>
+    <string name="reps">Wiederholungen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="add_exercise">Übungen hinzufügen</string>
+    <string name="add_to_workout">Zu Workout hinzufügen</string>
+    <string name="description">Beschreibung</string>
+    <string name="create_workout">Workout erstellen</string>
+    <string name="weekday">Wochentag</string>
+    <string name="all_muscle_groups">Alle Muskelgruppen</string>
+    <string name="selected_exercises">Ausgewählte Übungen</string>
+    <string name="filter_by_muscle_group">Nach Muskelgruppe filtern</string>
+    <string name="create">Erstellen</string>
+    <string name="todays_workouts">Heutige Workouts</string>
+    <string name="workout_progress">Workout Fortschritt</string>
+    <string name="completed">fertig</string>
+    <string name="no_filter_match">Keine Übungen ensprechen den Filtern</string>
+    <string name="all_exercises_added">Alle Übungen wurden hinzugefügt</string>
+    <string name="weight">Gewicht</string>
+    <string name="record_weight">Gewicht festhalten</string>
+    <string name="notes">Notizen (optional)</string>
+    <string name="record">Festhalten</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="all">Alle</string>
+    <string name="bodyweight">Eigengewicht</string>
+    <string name="equipment">Equipment</string>
+    <string name="custom">Benutzerdefiniert</string>
+    <string name="built_in">Integriert</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="delete">Entfernen</string>
+    <string name="weight_progression">Gewichtverlauf</string>
+    <string name="back">Zurück</string>
+    <string name="general">Allgemein</string>
+    <string name="appearance">Erscheinungsbild</string>
+    <string name="units">Einheiten</string>
+    <string name="general_desc">Allgemeine Einstellungen ändern</string>
+    <string name="appearance_desc">Aussehen der App ändern</string>
+    <string name="units_desc">Wähle zwischen verschiedenen Einheiten</string>
+</resources>

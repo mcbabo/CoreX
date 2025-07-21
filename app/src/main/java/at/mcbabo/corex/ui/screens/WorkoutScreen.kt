@@ -15,10 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -47,14 +47,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import at.mcbabo.corex.R
 import at.mcbabo.corex.data.entities.Workout
 import at.mcbabo.corex.data.entities.WorkoutExercise
 import at.mcbabo.corex.data.models.WorkoutModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
+import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.SwipeableWorkoutExerciseCard
 import at.mcbabo.corex.ui.components.bottomsheets.WorkoutExerciseDetailBottomSheet
 import java.time.DayOfWeek
@@ -103,11 +106,14 @@ fun WorkoutScreen(
                     }
                 },
                 actions = {
-                    // Add exercise button
-                    IconButton(onClick = { showAddExerciseDialog = true }) {
+                    IconButton(onClick = {
+                        workoutViewModel.resetWorkoutProgress(
+                            workout?.workout?.id ?: 0
+                        )
+                    }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add Exercise"
+                            imageVector = Icons.Outlined.LocalFireDepartment,
+                            contentDescription = "Clear all Completed Exercises"
                         )
                     }
 
@@ -128,7 +134,11 @@ fun WorkoutScreen(
                                 text = { Text("Edit Workout") },
                                 onClick = {
                                     showMenu = false
-                                    // Navigate to edit screen
+                                    navController.navigate(
+                                        route = Screen.EditWorkout.passWorkoutId(
+                                            workoutId
+                                        )
+                                    )
                                 }
                             )
                             DropdownMenuItem(
@@ -165,12 +175,12 @@ fun WorkoutScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Exercises",
+                            text = stringResource(R.string.exercises),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${workoutData.exercises.size} exercises",
+                            text = "${workoutData.exercises.size} ${stringResource(R.string.exercises)}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -303,7 +313,7 @@ fun WorkoutSummaryCard(
     ) {
         Column {
             Text(
-                text = "Workout Progress",
+                text = stringResource(R.string.workout_progress),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -325,7 +335,7 @@ fun WorkoutSummaryCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "$completedExercises/$totalExercises completed",
+                    text = "$completedExercises/$totalExercises ${stringResource(R.string.completed)}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -372,7 +382,7 @@ fun EmptyExercisesState(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = onAddExercise) {
-                Text("Add Exercise")
+                Text(stringResource(R.string.add_exercise))
             }
         }
     }

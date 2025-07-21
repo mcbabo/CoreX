@@ -89,6 +89,8 @@ dependencies {
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.compose.remember.setting)
 }
 
 hilt {

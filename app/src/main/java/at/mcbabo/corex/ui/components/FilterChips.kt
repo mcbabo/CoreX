@@ -8,7 +8,9 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import at.mcbabo.corex.R
 
 @Composable
 fun FilterChips(
@@ -27,7 +29,7 @@ fun FilterChips(
             FilterChip(
                 selected = selectedGroup == null,
                 onClick = { onGroupSelected(null) },
-                label = { Text("All") }
+                label = { Text(stringResource(R.string.all)) }
             )
         }
 

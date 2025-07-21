@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import at.mcbabo.corex.R
 import at.mcbabo.corex.data.entities.WorkoutSummary
 import java.time.DayOfWeek
 import java.time.format.TextStyle
@@ -45,7 +47,7 @@ fun WorkoutListItem(
                 "${
                     DayOfWeek.of(workout.weekday)
                         .getDisplayName(TextStyle.FULL, Locale.getDefault())
-                } - ${workout.exerciseCount} exercises",
+                } - ${workout.exerciseCount} ${stringResource(R.string.exercises)}",
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,

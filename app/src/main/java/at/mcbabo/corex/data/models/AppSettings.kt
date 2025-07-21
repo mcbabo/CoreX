@@ -12,7 +12,7 @@ data class AppSettings(
     val reminderTime: String = "09:00",
     val firstLaunch: Boolean = true,
     val lastSyncTimestamp: Long = 0L,
-    val selectedTheme: AppTheme = AppTheme.SYSTEM,
+    val selectedTheme: ThemeMode = ThemeMode.SYSTEM,
     // Workout defaults
     val defaultReps: Int = 10,
     val defaultSets: Int = 3,
@@ -25,7 +25,7 @@ enum class WeightUnit(val displayName: String, val symbol: String) {
 }
 
 @Serializable
-enum class AppTheme(val displayName: String) {
+enum class ThemeMode(val displayName: String) {
     LIGHT("Light"),
     DARK("Dark"),
     SYSTEM("System Default")

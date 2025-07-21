@@ -23,7 +23,7 @@ import javax.inject.Inject
 class WorkoutViewModel @Inject constructor(
     private val workoutRepository: WorkoutRepository,
     private val progressRepository: ProgressRepository,
-    private val settingsRepository: SettingsRepository // Inject settings repository
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     // Workout List functionality
@@ -59,6 +59,12 @@ class WorkoutViewModel @Inject constructor(
     fun deleteWorkout(workout: WorkoutModel) {
         viewModelScope.launch {
             workoutRepository.deleteWorkout(workout)
+        }
+    }
+
+    fun updateWorkout(workout: WorkoutModel) {
+        viewModelScope.launch {
+            workoutRepository.updateWorkout(workout)
         }
     }
 

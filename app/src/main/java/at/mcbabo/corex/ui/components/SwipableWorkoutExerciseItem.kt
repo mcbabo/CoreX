@@ -33,8 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import at.mcbabo.corex.R
 import at.mcbabo.corex.data.entities.WorkoutExercise
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,12 +128,16 @@ fun SwipeableWorkoutExerciseCard(
                                 fontWeight = FontWeight.Medium,
                             )
                             Text(
-                                "${exercise.workoutExercise.targetSets ?: 0} sets x ${exercise.workoutExercise.targetReps ?: 0} reps",
+                                "${exercise.workoutExercise.targetSets ?: 0} ${stringResource(R.string.sets)} x ${exercise.workoutExercise.targetReps ?: 0} ${
+                                    stringResource(
+                                        R.string.reps
+                                    )
+                                }",
                                 style = MaterialTheme.typography.bodySmall,
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
-                                "Weight: ${
+                                "${stringResource(R.string.weight)}: ${
                                     exercise.workoutExercise.targetWeight ?: 0.0F
                                 }kg",
                                 style = MaterialTheme.typography.bodySmall,

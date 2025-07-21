@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import at.mcbabo.corex.data.models.AppSettings
-import at.mcbabo.corex.data.models.AppTheme
+import at.mcbabo.corex.data.models.ThemeMode
 import at.mcbabo.corex.data.models.WeightUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -112,9 +112,9 @@ class SettingsDataStore @Inject constructor(
                 firstLaunch = preferences[FIRST_LAUNCH_KEY] != false,
                 lastSyncTimestamp = preferences[LAST_SYNC_KEY] ?: 0L,
                 selectedTheme = try {
-                    AppTheme.valueOf(preferences[THEME_KEY] ?: "SYSTEM")
+                    ThemeMode.valueOf(preferences[THEME_KEY] ?: "SYSTEM")
                 } catch (e: Exception) {
-                    AppTheme.SYSTEM
+                    ThemeMode.SYSTEM
                 }
             )
         }
@@ -138,7 +138,7 @@ class SettingsDataStore @Inject constructor(
         }
     }
 
-    suspend fun updateTheme(theme: AppTheme) {
+    suspend fun updateTheme(theme: ThemeMode) {
         context.settingsDataStore.edit { preferences ->
             preferences[THEME_KEY] = theme.name
         }

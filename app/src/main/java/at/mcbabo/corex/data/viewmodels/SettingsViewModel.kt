@@ -4,7 +4,7 @@ package at.mcbabo.corex.data.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mcbabo.corex.data.models.AppSettings
-import at.mcbabo.corex.data.models.AppTheme
+import at.mcbabo.corex.data.models.ThemeMode
 import at.mcbabo.corex.data.models.WeightUnit
 import at.mcbabo.corex.data.repositories.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +42,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setTheme(theme: AppTheme) {
+    fun setTheme(theme: ThemeMode) {
         viewModelScope.launch {
             settingsRepository.setTheme(theme)
             _events.emit(SettingsEvent.ShowMessage("Theme set to ${theme.displayName}"))

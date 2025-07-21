@@ -26,9 +26,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import at.mcbabo.corex.R
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.WorkoutListItem
@@ -51,7 +53,7 @@ fun HomeScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("My Workouts") },
+                title = { Text(stringResource(R.string.my_workouts)) },
                 actions = {
                     IconButton(onClick = { navController.navigate(route = Screen.Exercises.route) }) {
                         Icon(
@@ -61,7 +63,7 @@ fun HomeScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(route = Screen.Settings.route) }) {
+                    IconButton(onClick = { navController.navigate(route = Screen.SettingsGraph.route) }) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
                             contentDescription = "Settings",
@@ -103,7 +105,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Today's Workouts",
+                            text = stringResource(R.string.todays_workouts),
                             style = MaterialTheme.typography.titleMedium,
                         )
                     }
@@ -113,13 +115,17 @@ fun HomeScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(todayWorkouts) { workout ->
-                            WorkoutListItem(workout, Modifier.padding(horizontal = 16.dp), {
-                                navController.navigate(
-                                    Screen.WorkoutDetail.passWorkoutId(
-                                        workout.id
+                            WorkoutListItem(
+                                workout,
+                                Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                                {
+                                    navController.navigate(
+                                        Screen.WorkoutDetail.passWorkoutId(
+                                            workout.id
+                                        )
                                     )
-                                )
-                            }, {})
+                                },
+                                {})
                         }
                     }
                 }
@@ -132,11 +138,11 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Workouts",
+                        text = stringResource(R.string.workouts),
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
-                        text = "${workouts.size} workouts",
+                        text = "${workouts.size} ${stringResource(R.string.workouts)}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -145,13 +151,17 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(workouts) { workout ->
-                        WorkoutListItem(workout, Modifier.padding(horizontal = 16.dp), {
-                            navController.navigate(
-                                Screen.WorkoutDetail.passWorkoutId(
-                                    workout.id
+                        WorkoutListItem(
+                            workout,
+                            Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                            {
+                                navController.navigate(
+                                    Screen.WorkoutDetail.passWorkoutId(
+                                        workout.id
+                                    )
                                 )
-                            )
-                        }, {})
+                            },
+                            {})
                     }
                 }
             }

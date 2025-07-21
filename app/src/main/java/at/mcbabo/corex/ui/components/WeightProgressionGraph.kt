@@ -30,6 +30,8 @@ import kotlin.math.roundToInt
 
 @Composable
 fun WeightProgressionGraph(weightProgressions: List<WeightProgressionModel>) {
+    if (weightProgressions.size <= 1) return
+
     val dateFormatter = remember { SimpleDateFormat("dd.MM", Locale.getDefault()) }
     val modelProducer = remember { CartesianChartModelProducer() }
 
@@ -47,31 +49,47 @@ fun WeightProgressionGraph(weightProgressions: List<WeightProgressionModel>) {
 
         Triple(
             dailyData.indices.map { it.toFloat() },
-            dailyData.map { it.second },
+            dailyData.map { it.second.toFloat() },
             dailyData.map { it.first }
         )
     }
 
-    LaunchedEffect(xValues, yValues) {
-        modelProducer.runTransaction {
-            lineSeries { series(xValues, yValues) }
+    val (minY, maxY) = remember(yValues) {
+        if (yValues.isEmpty()) return@remember 0f to 100f
+
+        val validValues = yValues.filter { it.isFinite() && it > 0 }
+        if (validValues.isEmpty()) return@remember 0f to 100f
+
+        val min = validValues.minOf { it }
+        val max = validValues.maxOf { it }
+
+        // Ensure we don't have identical min/max (which could cause NaN in calculations)
+        if (max == min) {
+            val center = min
+            (center - 5f).coerceAtLeast(0f) to center + 5f
+        } else {
+            val padding = (max - min) * 0.1f
+            (min - padding).coerceAtLeast(0f) to max + padding
         }
     }
 
-    val (minY, maxY) = remember(yValues) {
-        if (yValues.isEmpty()) return@remember 0f to 100f
-        val min = yValues.minOf { it }
-        val max = yValues.maxOf { it }
-        val padding = (max - min) * 0.1f
-        (min - padding).coerceAtLeast(0f) to max + padding
+    LaunchedEffect(xValues, yValues) {
+        if (xValues.isNotEmpty() && yValues.isNotEmpty()) {
+            modelProducer.runTransaction {
+                lineSeries { series(xValues, yValues) }
+            }
+        }
     }
 
     val horizontalAxis = HorizontalAxis.rememberBottom(
         valueFormatter = { _, value, _ ->
-            labels.getOrNull(value.roundToInt()) ?: ""
+            if (value.isNaN() || !value.isFinite()) {
+                ""
+            } else {
+                labels.getOrNull(value.roundToInt()) ?: ""
+            }
         }
     )
-
 
     val lineLayer = rememberLineCartesianLayer(
         rangeProvider = CartesianLayerRangeProvider.fixed(

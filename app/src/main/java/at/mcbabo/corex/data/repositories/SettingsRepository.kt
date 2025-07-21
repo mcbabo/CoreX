@@ -2,7 +2,7 @@ package at.mcbabo.corex.data.repositories
 
 import at.mcbabo.corex.data.datastore.SettingsDataStore
 import at.mcbabo.corex.data.models.AppSettings
-import at.mcbabo.corex.data.models.AppTheme
+import at.mcbabo.corex.data.models.ThemeMode
 import at.mcbabo.corex.data.models.WeightUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -49,7 +49,7 @@ class SettingsRepository @Inject constructor(
         updateSettings { it.copy(weightUnit = unit) }
     }
 
-    suspend fun setTheme(theme: AppTheme) {
+    suspend fun setTheme(theme: ThemeMode) {
         updateSettings { it.copy(selectedTheme = theme) }
     }
 

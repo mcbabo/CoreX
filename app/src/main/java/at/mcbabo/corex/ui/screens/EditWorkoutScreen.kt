@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -28,12 +28,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,44 +44,70 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.models.ExerciseModel
+import at.mcbabo.corex.data.models.WorkoutModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.ui.components.ExerciseListItem
 import at.mcbabo.corex.ui.components.SelectedExerciseItem
-import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun CreateWorkoutScreen(
+fun EditWorkoutScreen(
     navController: NavController,
+    workoutId: Long,
     onNavigateBack: () -> Unit,
-    onWorkoutCreated: (Long) -> Unit,
     workoutViewModel: WorkoutViewModel = hiltViewModel(),
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
-    // Workout basic info
+    val workout by workoutViewModel.getWorkoutDetails(workoutId).collectAsState(null)
+
+    val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
+    val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
+
     val weekdays = remember {
         DayOfWeek.entries.associateWith {
             it.getDisplayName(TextStyle.FULL, Locale.getDefault())
         }
     }
 
+// Initialize with default values
     var selectedDayOfWeek by remember { mutableStateOf<DayOfWeek?>(LocalDate.now().dayOfWeek) }
-    val selectedWeekday = selectedDayOfWeek?.let { weekdays[it] } ?: ""
-
     var workoutName by remember { mutableStateOf("") }
-    var isCreating by remember { mutableStateOf(false) }
-
-    val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
-    val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
-
-    // Local state for the screen's filtering (separate from ViewModel's filtering)
     var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
     var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
+
+// Update state when workout data becomes available
+    LaunchedEffect(workout) {
+        workout?.let { workoutData ->
+            // Only update if not already set (to avoid overwriting user changes)
+            if (workoutName.isEmpty()) {
+                workoutName = workoutData.workout.name
+            }
+
+            if (selectedDayOfWeek == LocalDate.now().dayOfWeek) {
+                selectedDayOfWeek = DayOfWeek.of(workoutData.workout.weekday)
+            }
+
+            if (selectedExercises.isEmpty()) {
+                selectedExercises = workoutData.exercises.map { it.exercise }
+            }
+        }
+    }
+
+    val selectedWeekday = selectedDayOfWeek?.let { weekdays[it] } ?: ""
+
+    // Initialize selectedExercises with workout exercises when workout is available
+    LaunchedEffect(workout) {
+        workout?.let { workoutData ->
+            if (selectedExercises.isEmpty()) {
+                selectedExercises = workoutData.exercises.map { it.exercise }
+            }
+        }
+    }
 
     // Optimized filtering with derivedStateOf
     val availableExercises by remember {
@@ -101,48 +127,60 @@ fun CreateWorkoutScreen(
 
     val isLoading = allExercises.isEmpty() && muscleGroups.isEmpty()
 
-    val coroutineScope = rememberCoroutineScope()
+    // Function to update the workout with current selected exercises
+    fun updateWorkout() {
+        workout?.let { currentWorkout ->
+            workoutViewModel.updateWorkout(
+                WorkoutModel(
+                    id = currentWorkout.workout.id,
+                    name = workoutName,
+                    weekday = selectedDayOfWeek?.value ?: LocalDate.now().dayOfWeek.value
+                )
+            )
+
+            val originalExerciseIds = currentWorkout.exercises.map { it.exercise.id }.toSet()
+            val selectedExerciseIds = selectedExercises.map { it.id }.toSet()
+
+            // Find exercises to remove (in original but not in selected)
+            val exercisesToRemove = currentWorkout.exercises.filter {
+                it.exercise.id !in selectedExerciseIds
+            }
+
+            // Find exercises to add (in selected but not in original)
+            val exercisesToAdd = selectedExercises.filter {
+                it.id !in originalExerciseIds
+            }
+
+            // Delete removed workout exercises
+            exercisesToRemove.forEach { workoutExercise ->
+                workoutViewModel.removeExerciseFromWorkout(workoutExercise.workoutExercise.id)
+            }
+
+            // Create new workout exercises for added exercises
+            exercisesToAdd.forEach { exercise ->
+                workoutViewModel.addExerciseToWorkout(workout?.workout?.id ?: 0, exercise.id)
+            }
+        }
+    }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.create_workout)) },
+                title = { Text("Edit Workout") },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
                 },
                 actions = {
-                    TextButton(
-                        onClick = {
-                            if (workoutName.isNotBlank()) {
-                                isCreating = true
-
-                                coroutineScope.launch {
-                                    workoutViewModel.createWorkoutWithExercises(
-                                        workoutName,
-                                        selectedDayOfWeek?.value ?: LocalDate.now().dayOfWeek.value,
-                                        selectedExercises
-                                    ).onSuccess {
-                                        navController.popBackStack()
-                                    }.onFailure {
-                                        // Show error
-                                    }
-                                    isCreating = false
-                                }
-                            }
-                        },
-                        enabled = workoutName.isNotBlank() && !isCreating
-                    ) {
-                        if (isCreating) {
-                            LoadingIndicator()
-                        } else {
-                            Text(stringResource(R.string.create))
-                        }
+                    TextButton(onClick = {
+                        updateWorkout()
+                        navController.popBackStack()
+                    }) {
+                        Text("Update")
                     }
                 }
             )
@@ -159,67 +197,77 @@ fun CreateWorkoutScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(vertical = 4.dp),
+                    .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Workout Info Section
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = "Workout Details",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = workoutName,
-                        onValueChange = { workoutName = it },
-                        label = { Text("Workout Name") },
+                workout?.let { workout ->
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 12.dp),
-                        singleLine = true
-                    )
-
-                    var expanded by remember { mutableStateOf(false) }
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = { expanded = !expanded }
+                            .padding(horizontal = 16.dp)
                     ) {
-                        OutlinedTextField(
-                            value = selectedWeekday,
-                            onValueChange = {},
-                            readOnly = true,
-                            label = { Text(stringResource(R.string.weekday)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
-                            trailingIcon = {
-                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                            }
+                        Text(
+                            text = "Workout Details",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
 
-                        ExposedDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
                         ) {
-                            weekdays.forEach { (dayOfWeek, name) ->
-                                DropdownMenuItem(
-                                    text = { Text(name) },
-                                    onClick = {
-                                        selectedDayOfWeek = dayOfWeek
-                                        expanded = false
-                                    }
-                                )
+                            OutlinedTextField(
+                                value = workoutName,
+                                onValueChange = { workoutName = it },
+                                label = { Text("Workout Name") },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 12.dp),
+                                singleLine = true
+                            )
+                        }
+
+                        var expanded by remember { mutableStateOf(false) }
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded }
+                        ) {
+                            OutlinedTextField(
+                                value = selectedWeekday,
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text(stringResource(R.string.weekday)) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(
+                                        ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                        true
+                                    ),
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                                }
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                weekdays.forEach { (dayOfWeek, name) ->
+                                    DropdownMenuItem(
+                                        text = { Text(name) },
+                                        onClick = {
+                                            selectedDayOfWeek = dayOfWeek
+                                            expanded = false
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
 
+                } ?: run {
+                    Text(text = "Loading workout details...")
                 }
 
                 Column(
@@ -263,7 +311,6 @@ fun CreateWorkoutScreen(
                     }
                 }
 
-                // Exercise Selection Section
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {

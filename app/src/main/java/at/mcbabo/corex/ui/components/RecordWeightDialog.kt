@@ -15,8 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import at.mcbabo.corex.R
 
 @Composable
 fun RecordWeightDialog(
@@ -28,13 +30,13 @@ fun RecordWeightDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Record Weight") },
+        title = { Text(stringResource(R.string.record_weight)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = weight,
                     onValueChange = { weight = it },
-                    label = { Text("Weight (kg)") },
+                    label = { Text("${stringResource(R.string.weight)} (kg)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -44,7 +46,7 @@ fun RecordWeightDialog(
                 OutlinedTextField(
                     value = notes,
                     onValueChange = { notes = it },
-                    label = { Text("Notes (optional)") },
+                    label = { Text(stringResource(R.string.notes)) },
                     modifier = Modifier.fillMaxWidth(),
                     maxLines = 2
                 )
@@ -59,12 +61,12 @@ fun RecordWeightDialog(
                 },
                 enabled = weight.toFloatOrNull() != null
             ) {
-                Text("Record")
+                Text(stringResource(R.string.record))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
