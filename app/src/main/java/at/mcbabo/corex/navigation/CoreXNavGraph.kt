@@ -1,8 +1,5 @@
 package at.mcbabo.corex.navigation
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -12,7 +9,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import at.mcbabo.corex.ui.animatedComposable
-import at.mcbabo.corex.ui.motion.EmphasizeEasing
 import at.mcbabo.corex.ui.screens.CreateWorkoutScreen
 import at.mcbabo.corex.ui.screens.EditWorkoutScreen
 import at.mcbabo.corex.ui.screens.ExercisesScreen
@@ -22,20 +18,6 @@ import at.mcbabo.corex.ui.screens.WorkoutScreen
 import at.mcbabo.corex.ui.screens.settings.AppearanceSettings
 import at.mcbabo.corex.ui.screens.settings.GeneralSettings
 import at.mcbabo.corex.ui.screens.settings.UnitsSettings
-
-const val DURATION_ENTER = 400
-const val DURATION_EXIT = 200
-const val initialOffset = 0.10f
-
-private fun <T> enterTween() = tween<T>(durationMillis = DURATION_ENTER, easing = EmphasizeEasing)
-
-private fun <T> exitTween() = tween<T>(durationMillis = DURATION_ENTER, easing = EmphasizeEasing)
-
-private val fadeSpring =
-    spring<Float>(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMedium)
-private val fadeTween = tween<Float>(durationMillis = DURATION_EXIT)
-
-private val fadeSpec = fadeTween
 
 @Composable
 fun CoreXNavGraph(
@@ -54,7 +36,7 @@ fun CoreXNavGraph(
         animatedComposable(
             route = Screen.CreateWorkout.route
         ) { backStackEntry ->
-            CreateWorkoutScreen(navController, { navController.popBackStack() }, {})
+            CreateWorkoutScreen(navController, { navController.popBackStack() })
         }
         animatedComposable(
             route = Screen.WorkoutDetail.route,
@@ -80,21 +62,19 @@ fun CoreXNavGraph(
         animatedComposable(
             route = Screen.Exercises.route
         ) { backStackEntry ->
-            ExercisesScreen(navController, { navController.popBackStack() })
+            ExercisesScreen({ navController.popBackStack() })
         }
 
         settings(
             navController = navController,
-            onNavigateBack = { navController.popBackStack() },
-            onNavigateTo = { route -> navController.navigate(route.route) }
+            onNavigateBack = { navController.popBackStack() }
         )
     }
 }
 
 fun NavGraphBuilder.settings(
     navController: NavController,
-    onNavigateBack: () -> Unit,
-    onNavigateTo: (route: Screen) -> Unit
+    onNavigateBack: () -> Unit
 ) {
     navigation(
         startDestination = Screen.Settings.route,

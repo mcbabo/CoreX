@@ -216,11 +216,6 @@ fun WorkoutScreen(
                                     weight,
                                     notes
                                 )
-                            },
-                            onRemove = {
-                                workoutViewModel.removeExerciseFromWorkout(
-                                    exercise.workoutExercise.id
-                                )
                             }
                         )
                     }
@@ -255,24 +250,6 @@ fun WorkoutScreen(
         ) {
             WorkoutExerciseDetailBottomSheet(
                 workoutExercise = selectedExercise!!,
-                onDismiss = {
-                    showBottomSheet = false
-                    selectedExercise = null
-                },
-                onEdit = { exercise ->
-                    // Navigate to edit exercise screen
-                    showBottomSheet = false
-                    selectedExercise = null
-                },
-                onDelete = { exercise ->
-                    showBottomSheet = false
-                    selectedExercise = null
-                },
-                onAddToWorkout = { exercise ->
-                    // Navigate to workout selection or add to current workout
-                    showBottomSheet = false
-                    selectedExercise = null
-                },
             )
         }
     }

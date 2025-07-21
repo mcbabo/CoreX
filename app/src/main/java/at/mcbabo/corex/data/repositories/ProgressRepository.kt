@@ -17,7 +17,7 @@ interface ProgressRepository {
     // Analytics and insights
     suspend fun getProgressStats(workoutExerciseId: Long): ProgressStats
     suspend fun getProgressTrend(workoutExerciseId: Long, days: Int = 30): ProgressTrend
-    suspend fun getPersonalRecords(exerciseId: Long): List<PersonalRecord>
+    suspend fun getPersonalRecords(): List<PersonalRecord>
 
     // Date-based queries
     suspend fun getProgressionsByDateRange(
@@ -25,7 +25,7 @@ interface ProgressRepository {
         endDate: Date
     ): List<WeightProgressionModel>
 
-    suspend fun getWeeklyProgress(workoutExerciseId: Long): List<WeeklyProgressSummary>
+    suspend fun getWeeklyProgress(): List<WeeklyProgressSummary>
 }
 
 data class ProgressStats(
@@ -125,7 +125,7 @@ class ProgressRepositoryImpl @Inject constructor(
         return ProgressTrend(direction, changePercentage, true)
     }
 
-    override suspend fun getPersonalRecords(exerciseId: Long): List<PersonalRecord> {
+    override suspend fun getPersonalRecords(): List<PersonalRecord> {
         // Implementation would find PRs for this exercise across all workouts
         return emptyList()
     }
@@ -137,7 +137,7 @@ class ProgressRepositoryImpl @Inject constructor(
         return progressionDao.getProgressionsByDateRange(startDate, endDate)
     }
 
-    override suspend fun getWeeklyProgress(workoutExerciseId: Long): List<WeeklyProgressSummary> {
+    override suspend fun getWeeklyProgress(): List<WeeklyProgressSummary> {
         // Implementation would group progressions by week
         return emptyList()
     }

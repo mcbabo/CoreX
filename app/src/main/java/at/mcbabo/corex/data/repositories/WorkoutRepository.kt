@@ -35,7 +35,7 @@ interface WorkoutRepository {
     // Exercise management within workouts
     suspend fun addExerciseToWorkout(workoutId: Long, exerciseId: Long, orderIndex: Int): Long
     suspend fun removeExerciseFromWorkout(workoutExerciseId: Long)
-    suspend fun updateExerciseOrder(workoutId: Long, exerciseOrders: List<Pair<Long, Int>>)
+    suspend fun updateExerciseOrder(exerciseOrders: List<Pair<Long, Int>>)
     suspend fun updateExerciseTargets(
         workoutExerciseId: Long,
         targetWeight: Float?,
@@ -48,8 +48,8 @@ interface WorkoutRepository {
     suspend fun recordWeight(workoutExerciseId: Long, weight: Float, notes: String? = null): Long
 
     // Analytics
-    suspend fun getWorkoutStats(workoutId: Long): WorkoutStats
-    suspend fun getRecentWorkoutHistory(limit: Int = 10): List<WorkoutSession>
+    suspend fun getWorkoutStats(): WorkoutStats
+    suspend fun getRecentWorkoutHistory(): List<WorkoutSession>
 
     fun getWorkoutSummaries(): Flow<List<WorkoutSummary>>
 }
@@ -151,7 +151,6 @@ class WorkoutRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateExerciseOrder(
-        workoutId: Long,
         exerciseOrders: List<Pair<Long, Int>>
     ) {
         exerciseOrders.forEach { (exerciseId, newOrder) ->
@@ -201,7 +200,7 @@ class WorkoutRepositoryImpl @Inject constructor(
         return weightProgressionDao.insertWeightProgression(progression)
     }
 
-    override suspend fun getWorkoutStats(workoutId: Long): WorkoutStats {
+    override suspend fun getWorkoutStats(): WorkoutStats {
         // Implementation would calculate stats from database
         return WorkoutStats(
             totalCompletions = 0,
@@ -212,7 +211,7 @@ class WorkoutRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getRecentWorkoutHistory(limit: Int): List<WorkoutSession> {
+    override suspend fun getRecentWorkoutHistory(): List<WorkoutSession> {
         // Implementation would fetch recent workout sessions
         return emptyList()
     }

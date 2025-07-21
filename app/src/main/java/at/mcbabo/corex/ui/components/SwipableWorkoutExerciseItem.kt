@@ -45,8 +45,7 @@ fun SwipeableWorkoutExerciseCard(
     exercise: WorkoutExercise,
     onClick: () -> Unit,
     onMarkCompleted: (Boolean) -> Unit,
-    onRecordWeight: (Float, String?) -> Unit,
-    onRemove: () -> Unit
+    onRecordWeight: (Float, String?) -> Unit
 ) {
     var showWeightDialog by remember { mutableStateOf(false) }
 

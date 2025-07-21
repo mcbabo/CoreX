@@ -5,29 +5,17 @@ import androidx.lifecycle.viewModelScope
 import at.mcbabo.corex.data.entities.Workout
 import at.mcbabo.corex.data.entities.WorkoutSummary
 import at.mcbabo.corex.data.models.ExerciseModel
-import at.mcbabo.corex.data.models.WeightProgressionModel
 import at.mcbabo.corex.data.models.WorkoutModel
-import at.mcbabo.corex.data.repositories.ProgressRepository
-import at.mcbabo.corex.data.repositories.ProgressStats
-import at.mcbabo.corex.data.repositories.SettingsRepository
 import at.mcbabo.corex.data.repositories.WorkoutRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
-    private val workoutRepository: WorkoutRepository,
-    private val progressRepository: ProgressRepository,
-    private val settingsRepository: SettingsRepository
+    private val workoutRepository: WorkoutRepository
 ) : ViewModel() {
-
-    // Workout List functionality
-    fun getWorkouts(): Flow<List<WorkoutModel>> = workoutRepository.getActiveWorkouts()
 
     suspend fun createWorkoutWithExercises(
         name: String,
@@ -42,17 +30,6 @@ class WorkoutViewModel @Inject constructor(
             Result.success(workoutId)
         } catch (e: Exception) {
             Result.failure(e)
-        }
-    }
-
-    fun createWorkout(name: String, weekday: Int) {
-        viewModelScope.launch {
-            val workout = WorkoutModel(
-                name = name,
-                weekday = weekday,
-                isActive = true
-            )
-            workoutRepository.createWorkout(workout)
         }
     }
 
@@ -86,35 +63,6 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    fun updateExerciseTargets(
-        workoutExerciseId: Long,
-        targetWeight: Float?,
-        targetReps: Int?,
-        targetSets: Int?
-    ) {
-        viewModelScope.launch {
-            workoutRepository.updateExerciseTargets(
-                workoutExerciseId,
-                targetWeight,
-                targetReps,
-                targetSets
-            )
-        }
-    }
-
-    // Workout Session functionality
-    fun startWorkout(workoutId: Long) {
-        viewModelScope.launch {
-            workoutRepository.startWorkout(workoutId)
-        }
-    }
-
-    fun completeWorkout(workoutId: Long) {
-        viewModelScope.launch {
-            workoutRepository.completeWorkout(workoutId)
-        }
-    }
-
     fun markExerciseCompleted(workoutExerciseId: Long, isCompleted: Boolean) {
         viewModelScope.launch {
             workoutRepository.markExerciseCompleted(workoutExerciseId, isCompleted)
@@ -132,15 +80,6 @@ class WorkoutViewModel @Inject constructor(
             workoutRepository.resetWorkoutProgress(workoutId)
         }
     }
-
-    // Progress tracking
-    fun getProgressForExercise(workoutExerciseId: Long): Flow<List<WeightProgressionModel>> {
-        return progressRepository.getProgressionsForExercise(workoutExerciseId)
-    }
-
-    fun getProgressStats(workoutExerciseId: Long): Flow<ProgressStats?> = flow {
-        emit(progressRepository.getProgressStats(workoutExerciseId))
-    }.flowOn(Dispatchers.IO)
 
     fun getWorkoutSummaries(): Flow<List<WorkoutSummary>> = workoutRepository.getWorkoutSummaries()
 

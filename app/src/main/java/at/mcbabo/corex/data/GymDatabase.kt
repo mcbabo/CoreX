@@ -1,8 +1,6 @@
 package at.mcbabo.corex.data
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -36,19 +34,6 @@ abstract class GymDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: GymDatabase? = null
 
-        fun getDatabase(context: Context): GymDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    GymDatabase::class.java,
-                    "fitness_database"
-                )
-                    .addCallback(DatabaseCallback())
-                    .build()
-                INSTANCE = instance
-                instance
-            }
-        }
     }
 
     // Callback for database creation

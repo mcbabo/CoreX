@@ -13,12 +13,21 @@ android {
     namespace = "at.mcbabo.corex"
     compileSdk = 35
 
+    applicationVariants.all {
+        outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val appName = "CoreX" // <-- Replace with your app name
+            val version = versionName
+            output.outputFileName = "$appName-$version.apk"
+        }
+    }
+
     defaultConfig {
         applicationId = "at.mcbabo.corex"
         minSdk = 34
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

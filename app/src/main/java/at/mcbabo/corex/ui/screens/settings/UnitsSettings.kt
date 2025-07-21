@@ -55,7 +55,7 @@ fun UnitsSettings(
         topBar = {
             LargeTopAppBar(
                 title = {
-                    Text(modifier = Modifier, text = stringResource(R.string.appearance))
+                    Text(modifier = Modifier, text = stringResource(R.string.units))
                 },
                 navigationIcon = { BackButton(onNavigateBack) },
                 scrollBehavior = scrollBehavior,

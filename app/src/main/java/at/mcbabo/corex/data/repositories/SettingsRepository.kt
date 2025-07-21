@@ -37,10 +37,6 @@ class SettingsRepository @Inject constructor(
         updateSettings { it.copy(isDarkMode = !it.isDarkMode) }
     }
 
-    suspend fun setDarkMode(enabled: Boolean) {
-        updateSettings { it.copy(isDarkMode = enabled) }
-    }
-
     suspend fun setLanguage(language: String) {
         updateSettings { it.copy(language = language) }
     }
@@ -57,10 +53,6 @@ class SettingsRepository @Inject constructor(
         updateSettings { it.copy(notificationsEnabled = !it.notificationsEnabled) }
     }
 
-    suspend fun setNotifications(enabled: Boolean) {
-        updateSettings { it.copy(notificationsEnabled = enabled) }
-    }
-
     suspend fun toggleAutoBackup() {
         updateSettings { it.copy(autoBackup = !it.autoBackup) }
     }
@@ -73,10 +65,6 @@ class SettingsRepository @Inject constructor(
         updateSettings { it.copy(firstLaunch = false) }
     }
 
-    suspend fun updateLastSync(timestamp: Long = System.currentTimeMillis()) {
-        updateSettings { it.copy(lastSyncTimestamp = timestamp) }
-    }
-
     // Workout defaults methods
     suspend fun setDefaultReps(reps: Int) {
         updateSettings { it.copy(defaultReps = reps) }
@@ -84,15 +72,6 @@ class SettingsRepository @Inject constructor(
 
     suspend fun setDefaultSets(sets: Int) {
         updateSettings { it.copy(defaultSets = sets) }
-    }
-
-    // Get specific workout defaults
-    suspend fun getDefaultReps(): Int {
-        return getCurrentSettings().defaultReps
-    }
-
-    suspend fun getDefaultSets(): Int {
-        return getCurrentSettings().defaultSets
     }
 
     // Reset to defaults
@@ -105,11 +84,4 @@ class SettingsRepository @Inject constructor(
         return getCurrentSettings().firstLaunch
     }
 
-    suspend fun isDarkModeEnabled(): Boolean {
-        return getCurrentSettings().isDarkMode
-    }
-
-    suspend fun areNotificationsEnabled(): Boolean {
-        return getCurrentSettings().notificationsEnabled
-    }
 }

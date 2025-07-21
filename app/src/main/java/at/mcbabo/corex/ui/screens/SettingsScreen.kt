@@ -108,7 +108,7 @@ fun SettingsScreen(
 
             item {
                 SettingItem(
-                    title = "Units",
+                    title = stringResource(R.string.units),
                     description = stringResource(R.string.units_desc),
                     icon = Icons.Outlined.TypeSpecimen,
                 ) {

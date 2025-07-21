@@ -59,7 +59,6 @@ import java.util.Locale
 fun CreateWorkoutScreen(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    onWorkoutCreated: (Long) -> Unit,
     workoutViewModel: WorkoutViewModel = hiltViewModel(),
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {

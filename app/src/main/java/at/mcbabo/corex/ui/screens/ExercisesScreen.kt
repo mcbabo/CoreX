@@ -30,7 +30,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
@@ -41,7 +40,6 @@ import at.mcbabo.corex.ui.components.bottomsheets.ExerciseDetailBottomSheet
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExercisesScreen(
-    navController: NavController,
     onNavigateBack: () -> Unit,
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
@@ -127,10 +125,6 @@ fun ExercisesScreen(
         ) {
             ExerciseDetailBottomSheet(
                 exercise = selectedExercise!!,
-                onDismiss = {
-                    showBottomSheet = false
-                    selectedExercise = null
-                },
                 onEdit = { exercise ->
                     // Navigate to edit exercise screen
                     showBottomSheet = false

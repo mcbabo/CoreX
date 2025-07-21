@@ -30,9 +30,6 @@ interface WorkoutDao {
     @Query("SELECT * FROM workouts WHERE isActive = 1 ORDER BY weekday")
     fun getActiveWorkouts(): Flow<List<WorkoutModel>>
 
-    @Query("SELECT * FROM workouts WHERE weekday = :weekday AND isActive = 1")
-    suspend fun getWorkoutsByWeekday(weekday: String): List<WorkoutModel>
-
     // With relations
     @Transaction
     @Query("SELECT * FROM workouts WHERE id = :id")

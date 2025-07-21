@@ -21,10 +21,6 @@ interface WeightProgressionDao {
     @Delete
     suspend fun deleteWeightProgression(progression: WeightProgressionModel)
 
-    // Simple queries
-    @Query("SELECT * FROM weight_progressions WHERE id = :id")
-    suspend fun getWeightProgressionById(id: Long): WeightProgressionModel?
-
     @Query("SELECT * FROM weight_progressions WHERE workoutExerciseId = :workoutExerciseId ORDER BY date DESC")
     fun getProgressionsByWorkoutExercise(workoutExerciseId: Long): Flow<List<WeightProgressionModel>>
 

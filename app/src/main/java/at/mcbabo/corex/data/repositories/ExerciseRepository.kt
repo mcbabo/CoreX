@@ -32,7 +32,7 @@ interface ExerciseRepository {
         description: String? = null
     ): Long
 
-    suspend fun toggleFavorite(exerciseId: Long, isFavorite: Boolean)
+    suspend fun toggleFavorite(exerciseId: Long)
 }
 
 class ExerciseRepositoryImpl @Inject constructor(
@@ -103,7 +103,7 @@ class ExerciseRepositoryImpl @Inject constructor(
         return exerciseDao.insertExercise(exercise)
     }
 
-    override suspend fun toggleFavorite(exerciseId: Long, isFavorite: Boolean) {
+    override suspend fun toggleFavorite(exerciseId: Long) {
         val exercise = exerciseDao.getExerciseById(exerciseId)
         exercise?.let {
             // You'd need to add a favorite field to ExerciseModel

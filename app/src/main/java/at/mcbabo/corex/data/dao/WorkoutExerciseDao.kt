@@ -3,10 +3,8 @@ package at.mcbabo.corex.data.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
-import at.mcbabo.corex.data.entities.WorkoutExercise
 import at.mcbabo.corex.data.models.WorkoutExerciseModel
 
 @Dao
@@ -27,15 +25,6 @@ interface WorkoutExerciseDao {
 
     @Query("SELECT * FROM workout_exercises WHERE workoutId = :workoutId ORDER BY orderIndex")
     suspend fun getWorkoutExercisesByWorkoutId(workoutId: Long): List<WorkoutExerciseModel>
-
-    // With relations
-    @Transaction
-    @Query("SELECT * FROM workout_exercises WHERE id = :id")
-    suspend fun getFullWorkoutExercise(id: Long): WorkoutExercise?
-
-    @Transaction
-    @Query("SELECT * FROM workout_exercises WHERE workoutId = :workoutId ORDER BY orderIndex")
-    suspend fun getFullWorkoutExercisesByWorkoutId(workoutId: Long): List<WorkoutExercise>
 
     // Mark as completed
     @Query("UPDATE workout_exercises SET isCompleted = :isCompleted WHERE id = :id")

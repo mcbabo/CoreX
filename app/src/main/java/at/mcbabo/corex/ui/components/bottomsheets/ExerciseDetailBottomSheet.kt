@@ -32,7 +32,6 @@ import at.mcbabo.corex.data.models.ExerciseModel
 @Composable
 fun ExerciseDetailBottomSheet(
     exercise: ExerciseModel,
-    onDismiss: () -> Unit,
     onEdit: (ExerciseModel) -> Unit,
     onDelete: (ExerciseModel) -> Unit,
     onAddToWorkout: (ExerciseModel) -> Unit

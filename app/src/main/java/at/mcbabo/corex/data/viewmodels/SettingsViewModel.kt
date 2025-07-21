@@ -34,14 +34,6 @@ class SettingsViewModel @Inject constructor(
     private val _events = MutableSharedFlow<SettingsEvent>()
     val events: SharedFlow<SettingsEvent> = _events.asSharedFlow()
 
-    // Actions
-    fun toggleDarkMode() {
-        viewModelScope.launch {
-            settingsRepository.toggleDarkMode()
-            _events.emit(SettingsEvent.ShowMessage("Theme updated"))
-        }
-    }
-
     fun setTheme(theme: ThemeMode) {
         viewModelScope.launch {
             settingsRepository.setTheme(theme)
@@ -49,49 +41,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setLanguage(language: String) {
-        viewModelScope.launch {
-            settingsRepository.setLanguage(language)
-            _events.emit(SettingsEvent.ShowMessage("Language updated"))
-        }
-    }
-
     fun setWeightUnit(unit: WeightUnit) {
         viewModelScope.launch {
             settingsRepository.setWeightUnit(unit)
             _events.emit(SettingsEvent.ShowMessage("Weight unit set to ${unit.displayName}"))
-        }
-    }
-
-    fun toggleNotifications() {
-        viewModelScope.launch {
-            settingsRepository.toggleNotifications()
-            val enabled = settingsRepository.getCurrentSettings().notificationsEnabled
-            val message = if (enabled) "Notifications enabled" else "Notifications disabled"
-            _events.emit(SettingsEvent.ShowMessage(message))
-        }
-    }
-
-    fun toggleAutoBackup() {
-        viewModelScope.launch {
-            settingsRepository.toggleAutoBackup()
-            val enabled = settingsRepository.getCurrentSettings().autoBackup
-            val message = if (enabled) "Auto backup enabled" else "Auto backup disabled"
-            _events.emit(SettingsEvent.ShowMessage(message))
-        }
-    }
-
-    fun setReminderTime(time: String) {
-        viewModelScope.launch {
-            settingsRepository.setReminderTime(time)
-            _events.emit(SettingsEvent.ShowMessage("Reminder time updated"))
-        }
-    }
-
-    fun resetSettings() {
-        viewModelScope.launch {
-            settingsRepository.resetToDefaults()
-            _events.emit(SettingsEvent.ShowMessage("Settings reset to defaults"))
         }
     }
 
@@ -111,11 +64,6 @@ class SettingsViewModel @Inject constructor(
     }
 
 
-    fun markFirstLaunchComplete() {
-        viewModelScope.launch {
-            settingsRepository.markFirstLaunchComplete()
-        }
-    }
 }
 
 sealed class SettingsEvent {

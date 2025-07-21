@@ -21,17 +21,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.entities.WorkoutExercise
-import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.ui.components.WeightProgressionGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutExerciseDetailBottomSheet(
-    workoutExercise: WorkoutExercise,
-    onDismiss: () -> Unit,
-    onEdit: (ExerciseModel) -> Unit,
-    onDelete: (ExerciseModel) -> Unit,
-    onAddToWorkout: (ExerciseModel) -> Unit
+    workoutExercise: WorkoutExercise
 ) {
     Column(
         modifier = Modifier
