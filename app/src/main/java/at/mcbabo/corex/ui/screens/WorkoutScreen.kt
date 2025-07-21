@@ -66,6 +66,7 @@ import java.util.Locale
 fun WorkoutScreen(
     navController: NavController,
     workoutId: Long,
+    onNavigateBack: () -> Unit,
     workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
     val workout by workoutViewModel.getWorkoutDetails(workoutId).collectAsState(null)
@@ -94,7 +95,7 @@ fun WorkoutScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"

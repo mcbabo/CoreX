@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
 
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -80,6 +81,14 @@ dependencies {
     implementation(libs.accompanist.navigation.animation)
 
     implementation(libs.vico.compose.m3)
+
+    implementation(libs.androidx.datastore.preferences)
+
+    // Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Lifecycle
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 }
 
 hilt {

@@ -47,7 +47,7 @@ fun CoreXNavGraph(
         animatedComposable(
             route = Screen.CreateWorkout.route
         ) { backStackEntry ->
-            CreateWorkoutScreen(navController, {}, {})
+            CreateWorkoutScreen(navController, { navController.popBackStack() }, {})
         }
         animatedComposable(
             route = Screen.WorkoutDetail.route,
@@ -55,19 +55,22 @@ fun CoreXNavGraph(
 
         ) { backStackEntry ->
             val workoutId = backStackEntry.arguments?.getLong("workoutId") ?: 0
-            WorkoutScreen(navController = navController, workoutId)
+            WorkoutScreen(
+                navController = navController,
+                workoutId,
+                { navController.popBackStack() })
         }
 
         animatedComposable(
             route = Screen.Exercises.route
         ) { backStackEntry ->
-            ExercisesScreen(navController)
+            ExercisesScreen(navController, { navController.popBackStack() })
         }
 
         animatedComposable(
             route = Screen.Settings.route
         ) { backStackEntry ->
-            SettingsScreen(navController)
+            SettingsScreen(navController, { navController.popBackStack() })
         }
         /*
         animatedComposable(

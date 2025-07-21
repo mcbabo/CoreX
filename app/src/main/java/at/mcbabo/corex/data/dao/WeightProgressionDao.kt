@@ -50,4 +50,7 @@ interface WeightProgressionDao {
 
     @Query("SELECT MAX(weight) FROM weight_progressions WHERE workoutExerciseId = :workoutExerciseId")
     suspend fun getMaxWeight(workoutExerciseId: Long): Float?
+
+    @Query("UPDATE workout_exercises SET targetWeight = :targetWeight WHERE id = :workoutExerciseId")
+    suspend fun updateTargetWeight(workoutExerciseId: Long, targetWeight: Float)
 }

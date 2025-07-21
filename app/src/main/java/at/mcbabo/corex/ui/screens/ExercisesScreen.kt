@@ -38,6 +38,7 @@ import at.mcbabo.corex.ui.components.bottomsheets.ExerciseDetailBottomSheet
 @Composable
 fun ExercisesScreen(
     navController: NavController,
+    onNavigateBack: () -> Unit,
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
     val exercises by exerciseViewModel.exercises.collectAsState(initial = emptyList())
@@ -69,7 +70,7 @@ fun ExercisesScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"

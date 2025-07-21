@@ -74,7 +74,8 @@ data class WorkoutSession(
 class WorkoutRepositoryImpl @Inject constructor(
     private val workoutDao: WorkoutDao,
     private val workoutExerciseDao: WorkoutExerciseDao,
-    private val weightProgressionDao: WeightProgressionDao
+    private val weightProgressionDao: WeightProgressionDao,
+    private val settingsRepository: SettingsRepository // Inject settings repository
 ) : WorkoutRepository {
 
     override fun getAllWorkouts(): Flow<List<WorkoutModel>> {
@@ -131,10 +132,13 @@ class WorkoutRepositoryImpl @Inject constructor(
         exerciseId: Long,
         orderIndex: Int
     ): Long {
+        val settings = settingsRepository.getCurrentSettings()
         val workoutExercise = WorkoutExerciseModel(
             workoutId = workoutId,
             exerciseId = exerciseId,
-            orderIndex = orderIndex
+            orderIndex = orderIndex,
+            targetReps = settings.defaultReps,
+            targetSets = settings.defaultSets
         )
         return workoutExerciseDao.insertWorkoutExercise(workoutExercise)
     }
@@ -189,6 +193,10 @@ class WorkoutRepositoryImpl @Inject constructor(
             workoutExerciseId = workoutExerciseId,
             weight = weight,
             notes = notes
+        )
+        weightProgressionDao.updateTargetWeight(
+            workoutExerciseId,
+            weight
         )
         return weightProgressionDao.insertWeightProgression(progression)
     }

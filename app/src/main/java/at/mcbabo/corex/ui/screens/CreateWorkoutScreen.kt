@@ -107,7 +107,7 @@ fun CreateWorkoutScreen(
             TopAppBar(
                 title = { Text("Create Workout") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onNavigateBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"

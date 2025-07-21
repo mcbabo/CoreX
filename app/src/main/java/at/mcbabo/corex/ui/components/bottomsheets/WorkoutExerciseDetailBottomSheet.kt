@@ -1,6 +1,5 @@
 package at.mcbabo.corex.ui.components.bottomsheets
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,31 +23,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import at.mcbabo.corex.data.entities.WorkoutExercise
 import at.mcbabo.corex.data.models.ExerciseModel
-import at.mcbabo.corex.data.models.WeightProgressionModel
 import at.mcbabo.corex.ui.components.ExerciseAvatar
-import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
-import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
-import com.patrykandpatrick.vico.core.common.component.TextComponent
+import at.mcbabo.corex.ui.components.WeightProgressionGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -268,7 +251,7 @@ fun WorkoutExerciseDetailBottomSheet(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (workoutExercise.weightProgressions.isNotEmpty()) {
+        if (workoutExercise.weightProgressions.isNotEmpty() && workoutExercise.weightProgressions.size > 1) {
             Text(
                 text = "Weight Progression",
                 style = MaterialTheme.typography.titleMedium,
@@ -280,58 +263,6 @@ fun WorkoutExerciseDetailBottomSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
-
     }
 }
 
-@Composable
-fun WeightProgressionGraph(weightProgressions: List<WeightProgressionModel>) {
-    val modelProducer = remember { CartesianChartModelProducer() }
-
-    LaunchedEffect(Unit) {
-        modelProducer.runTransaction {
-            lineSeries {
-                series(
-                    weightProgressions.map { it.date.date },
-                    weightProgressions.map { it.weight }
-                )
-            }
-        }
-    }
-
-    val weights = weightProgressions.map { it.weight }
-    val minWeight = weights.minOrNull() ?: 0f
-    val maxWeight = weights.maxOrNull() ?: 100f
-
-    // Add some padding to the range
-    val padding = (maxWeight - minWeight) * 0.1f
-    val minY = (minWeight - padding).coerceAtLeast(0f)
-    val maxY = maxWeight + padding
-
-    val lineLayer = rememberLineCartesianLayer(
-        rangeProvider = CartesianLayerRangeProvider.fixed(
-            minY = minY.toDouble(),
-            maxY = maxY.toDouble()
-        )
-    )
-
-
-    Card {
-        CartesianChartHost(
-            rememberCartesianChart(
-                lineLayer,
-                startAxis = VerticalAxis.rememberStart(),
-                bottomAxis = HorizontalAxis.rememberBottom(),
-                marker = rememberDefaultCartesianMarker(
-                    label = TextComponent(),
-                    labelPosition = DefaultCartesianMarker.LabelPosition.AbovePoint
-                )
-            ),
-            modelProducer,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent)
-                .padding(8.dp),
-        )
-    }
-}

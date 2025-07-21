@@ -9,6 +9,7 @@ import at.mcbabo.corex.data.models.WeightProgressionModel
 import at.mcbabo.corex.data.models.WorkoutModel
 import at.mcbabo.corex.data.repositories.ProgressRepository
 import at.mcbabo.corex.data.repositories.ProgressStats
+import at.mcbabo.corex.data.repositories.SettingsRepository
 import at.mcbabo.corex.data.repositories.WorkoutRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
     private val workoutRepository: WorkoutRepository,
-    private val progressRepository: ProgressRepository
+    private val progressRepository: ProgressRepository,
+    private val settingsRepository: SettingsRepository // Inject settings repository
 ) : ViewModel() {
 
     // Workout List functionality
