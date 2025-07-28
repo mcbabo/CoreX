@@ -57,4 +57,10 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
+    fun createExercise(exercise: ExerciseModel) {
+        viewModelScope.launch {
+            exerciseRepository.createExercise(exercise)
+        }
+    }
+
 }

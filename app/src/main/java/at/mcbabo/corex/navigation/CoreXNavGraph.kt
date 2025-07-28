@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import at.mcbabo.corex.ui.animatedComposable
+import at.mcbabo.corex.ui.screens.CreateExerciseScreen
 import at.mcbabo.corex.ui.screens.CreateWorkoutScreen
 import at.mcbabo.corex.ui.screens.EditWorkoutScreen
 import at.mcbabo.corex.ui.screens.ExercisesScreen
@@ -62,7 +63,13 @@ fun CoreXNavGraph(
         animatedComposable(
             route = Screen.Exercises.route
         ) { backStackEntry ->
-            ExercisesScreen({ navController.popBackStack() })
+            ExercisesScreen(navController, { navController.popBackStack() })
+        }
+
+        animatedComposable(
+            route = Screen.CreateExercise.route
+        ) { backStackEntry ->
+            CreateExerciseScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         settings(

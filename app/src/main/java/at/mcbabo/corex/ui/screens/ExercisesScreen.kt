@@ -30,9 +30,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
+import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.ExerciseListItem
 import at.mcbabo.corex.ui.components.FilterChips
 import at.mcbabo.corex.ui.components.bottomsheets.ExerciseDetailBottomSheet
@@ -40,6 +42,7 @@ import at.mcbabo.corex.ui.components.bottomsheets.ExerciseDetailBottomSheet
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExercisesScreen(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
@@ -71,7 +74,7 @@ fun ExercisesScreen(
                             contentDescription = "Filter"
                         )
                     }
-                    TextButton(onClick = { /* Navigate to create exercise */ }) {
+                    TextButton(onClick = { navController.navigate(route = Screen.CreateExercise.route) }) {
                         Text(stringResource(R.string.add_exercise))
                     }
                 },

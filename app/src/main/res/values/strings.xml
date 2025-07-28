@@ -43,4 +43,7 @@
     <string name="units_desc">Change between different units</string>
     <string name="no_workouts">No workouts yet</string>
     <string name="not_workouts_desc">Start by creating a new workout using the button below.</string>
+    <string name="exercise_details">Exercise Details</string>
+    <string name="exercise_name">Exercise Name</string>
+    <string name="create_exercise_info">If you want to set weights or reps, you can do so in the exercise details after creating a workout with this exercise.</string>
 </resources>
