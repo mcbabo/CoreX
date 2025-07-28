@@ -65,7 +65,7 @@ fun SettingsScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings)) },
                 scrollBehavior = scrollBehavior,
                 expandedHeight = TopAppBarDefaults.LargeAppBarExpandedHeight + 24.dp,
                 navigationIcon = {
