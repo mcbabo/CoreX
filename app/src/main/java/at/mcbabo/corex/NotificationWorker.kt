@@ -213,4 +213,8 @@ class NotificationScheduler @Inject constructor(
 
         return delay
     }
+
+    fun cancelWork(context: Context) {
+        WorkManager.getInstance(context).cancelAllWorkByTag(WORK_NAME)
+    }
 }

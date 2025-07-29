@@ -48,10 +48,16 @@ class SettingsRepository @Inject constructor(
         updateSettings { it.copy(selectedTheme = theme) }
     }
 
-    /* TODO: Implement notification permission handling based on enabled setting */
-    suspend fun toggleNotifications() {
-        updateSettings { it.copy(notificationsEnabled = !it.notificationsEnabled) }
+    suspend fun toggleNotifications(): AppSettings {
+        var updatedSettings: AppSettings? = null
+        updateSettings {
+            it.copy(notificationsEnabled = !it.notificationsEnabled).also { updated ->
+                updatedSettings = updated
+            }
+        }
+        return updatedSettings ?: throw IllegalStateException("Failed to update settings")
     }
+
 
     suspend fun toggleAutoBackup() {
         updateSettings { it.copy(autoBackup = !it.autoBackup) }

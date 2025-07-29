@@ -21,12 +21,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -37,9 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.databinding.library.BuildConfig
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import at.mcbabo.corex.R
-import at.mcbabo.corex.data.viewmodels.SettingsEvent
 import at.mcbabo.corex.data.viewmodels.SettingsViewModel
 import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.SettingItem
@@ -51,23 +49,9 @@ fun SettingsScreen(
     onNavigateBack: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    // Handle events
-    LaunchedEffect(viewModel.events) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is SettingsEvent.ShowMessage -> {
-                    snackbarHostState.showSnackbar(event.message)
-                }
 
-                is SettingsEvent.NavigateBack -> {
-                    onNavigateBack()
-                }
-            }
-        }
-    }
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier
@@ -88,16 +72,18 @@ fun SettingsScreen(
                 }
             )
 
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            item {
-                BatteryOptimizationWarning()
+
+            if (settings.notificationsEnabled) {
+                item {
+                    BatteryOptimizationWarning()
+                }
             }
 
             item {
@@ -143,7 +129,6 @@ fun SettingsScreen(
     }
 }
 
-
 fun isIgnoringBatteryOptimizations(context: Context): Boolean {
     val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     return pm.isIgnoringBatteryOptimizations(context.packageName)
@@ -157,7 +142,6 @@ fun requestIgnoreBatteryOptimizations(context: Context) {
         context.startActivity(intent)
     }
 }
-
 
 @Composable
 fun BatteryOptimizationWarning(context: Context = LocalContext.current) {

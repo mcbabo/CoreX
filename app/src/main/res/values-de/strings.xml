@@ -5,7 +5,7 @@
     <string name="workouts">Workouts</string>
     <string name="exercise">Übung</string>
     <string name="exercises">Übungen</string>
-    <string name="sets">Sets</string>
+    <string name="sets">Sätze</string>
     <string name="reps">Wiederholungen</string>
     <string name="settings">Einstellungen</string>
     <string name="add_exercise">Übungen hinzufügen</string>
@@ -50,4 +50,12 @@
     <string name="daily_workout">Dein heutiges Workout</string>
     <string name="battery_warning">Akkukonfiguration</string>
     <string name="battery_warning_desc">Akku-Optimierung für diese App ignorieren, um Workout Benachrichtigung zu aktivieren</string>
+    <string name="default_reps_des">Standard Anzahl an Wiederholungen pro Satz</string>
+    <string name="default_sets">Standard Sätze</string>
+    <string name="default_reps">Standard Wiederholungen</string>
+    <string name="default_sets_desc">Standard Anzahl der Sätze pro Übung</string>
+    <string name="daily_reminder">Tägliche Erinnerung</string>
+    <string name="daily_reminder_desc">Lassen dich jeden Tag zu einer festgelegten Zeit benachrichtigen</string>
+    <string name="set_time">Uhrzeit festlegen</string>
+    <string name="confirm_reminder">Erinnerung bestätigen</string>
 </resources>

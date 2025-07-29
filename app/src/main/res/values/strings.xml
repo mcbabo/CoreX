@@ -49,4 +49,12 @@
     <string name="daily_workout">Daily Workout</string>
     <string name="battery_warning">Battery Optimization</string>
     <string name="battery_warning_desc">Ignore battery optimization for this app to enable workout notifications</string>
+    <string name="default_reps">Default Reps</string>
+    <string name="default_reps_des">Default number of repetitions per set</string>
+    <string name="default_sets">Default Sets</string>
+    <string name="default_sets_desc">Default number of sets per exercise</string>
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="daily_reminder_desc">Get notified at a set time each day</string>
+    <string name="set_time">Set Time</string>
+    <string name="confirm_reminder">Confirm Reminder</string>
 </resources>

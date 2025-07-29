@@ -1,6 +1,7 @@
 package at.mcbabo.corex.data.viewmodels
 
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -22,9 +23,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    application: Application,
     private val settingsRepository: SettingsRepository,
     private val notificationScheduler: NotificationScheduler
 ) : ViewModel() {
+    private val appContext = application.applicationContext
 
     // Expose settings as StateFlow for Compose
     val settings: StateFlow<AppSettings> = settingsRepository.settingsFlow
@@ -64,6 +67,20 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             settingsRepository.setDefaultSets(sets)
             _events.emit(SettingsEvent.ShowMessage("Default sets set to $sets"))
+        }
+    }
+
+    fun toggleNotifications() {
+        viewModelScope.launch {
+            val updated = settingsRepository.toggleNotifications()
+
+            if (updated.notificationsEnabled) {
+                notificationScheduler.scheduleDailyWork(appContext)
+            } else {
+                notificationScheduler.cancelWork(appContext)
+            }
+
+            _events.emit(SettingsEvent.ShowMessage("Toggled notifications"))
         }
     }
 
