@@ -49,7 +49,7 @@ at.mcbabo.corex/
 
 1. **Clone the repository**
     ```bash
-    git clone https://github.com/mcbabo/corex.git
+    git clone https://github.com/mcbabo/CoreX.git
     ```
 
 2. **Open in Android Studio**

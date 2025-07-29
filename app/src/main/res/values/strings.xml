@@ -46,4 +46,7 @@
     <string name="exercise_details">Exercise Details</string>
     <string name="exercise_name">Exercise Name</string>
     <string name="create_exercise_info">If you want to set weights or reps, you can do so in the exercise details after creating a workout with this exercise.</string>
+    <string name="daily_workout">Daily Workout</string>
+    <string name="battery_warning">Battery Optimization</string>
+    <string name="battery_warning_desc">Ignore battery optimization for this app to enable workout notifications</string>
 </resources>

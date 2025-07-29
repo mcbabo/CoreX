@@ -18,6 +18,7 @@ interface WorkoutRepository {
     // Basic workout operations
     fun getAllWorkouts(): Flow<List<WorkoutModel>>
     fun getActiveWorkouts(): Flow<List<WorkoutModel>>
+    suspend fun getWorkoutsByWeekday(weekday: Int): List<WorkoutModel>
     suspend fun getWorkoutById(id: Long): WorkoutModel?
     suspend fun createWorkout(workout: WorkoutModel): Long
     suspend fun updateWorkout(workout: WorkoutModel)
@@ -86,6 +87,10 @@ class WorkoutRepositoryImpl @Inject constructor(
 
     override fun getActiveWorkouts(): Flow<List<WorkoutModel>> {
         return workoutDao.getActiveWorkouts()
+    }
+
+    override suspend fun getWorkoutsByWeekday(weekday: Int): List<WorkoutModel> {
+        return workoutDao.getWorkoutsByWeekday(weekday)
     }
 
     override suspend fun getWorkoutById(id: Long): WorkoutModel? {

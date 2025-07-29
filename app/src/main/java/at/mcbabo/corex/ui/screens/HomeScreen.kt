@@ -42,7 +42,6 @@ import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.WorkoutListItem
 import java.time.LocalDate
 
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HomeScreen(

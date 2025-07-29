@@ -11,6 +11,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\Moritz\\signing.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
     namespace = "at.mcbabo.corex"
     compileSdk = 36
 
@@ -102,6 +110,9 @@ dependencies {
     // UI Components
     implementation(libs.vico.compose.m3)
     implementation(libs.compose.remember.setting)
+
+    // Background Tasks
+    implementation(libs.work.runtime.ktx)
 
     // Misc
     implementation(libs.androidx.adapters)

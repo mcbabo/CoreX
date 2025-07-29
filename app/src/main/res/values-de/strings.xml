@@ -47,4 +47,7 @@
     <string name="exercise_details">Übungsdetails</string>
     <string name="exercise_name">Übungsname</string>
     <string name="create_exercise_info">Wenn du Gewichte oder Wiederholungen festlegen möchtest, kannst du das in den Übungsdetails tun, nachdem du ein Training mit dieser Übung erstellt hast.</string>
+    <string name="daily_workout">Dein heutiges Workout</string>
+    <string name="battery_warning">Akkukonfiguration</string>
+    <string name="battery_warning_desc">Akku-Optimierung für diese App ignorieren, um Workout Benachrichtigung zu aktivieren</string>
 </resources>

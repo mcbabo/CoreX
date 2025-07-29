@@ -1,8 +1,11 @@
 package at.mcbabo.corex.data.viewmodels
 
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import at.mcbabo.corex.NotificationScheduler
 import at.mcbabo.corex.data.models.AppSettings
 import at.mcbabo.corex.data.models.ThemeMode
 import at.mcbabo.corex.data.models.WeightUnit
@@ -19,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val notificationScheduler: NotificationScheduler
 ) : ViewModel() {
 
     // Expose settings as StateFlow for Compose
@@ -63,6 +67,21 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setReminderTime(reminderTime: String, context: Context) {
+        viewModelScope.launch {
+            settingsRepository.setReminderTime(reminderTime)
+            try {
+                notificationScheduler.rescheduleWithNewTime(context)
+                Log.d(
+                    "SettingsViewModel",
+                    "Successfully rescheduled notifications for $reminderTime"
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Failed to reschedule notifications", e)
+            }
+            _events.emit(SettingsEvent.ShowMessage("Reminder set to $reminderTime"))
+        }
+    }
 
 }
 

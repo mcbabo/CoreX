@@ -13,7 +13,6 @@ import javax.inject.Singleton
 class SettingsRepository @Inject constructor(
     private val settingsDataStore: SettingsDataStore
 ) {
-
     // Expose settings as Flow for reactive UI
     val settingsFlow: Flow<AppSettings> = settingsDataStore.settingsFlow
 
@@ -49,6 +48,7 @@ class SettingsRepository @Inject constructor(
         updateSettings { it.copy(selectedTheme = theme) }
     }
 
+    /* TODO: Implement notification permission handling based on enabled setting */
     suspend fun toggleNotifications() {
         updateSettings { it.copy(notificationsEnabled = !it.notificationsEnabled) }
     }
