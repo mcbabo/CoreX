@@ -1,5 +1,6 @@
 package at.mcbabo.corex.ui.screens
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -206,7 +208,7 @@ fun WorkoutScreen(
                             },
                             onMarkCompleted = { isCompleted ->
                                 workoutViewModel.markExerciseCompleted(
-                                    exercise.exercise.id,
+                                    exercise.workoutExercise.id,
                                     isCompleted
                                 )
                             },
@@ -280,6 +282,7 @@ fun WorkoutScreen(
 
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun WorkoutSummaryCard(
     workout: Workout
@@ -303,14 +306,19 @@ fun WorkoutSummaryCard(
             val totalExercises = workout.exercises.size
             val progress =
                 if (totalExercises > 0) completedExercises.toFloat() / totalExercises else 0f
-
+            val animatedProgress by
+            animateFloatAsState(
+                targetValue = progress,
+                animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 LinearProgressIndicator(
-                    progress = { progress },
+                    progress = { animatedProgress },
                     modifier = Modifier.weight(1f),
                 )
+
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "$completedExercises/$totalExercises ${stringResource(R.string.completed)}",
