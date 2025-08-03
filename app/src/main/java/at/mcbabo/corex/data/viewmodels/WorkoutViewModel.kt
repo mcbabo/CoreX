@@ -69,9 +69,14 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    fun recordWeight(workoutExerciseId: Long, weight: Float, notes: String? = null) {
+    fun recordWeight(
+        workoutExerciseId: Long,
+        exerciseId: Long,
+        weight: Float,
+        notes: String? = null
+    ) {
         viewModelScope.launch {
-            workoutRepository.recordWeight(workoutExerciseId, weight, notes)
+            workoutRepository.recordWeight(workoutExerciseId, exerciseId, weight, notes)
         }
     }
 

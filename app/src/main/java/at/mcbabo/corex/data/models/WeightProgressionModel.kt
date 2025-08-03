@@ -10,21 +10,21 @@ import java.util.Date
     tableName = "weight_progressions",
     foreignKeys = [
         ForeignKey(
-            entity = WorkoutExerciseModel::class,
+            entity = ExerciseModel::class,
             parentColumns = ["id"],
-            childColumns = ["workoutExerciseId"],
+            childColumns = ["exerciseId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
-        Index("workoutExerciseId"),
+        Index("exerciseId"),
         Index("date")
     ]
 )
 data class WeightProgressionModel(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val workoutExerciseId: Long,
+    val exerciseId: Long,
     val weight: Float,
     val date: Date = Date(),
     val notes: String? = null // optional notes for this specific weight entry

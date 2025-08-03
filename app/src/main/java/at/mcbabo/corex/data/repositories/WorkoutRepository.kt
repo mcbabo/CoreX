@@ -46,7 +46,12 @@ interface WorkoutRepository {
 
     // Exercise completion tracking
     suspend fun markExerciseCompleted(workoutExerciseId: Long, isCompleted: Boolean)
-    suspend fun recordWeight(workoutExerciseId: Long, weight: Float, notes: String? = null): Long
+    suspend fun recordWeight(
+        workoutExerciseId: Long,
+        exerciseId: Long,
+        weight: Float,
+        notes: String? = null
+    ): Long
 
     // Analytics
     suspend fun getWorkoutStats(): WorkoutStats
@@ -190,11 +195,12 @@ class WorkoutRepositoryImpl @Inject constructor(
 
     override suspend fun recordWeight(
         workoutExerciseId: Long,
+        exerciseId: Long,
         weight: Float,
         notes: String?
     ): Long {
         val progression = WeightProgressionModel(
-            workoutExerciseId = workoutExerciseId,
+            exerciseId = exerciseId,
             weight = weight,
             notes = notes
         )

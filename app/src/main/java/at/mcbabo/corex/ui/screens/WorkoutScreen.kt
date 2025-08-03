@@ -206,13 +206,14 @@ fun WorkoutScreen(
                             },
                             onMarkCompleted = { isCompleted ->
                                 workoutViewModel.markExerciseCompleted(
-                                    exercise.workoutExercise.id,
+                                    exercise.exercise.id,
                                     isCompleted
                                 )
                             },
                             onRecordWeight = { weight, notes ->
                                 workoutViewModel.recordWeight(
                                     exercise.workoutExercise.id,
+                                    exercise.exercise.id,
                                     weight,
                                     notes
                                 )

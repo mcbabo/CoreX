@@ -16,8 +16,8 @@ data class WorkoutExercise(
     val exercise: ExerciseModel,
 
     @Relation(
-        parentColumn = "id",
-        entityColumn = "workoutExerciseId"
+        parentColumn = "exerciseId",
+        entityColumn = "exerciseId"
     )
     val weightProgressions: List<WeightProgressionModel> = emptyList()
 )
