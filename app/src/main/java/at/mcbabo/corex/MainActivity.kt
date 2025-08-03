@@ -4,11 +4,11 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,21 +20,22 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.mcbabo.corex.data.models.AppSettings
 import at.mcbabo.corex.data.models.ThemeMode
 import at.mcbabo.corex.data.repositories.SettingsRepository
 import at.mcbabo.corex.navigation.CoreXNavGraph
 import at.mcbabo.corex.ui.theme.AppTheme
+import at.mcbabo.corex.util.DismissKeyboard
+import at.mcbabo.corex.util.NotificationScheduler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    lateinit var navController: NavHostController
+class MainActivity : AppCompatActivity() {
+    //lateinit var navController: NavHostController
 
     @Inject
     lateinit var settingsRepository: SettingsRepository
@@ -72,28 +73,33 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             if (settingsRepository.isFirstLaunch()) {
-                // Show onboarding or setup
                 settingsRepository.markFirstLaunchComplete()
             }
         }
 
         enableEdgeToEdge()
+
         setContent {
             val settings by settingsRepository.settingsFlow.collectAsStateWithLifecycle(
                 initialValue = AppSettings()
             )
 
-            // Determine dark theme based on user preference
             val isDarkTheme = when (settings.selectedTheme) {
                 ThemeMode.LIGHT -> false
                 ThemeMode.DARK -> true
                 ThemeMode.SYSTEM -> isSystemInDarkTheme()
             }
 
-            AppTheme(darkTheme = isDarkTheme) {
+            val dynamicColorsEnabled = settings.dynamicColors
+
+            val navController = rememberNavController()
+
+            AppTheme(
+                darkTheme = isDarkTheme,
+                dynamicColor = dynamicColorsEnabled
+            ) {
                 SystemBarsTheme()
 
-                navController = rememberNavController()
                 DismissKeyboard {
                     CoreXNavGraph(navController = navController)
                 }

@@ -10,21 +10,22 @@ hiltNavigationCompose = "1.2.0"
 kotlin = "2.2.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
 composeBom = "2025.07.00"
 
-material3 = "1.4.0-alpha18"
+material = "1.14.0-alpha03"
+material3 = "1.5.0-alpha01"
 materialIconsExtended = "1.7.8"
-navigationCompose = "2.9.2"
+navigationCompose = "2.9.3"
 roomRuntime = "2.7.2"
 adapters = "3.2.0-alpha11"
 accompanistNavigationAnimation = "0.36.0"
 
 vico = "2.1.3"
-workRuntimeKtx = "2.10.2"
+workRuntimeKtx = "2.10.3"
 
 [libraries]
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
@@ -63,6 +64,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3",
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
 vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 

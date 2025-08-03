@@ -54,7 +54,7 @@ import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CreateWorkoutScreen(
     navController: NavController,

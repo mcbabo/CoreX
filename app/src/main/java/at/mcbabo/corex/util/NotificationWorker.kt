@@ -1,4 +1,4 @@
-package at.mcbabo.corex
+package at.mcbabo.corex.util
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,6 +12,8 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import at.mcbabo.corex.MainActivity
+import at.mcbabo.corex.R
 import at.mcbabo.corex.data.repositories.SettingsRepository
 import at.mcbabo.corex.data.repositories.WorkoutRepository
 import dagger.hilt.EntryPoint

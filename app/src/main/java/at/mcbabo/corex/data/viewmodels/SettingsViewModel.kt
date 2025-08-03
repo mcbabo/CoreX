@@ -1,22 +1,21 @@
 package at.mcbabo.corex.data.viewmodels
 
-
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.mcbabo.corex.NotificationScheduler
 import at.mcbabo.corex.data.models.AppSettings
+import at.mcbabo.corex.data.models.Language
 import at.mcbabo.corex.data.models.ThemeMode
 import at.mcbabo.corex.data.models.WeightUnit
 import at.mcbabo.corex.data.repositories.SettingsRepository
+import at.mcbabo.corex.util.NotificationScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,21 +36,31 @@ class SettingsViewModel @Inject constructor(
             initialValue = AppSettings()
         )
 
-    // Events for one-time actions (like showing snackbars)
-    private val _events = MutableSharedFlow<SettingsEvent>()
-    val events: SharedFlow<SettingsEvent> = _events.asSharedFlow()
-
     fun setTheme(theme: ThemeMode) {
         viewModelScope.launch {
             settingsRepository.setTheme(theme)
-            _events.emit(SettingsEvent.ShowMessage("Theme set to ${theme.displayName}"))
         }
     }
 
+    fun setDynamicColors(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDynamicColors(enabled)
+        }
+    }
+
+    /* TODO() */
     fun setWeightUnit(unit: WeightUnit) {
         viewModelScope.launch {
             settingsRepository.setWeightUnit(unit)
-            _events.emit(SettingsEvent.ShowMessage("Weight unit set to ${unit.displayName}"))
+        }
+    }
+
+    fun setLanguage(language: Language) {
+        viewModelScope.launch {
+            settingsRepository.setLanguage(language)
+
+            val localeList = LocaleListCompat.forLanguageTags(language.symbol)
+            AppCompatDelegate.setApplicationLocales(localeList)
         }
     }
 
@@ -59,14 +68,12 @@ class SettingsViewModel @Inject constructor(
     fun setDefaultReps(reps: Int) {
         viewModelScope.launch {
             settingsRepository.setDefaultReps(reps)
-            _events.emit(SettingsEvent.ShowMessage("Default reps set to $reps"))
         }
     }
 
     fun setDefaultSets(sets: Int) {
         viewModelScope.launch {
             settingsRepository.setDefaultSets(sets)
-            _events.emit(SettingsEvent.ShowMessage("Default sets set to $sets"))
         }
     }
 
@@ -79,8 +86,6 @@ class SettingsViewModel @Inject constructor(
             } else {
                 notificationScheduler.cancelWork(appContext)
             }
-
-            _events.emit(SettingsEvent.ShowMessage("Toggled notifications"))
         }
     }
 
@@ -96,13 +101,6 @@ class SettingsViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Failed to reschedule notifications", e)
             }
-            _events.emit(SettingsEvent.ShowMessage("Reminder set to $reminderTime"))
         }
     }
-
-}
-
-sealed class SettingsEvent {
-    data class ShowMessage(val message: String) : SettingsEvent()
-    object NavigateBack : SettingsEvent()
 }

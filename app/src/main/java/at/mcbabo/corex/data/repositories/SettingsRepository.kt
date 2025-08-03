@@ -2,6 +2,7 @@ package at.mcbabo.corex.data.repositories
 
 import at.mcbabo.corex.data.datastore.SettingsDataStore
 import at.mcbabo.corex.data.models.AppSettings
+import at.mcbabo.corex.data.models.Language
 import at.mcbabo.corex.data.models.ThemeMode
 import at.mcbabo.corex.data.models.WeightUnit
 import kotlinx.coroutines.flow.Flow
@@ -31,12 +32,7 @@ class SettingsRepository @Inject constructor(
         settingsDataStore.updateSettings(update)
     }
 
-    // Convenience methods for common updates
-    suspend fun toggleDarkMode() {
-        updateSettings { it.copy(isDarkMode = !it.isDarkMode) }
-    }
-
-    suspend fun setLanguage(language: String) {
+    suspend fun setLanguage(language: Language) {
         updateSettings { it.copy(language = language) }
     }
 
@@ -48,6 +44,10 @@ class SettingsRepository @Inject constructor(
         updateSettings { it.copy(selectedTheme = theme) }
     }
 
+    suspend fun setDynamicColors(enabled: Boolean) {
+        updateSettings { it.copy(dynamicColors = enabled) }
+    }
+
     suspend fun toggleNotifications(): AppSettings {
         var updatedSettings: AppSettings? = null
         updateSettings {
@@ -56,11 +56,6 @@ class SettingsRepository @Inject constructor(
             }
         }
         return updatedSettings ?: throw IllegalStateException("Failed to update settings")
-    }
-
-
-    suspend fun toggleAutoBackup() {
-        updateSettings { it.copy(autoBackup = !it.autoBackup) }
     }
 
     suspend fun setReminderTime(time: String) {

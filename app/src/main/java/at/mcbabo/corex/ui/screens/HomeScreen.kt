@@ -112,7 +112,7 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        stringResource(R.string.not_workouts_desc),
+                        stringResource(R.string.no_workouts_desc),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center

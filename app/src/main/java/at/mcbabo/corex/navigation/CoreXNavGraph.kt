@@ -16,9 +16,10 @@ import at.mcbabo.corex.ui.screens.ExercisesScreen
 import at.mcbabo.corex.ui.screens.HomeScreen
 import at.mcbabo.corex.ui.screens.SettingsScreen
 import at.mcbabo.corex.ui.screens.WorkoutScreen
-import at.mcbabo.corex.ui.screens.settings.AppearanceSettings
-import at.mcbabo.corex.ui.screens.settings.GeneralSettings
-import at.mcbabo.corex.ui.screens.settings.UnitsSettings
+import at.mcbabo.corex.ui.screens.settings.GeneralSettingsScreen
+import at.mcbabo.corex.ui.screens.settings.UnitsSettingsScreen
+import at.mcbabo.corex.ui.screens.settings.appearance.AppearanceSettingsScreen
+import at.mcbabo.corex.ui.screens.settings.appearance.LanguageSettingsScreen
 
 @Composable
 fun CoreXNavGraph(
@@ -96,19 +97,25 @@ fun NavGraphBuilder.settings(
         animatedComposable(
             route = Screen.GeneralSettings.route
         ) { backStackEntry ->
-            GeneralSettings(onNavigateBack)
+            GeneralSettingsScreen(onNavigateBack)
         }
 
         animatedComposable(
             route = Screen.AppearanceSettings.route
         ) { backStackEntry ->
-            AppearanceSettings(onNavigateBack)
+            AppearanceSettingsScreen(navController, onNavigateBack)
+        }
+
+        animatedComposable(
+            route = Screen.LanguageSettings.route
+        ) { backStackEntry ->
+            LanguageSettingsScreen(onNavigateBack)
         }
 
         animatedComposable(
             route = Screen.UnitsSettings.route
         ) { backStackEntry ->
-            UnitsSettings(onNavigateBack)
+            UnitsSettingsScreen(onNavigateBack)
         }
     }
 }

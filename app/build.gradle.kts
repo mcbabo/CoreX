@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     implementation(libs.androidx.core.splashscreen)
 
     // Compose BOM & UI
@@ -116,6 +117,9 @@ dependencies {
 
     // Misc
     implementation(libs.androidx.adapters)
+
+    // Language
+    implementation(libs.androidx.appcompat)
 
     // Testing
     testImplementation(libs.junit)

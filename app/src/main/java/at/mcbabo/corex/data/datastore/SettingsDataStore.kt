@@ -1,18 +1,16 @@
 package at.mcbabo.corex.data.datastore
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import at.mcbabo.corex.data.models.AppSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,22 +30,9 @@ class SettingsDataStore @Inject constructor(
     }
 
     companion object {
-        // Option 1: Store as single JSON string (simpler)
         private val SETTINGS_JSON_KEY = stringPreferencesKey("settings_json")
-
-        // Option 2: Store as individual keys (more granular)
-        private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
-        private val LANGUAGE_KEY = stringPreferencesKey("language")
-        private val WEIGHT_UNIT_KEY = stringPreferencesKey("weight_unit")
-        private val NOTIFICATIONS_KEY = booleanPreferencesKey("notifications")
-        private val AUTO_BACKUP_KEY = booleanPreferencesKey("auto_backup")
-        private val REMINDER_TIME_KEY = stringPreferencesKey("reminder_time")
-        private val FIRST_LAUNCH_KEY = booleanPreferencesKey("first_launch")
-        private val LAST_SYNC_KEY = longPreferencesKey("last_sync")
-        private val THEME_KEY = stringPreferencesKey("theme")
     }
 
-    // Method 1: JSON approach (recommended for complex settings)
     val settingsFlow: Flow<AppSettings> = context.settingsDataStore.data
         .catch { exception ->
             // Handle any errors gracefully
@@ -87,7 +72,8 @@ class SettingsDataStore @Inject constructor(
 
             val updatedSettings = update(currentSettings)
             preferences[SETTINGS_JSON_KEY] = json.encodeToString(updatedSettings)
+            Log.d("SETTINGS", json.encodeToString(updatedSettings))
+
         }
     }
-
 }
