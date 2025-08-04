@@ -1,5 +1,6 @@
 package at.mcbabo.corex.ui.screens.settings.appearance
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -88,7 +89,7 @@ fun AppearanceSettingsScreen(
                 } else {
                     Icons.Outlined.LightMode
                 },
-                isChecked = (settings.selectedTheme == ThemeMode.DARK),
+                isChecked = (settings.selectedTheme == ThemeMode.DARK || (settings.selectedTheme == ThemeMode.SYSTEM && isSystemInDarkTheme())),
                 description =
                     if (settings.selectedTheme.symbol ==
                         true
