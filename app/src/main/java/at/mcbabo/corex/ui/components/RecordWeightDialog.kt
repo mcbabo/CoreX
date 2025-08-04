@@ -21,10 +21,7 @@ import androidx.compose.ui.unit.dp
 import at.mcbabo.corex.R
 
 @Composable
-fun RecordWeightDialog(
-    onDismiss: () -> Unit,
-    onRecord: (Float, String?) -> Unit
-) {
+fun RecordWeightDialog(onDismiss: () -> Unit, onRecord: (Float, String?) -> Unit) {
     var weight by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
 

@@ -27,48 +27,73 @@ fun SettingItem(
     description: String,
     icon: ImageVector?,
     backgroundColor: Color = Color.Transparent,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
-            .clickable { onClick() }
+        modifier =
+            Modifier
+                .clickable { onClick() }
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(backgroundColor)
-                .padding(horizontal = 16.dp, vertical = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(backgroundColor)
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             icon?.let {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(24.dp),
-                    tint = if (backgroundColor == Color.Transparent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier =
+                        Modifier
+                            .padding(end = 16.dp)
+                            .size(24.dp),
+                    tint =
+                        if (backgroundColor ==
+                            Color.Transparent
+                        ) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        }
                 )
             }
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = if (icon == null) 12.dp else 0.dp)
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(start = if (icon == null) 12.dp else 0.dp)
             ) {
                 Text(
                     text = title,
                     maxLines = 1,
                     style = MaterialTheme.typography.titleLarge,
-                    color = if (backgroundColor == Color.Transparent) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimaryContainer,
-                    overflow = TextOverflow.Ellipsis,
+                    color =
+                        if (backgroundColor ==
+                            Color.Transparent
+                        ) {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        },
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = description,
-                    color = if (backgroundColor == Color.Transparent) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onPrimaryContainer,
+                    color =
+                        if (backgroundColor ==
+                            Color.Transparent
+                        ) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        },
                     maxLines = 2,
                     style = MaterialTheme.typography.bodyMedium,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

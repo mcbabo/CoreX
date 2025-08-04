@@ -59,9 +59,10 @@ fun ExercisesScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LargeTopAppBar(
@@ -74,7 +75,9 @@ fun ExercisesScreen(
                             contentDescription = "Filter"
                         )
                     }
-                    TextButton(onClick = { navController.navigate(route = Screen.CreateExercise.route) }) {
+                    TextButton(onClick = {
+                        navController.navigate(route = Screen.CreateExercise.route)
+                    }) {
                         Text(stringResource(R.string.add_exercise))
                     }
                 },
@@ -142,7 +145,7 @@ fun ExercisesScreen(
                     // Navigate to workout selection or add to current workout
                     showBottomSheet = false
                     selectedExercise = null
-                },
+                }
             )
         }
     }

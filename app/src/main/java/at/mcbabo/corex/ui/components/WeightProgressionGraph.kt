@@ -35,43 +35,45 @@ fun WeightProgressionGraph(weightProgressions: List<WeightProgressionModel>) {
     val dateFormatter = remember { SimpleDateFormat("dd.MM", Locale.getDefault()) }
     val modelProducer = remember { CartesianChartModelProducer() }
 
-    val (xValues, yValues, labels) = remember(weightProgressions) {
-        val dailyData = weightProgressions
-            .groupBy { dateFormatter.format(it.date) }
-            .map { (dateLabel, entries) ->
-                Triple(
-                    dateLabel,
-                    entries.maxOf { it.weight },
-                    entries.minOf { it.date.time }
-                )
-            }
-            .sortedBy { it.third }
+    val (xValues, yValues, labels) =
+        remember(weightProgressions) {
+            val dailyData =
+                weightProgressions
+                    .groupBy { dateFormatter.format(it.date) }
+                    .map { (dateLabel, entries) ->
+                        Triple(
+                            dateLabel,
+                            entries.maxOf { it.weight },
+                            entries.minOf { it.date.time }
+                        )
+                    }.sortedBy { it.third }
 
-        Triple(
-            dailyData.indices.map { it.toFloat() },
-            dailyData.map { it.second.toFloat() },
-            dailyData.map { it.first }
-        )
-    }
-
-    val (minY, maxY) = remember(yValues) {
-        if (yValues.isEmpty()) return@remember 0f to 100f
-
-        val validValues = yValues.filter { it.isFinite() && it > 0 }
-        if (validValues.isEmpty()) return@remember 0f to 100f
-
-        val min = validValues.minOf { it }
-        val max = validValues.maxOf { it }
-
-        // Ensure we don't have identical min/max (which could cause NaN in calculations)
-        if (max == min) {
-            val center = min
-            (center - 5f).coerceAtLeast(0f) to center + 5f
-        } else {
-            val padding = (max - min) * 0.1f
-            (min - padding).coerceAtLeast(0f) to max + padding
+            Triple(
+                dailyData.indices.map { it.toFloat() },
+                dailyData.map { it.second.toFloat() },
+                dailyData.map { it.first }
+            )
         }
-    }
+
+    val (minY, maxY) =
+        remember(yValues) {
+            if (yValues.isEmpty()) return@remember 0f to 100f
+
+            val validValues = yValues.filter { it.isFinite() && it > 0 }
+            if (validValues.isEmpty()) return@remember 0f to 100f
+
+            val min = validValues.minOf { it }
+            val max = validValues.maxOf { it }
+
+            // Ensure we don't have identical min/max (which could cause NaN in calculations)
+            if (max == min) {
+                val center = min
+                (center - 5f).coerceAtLeast(0f) to center + 5f
+            } else {
+                val padding = (max - min) * 0.1f
+                (min - padding).coerceAtLeast(0f) to max + padding
+            }
+        }
 
     LaunchedEffect(xValues, yValues) {
         if (xValues.isNotEmpty() && yValues.isNotEmpty()) {
@@ -81,39 +83,45 @@ fun WeightProgressionGraph(weightProgressions: List<WeightProgressionModel>) {
         }
     }
 
-    val horizontalAxis = HorizontalAxis.rememberBottom(
-        valueFormatter = { _, value, _ ->
-            if (value.isNaN() || !value.isFinite()) {
-                ""
-            } else {
-                labels.getOrNull(value.roundToInt()) ?: ""
+    val horizontalAxis =
+        HorizontalAxis.rememberBottom(
+            valueFormatter = { _, value, _ ->
+                if (value.isNaN() || !value.isFinite()) {
+                    ""
+                } else {
+                    labels.getOrNull(value.roundToInt()) ?: ""
+                }
             }
-        }
-    )
-
-    val lineLayer = rememberLineCartesianLayer(
-        rangeProvider = CartesianLayerRangeProvider.fixed(
-            minY = minY.toDouble(),
-            maxY = maxY.toDouble()
         )
-    )
+
+    val lineLayer =
+        rememberLineCartesianLayer(
+            rangeProvider =
+                CartesianLayerRangeProvider.fixed(
+                    minY = minY.toDouble(),
+                    maxY = maxY.toDouble()
+                )
+        )
 
     Card {
         CartesianChartHost(
-            chart = rememberCartesianChart(
-                lineLayer,
-                startAxis = VerticalAxis.rememberStart(),
-                bottomAxis = horizontalAxis,
-                marker = rememberDefaultCartesianMarker(
-                    label = TextComponent(),
-                    labelPosition = DefaultCartesianMarker.LabelPosition.AbovePoint
-                )
-            ),
+            chart =
+                rememberCartesianChart(
+                    lineLayer,
+                    startAxis = VerticalAxis.rememberStart(),
+                    bottomAxis = horizontalAxis,
+                    marker =
+                        rememberDefaultCartesianMarker(
+                            label = TextComponent(),
+                            labelPosition = DefaultCartesianMarker.LabelPosition.AbovePoint
+                        )
+                ),
             modelProducer = modelProducer,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent)
-                .padding(8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent)
+                    .padding(8.dp)
         )
     }
 }

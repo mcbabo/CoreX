@@ -29,6 +29,8 @@
     <string name="default_sets">Standard Sätze</string>
     <string name="default_sets_desc">Standard Anzahl der Sätze pro Übung</string>
     <string name="delete">Entfernen</string>
+    <string name="delete_workout">Workout löschen</string>
+    <string name="delete_workout_desc">Wenn du dieses Workout löschst, werden auch alle damit verbundenen Übungen entfernt. Möchtest du wirklich fortfahren?</string>
     <string name="description">Beschreibung</string>
     <string name="dynamic_color">Dynamische Farbe</string>
     <string name="dynamic_color_desc">Farben von Hintergrundbildern auf das Farbschema anwenden</string>

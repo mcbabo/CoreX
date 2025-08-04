@@ -11,16 +11,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsRepository @Inject constructor(
-    private val settingsDataStore: SettingsDataStore
-) {
+class SettingsRepository
+@Inject
+constructor(private val settingsDataStore: SettingsDataStore) {
     // Expose settings as Flow for reactive UI
     val settingsFlow: Flow<AppSettings> = settingsDataStore.settingsFlow
 
     // Get current settings (suspend function)
-    suspend fun getCurrentSettings(): AppSettings {
-        return settingsFlow.first()
-    }
+    suspend fun getCurrentSettings(): AppSettings = settingsFlow.first()
 
     // Update entire settings object
     suspend fun updateSettings(settings: AppSettings) {
@@ -81,8 +79,5 @@ class SettingsRepository @Inject constructor(
     }
 
     // Check specific conditions
-    suspend fun isFirstLaunch(): Boolean {
-        return getCurrentSettings().firstLaunch
-    }
-
+    suspend fun isFirstLaunch(): Boolean = getCurrentSettings().firstLaunch
 }

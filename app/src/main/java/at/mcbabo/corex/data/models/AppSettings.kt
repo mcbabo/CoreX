@@ -6,21 +6,15 @@ import kotlinx.serialization.Serializable
 data class AppSettings(
     val selectedTheme: ThemeMode = ThemeMode.SYSTEM,
     val dynamicColors: Boolean = false,
-
     val language: Language = Language.SYSTEM,
-
     val weightUnit: WeightUnit = WeightUnit.KG,
-
     val notificationsEnabled: Boolean = true,
     val reminderTime: String = "09:00",
-
     val firstLaunch: Boolean = true,
-
     val lastSyncTimestamp: Long = 0L,
-
     // Workout defaults
     val defaultReps: Int = 10,
-    val defaultSets: Int = 3,
+    val defaultSets: Int = 3
 )
 
 @Serializable

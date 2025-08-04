@@ -13,16 +13,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WorkoutViewModel @Inject constructor(
-    private val workoutRepository: WorkoutRepository
-) : ViewModel() {
-
-    suspend fun createWorkoutWithExercises(
-        name: String,
-        weekday: Int,
-        exercises: List<ExerciseModel>
-    ): Result<Long> {
-        return try {
+class WorkoutViewModel
+@Inject
+constructor(private val workoutRepository: WorkoutRepository) : ViewModel() {
+    suspend fun createWorkoutWithExercises(name: String, weekday: Int, exercises: List<ExerciseModel>): Result<Long> =
+        try {
             val workoutId = createWorkoutAndGetId(name, weekday)
             exercises.forEachIndexed { index, exercise ->
                 addExerciseToWorkout(workoutId, exercise.id)
@@ -31,7 +26,6 @@ class WorkoutViewModel @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
-    }
 
     fun deleteWorkout(workout: WorkoutModel) {
         viewModelScope.launch {
@@ -69,12 +63,7 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    fun recordWeight(
-        workoutExerciseId: Long,
-        exerciseId: Long,
-        weight: Float,
-        notes: String? = null
-    ) {
+    fun recordWeight(workoutExerciseId: Long, exerciseId: Long, weight: Float, notes: String? = null) {
         viewModelScope.launch {
             workoutRepository.recordWeight(workoutExerciseId, exerciseId, weight, notes)
         }
@@ -89,11 +78,12 @@ class WorkoutViewModel @Inject constructor(
     fun getWorkoutSummaries(): Flow<List<WorkoutSummary>> = workoutRepository.getWorkoutSummaries()
 
     suspend fun createWorkoutAndGetId(name: String, weekday: Int): Long {
-        val workout = WorkoutModel(
-            name = name,
-            weekday = weekday,
-            isActive = true
-        )
+        val workout =
+            WorkoutModel(
+                name = name,
+                weekday = weekday,
+                isActive = true
+            )
         return workoutRepository.createWorkout(workout)
     }
 }

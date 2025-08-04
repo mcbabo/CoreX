@@ -20,22 +20,21 @@ import androidx.compose.ui.unit.dp
 import at.mcbabo.corex.data.models.ExerciseModel
 
 @Composable
-fun SelectedExerciseItem(
-    exercise: ExerciseModel,
-    onRemove: () -> Unit
-) {
+fun SelectedExerciseItem(exercise: ExerciseModel, onRemove: () -> Unit) {
     Surface(
-        modifier = Modifier
-            .size(90.dp)
-            .clickable(
-                onClick = onRemove,
-            ),
+        modifier =
+            Modifier
+                .size(90.dp)
+                .clickable(
+                    onClick = onRemove
+                ),
         shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.secondaryContainer
     ) {
         Box(
-            modifier = Modifier
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(

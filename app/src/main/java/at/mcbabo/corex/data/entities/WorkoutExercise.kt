@@ -8,13 +8,11 @@ import at.mcbabo.corex.data.models.WorkoutExerciseModel
 
 data class WorkoutExercise(
     @Embedded val workoutExercise: WorkoutExerciseModel,
-
     @Relation(
         parentColumn = "exerciseId",
         entityColumn = "id"
     )
     val exercise: ExerciseModel,
-
     @Relation(
         parentColumn = "exerciseId",
         entityColumn = "exerciseId"

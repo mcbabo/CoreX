@@ -26,14 +26,16 @@ import at.mcbabo.corex.data.models.WorkoutModel
 @TypeConverters(DateConverter::class)
 abstract class GymDatabase : RoomDatabase() {
     abstract fun workoutDao(): WorkoutDao
+
     abstract fun exerciseDao(): ExerciseDao
+
     abstract fun workoutExerciseDao(): WorkoutExerciseDao
+
     abstract fun weightProgressionDao(): WeightProgressionDao
 
     companion object {
         @Volatile
-        private var INSTANCE: GymDatabase? = null
-
+        private var instance: GymDatabase? = null
     }
 
     // Callback for database creation

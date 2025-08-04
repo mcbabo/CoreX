@@ -15,11 +15,11 @@ fun BackButton(onClick: () -> Unit) {
         modifier = Modifier,
         onClick = {
             onClick()
-        },
+        }
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-            contentDescription = stringResource(R.string.back),
+            contentDescription = stringResource(R.string.back)
         )
     }
 }

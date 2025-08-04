@@ -15,17 +15,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ExerciseAvatar(
-    exerciseName: String,
-    modifier: Modifier = Modifier,
-) {
+fun ExerciseAvatar(exerciseName: String, modifier: Modifier = Modifier) {
     val firstLetter = exerciseName.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
 
     Box(
-        modifier = modifier
-            .size(36.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primaryContainer),
+        modifier =
+            modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
         Text(

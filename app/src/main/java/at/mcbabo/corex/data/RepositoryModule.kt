@@ -14,19 +14,12 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Binds
+    abstract fun bindWorkoutRepository(workoutRepositoryImpl: WorkoutRepositoryImpl): WorkoutRepository
 
     @Binds
-    abstract fun bindWorkoutRepository(
-        workoutRepositoryImpl: WorkoutRepositoryImpl
-    ): WorkoutRepository
+    abstract fun bindExerciseRepository(exerciseRepositoryImpl: ExerciseRepositoryImpl): ExerciseRepository
 
     @Binds
-    abstract fun bindExerciseRepository(
-        exerciseRepositoryImpl: ExerciseRepositoryImpl
-    ): ExerciseRepository
-
-    @Binds
-    abstract fun bindProgressRepository(
-        progressRepositoryImpl: ProgressRepositoryImpl
-    ): ProgressRepository
+    abstract fun bindProgressRepository(progressRepositoryImpl: ProgressRepositoryImpl): ProgressRepository
 }

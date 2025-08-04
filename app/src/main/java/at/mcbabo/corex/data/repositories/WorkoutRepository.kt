@@ -17,44 +17,48 @@ import javax.inject.Inject
 interface WorkoutRepository {
     // Basic workout operations
     fun getAllWorkouts(): Flow<List<WorkoutModel>>
+
     fun getActiveWorkouts(): Flow<List<WorkoutModel>>
+
     suspend fun getWorkoutsByWeekday(weekday: Int): List<WorkoutModel>
+
     suspend fun getWorkoutById(id: Long): WorkoutModel?
+
     suspend fun createWorkout(workout: WorkoutModel): Long
+
     suspend fun updateWorkout(workout: WorkoutModel)
+
     suspend fun deleteWorkout(workout: WorkoutModel)
 
     // Full workout with exercises and progressions
     suspend fun getFullWorkout(id: Long): Workout?
+
     fun observeFullWorkout(id: Long): Flow<Workout?>
 
     // Workout session management
     suspend fun startWorkout(workoutId: Long)
+
     suspend fun completeWorkout(workoutId: Long)
+
     suspend fun resetWorkoutProgress(workoutId: Long)
 
     // Exercise management within workouts
     suspend fun addExerciseToWorkout(workoutId: Long, exerciseId: Long, orderIndex: Int): Long
+
     suspend fun removeExerciseFromWorkout(workoutExerciseId: Long)
+
     suspend fun updateExerciseOrder(exerciseOrders: List<Pair<Long, Int>>)
-    suspend fun updateExerciseTargets(
-        workoutExerciseId: Long,
-        targetWeight: Float?,
-        targetReps: Int?,
-        targetSets: Int?
-    )
+
+    suspend fun updateExerciseTargets(workoutExerciseId: Long, targetWeight: Float?, targetReps: Int?, targetSets: Int?)
 
     // Exercise completion tracking
     suspend fun markExerciseCompleted(workoutExerciseId: Long, isCompleted: Boolean)
-    suspend fun recordWeight(
-        workoutExerciseId: Long,
-        exerciseId: Long,
-        weight: Float,
-        notes: String? = null
-    ): Long
+
+    suspend fun recordWeight(workoutExerciseId: Long, exerciseId: Long, weight: Float, notes: String? = null): Long
 
     // Analytics
     suspend fun getWorkoutStats(): WorkoutStats
+
     suspend fun getRecentWorkoutHistory(): List<WorkoutSession>
 
     fun getWorkoutSummaries(): Flow<List<WorkoutSummary>>
@@ -77,34 +81,26 @@ data class WorkoutSession(
     val completedExercises: Int
 )
 
-class WorkoutRepositoryImpl @Inject constructor(
+class WorkoutRepositoryImpl
+@Inject
+constructor(
     private val workoutDao: WorkoutDao,
     private val workoutExerciseDao: WorkoutExerciseDao,
     private val weightProgressionDao: WeightProgressionDao,
-    private val settingsRepository: SettingsRepository // Inject settings repository
+    private val settingsRepository: SettingsRepository
 ) : WorkoutRepository {
-
-    override fun getAllWorkouts(): Flow<List<WorkoutModel>> {
-        return workoutDao.getAllFullWorkouts().map { workouts ->
-            workouts.map { it.workout }
-        }
+    override fun getAllWorkouts(): Flow<List<WorkoutModel>> = workoutDao.getAllFullWorkouts().map { workouts ->
+        workouts.map { it.workout }
     }
 
-    override fun getActiveWorkouts(): Flow<List<WorkoutModel>> {
-        return workoutDao.getActiveWorkouts()
-    }
+    override fun getActiveWorkouts(): Flow<List<WorkoutModel>> = workoutDao.getActiveWorkouts()
 
-    override suspend fun getWorkoutsByWeekday(weekday: Int): List<WorkoutModel> {
-        return workoutDao.getWorkoutsByWeekday(weekday)
-    }
+    override suspend fun getWorkoutsByWeekday(weekday: Int): List<WorkoutModel> =
+        workoutDao.getWorkoutsByWeekday(weekday)
 
-    override suspend fun getWorkoutById(id: Long): WorkoutModel? {
-        return workoutDao.getWorkoutById(id)
-    }
+    override suspend fun getWorkoutById(id: Long): WorkoutModel? = workoutDao.getWorkoutById(id)
 
-    override suspend fun createWorkout(workout: WorkoutModel): Long {
-        return workoutDao.insertWorkout(workout)
-    }
+    override suspend fun createWorkout(workout: WorkoutModel): Long = workoutDao.insertWorkout(workout)
 
     override suspend fun updateWorkout(workout: WorkoutModel) {
         workoutDao.updateWorkout(workout)
@@ -114,9 +110,7 @@ class WorkoutRepositoryImpl @Inject constructor(
         workoutDao.deleteWorkout(workout)
     }
 
-    override suspend fun getFullWorkout(id: Long): Workout? {
-        return workoutDao.getFullWorkout(id)
-    }
+    override suspend fun getFullWorkout(id: Long): Workout? = workoutDao.getFullWorkout(id)
 
     override fun observeFullWorkout(id: Long): Flow<Workout?> = workoutDao.observeFullWorkout(id)
 
@@ -137,19 +131,16 @@ class WorkoutRepositoryImpl @Inject constructor(
         workoutExerciseDao.resetWorkoutCompletion(workoutId)
     }
 
-    override suspend fun addExerciseToWorkout(
-        workoutId: Long,
-        exerciseId: Long,
-        orderIndex: Int
-    ): Long {
+    override suspend fun addExerciseToWorkout(workoutId: Long, exerciseId: Long, orderIndex: Int): Long {
         val settings = settingsRepository.getCurrentSettings()
-        val workoutExercise = WorkoutExerciseModel(
-            workoutId = workoutId,
-            exerciseId = exerciseId,
-            orderIndex = orderIndex,
-            targetReps = settings.defaultReps,
-            targetSets = settings.defaultSets
-        )
+        val workoutExercise =
+            WorkoutExerciseModel(
+                workoutId = workoutId,
+                exerciseId = exerciseId,
+                orderIndex = orderIndex,
+                targetReps = settings.defaultReps,
+                targetSets = settings.defaultSets
+            )
         return workoutExerciseDao.insertWorkoutExercise(workoutExercise)
     }
 
@@ -160,9 +151,7 @@ class WorkoutRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateExerciseOrder(
-        exerciseOrders: List<Pair<Long, Int>>
-    ) {
+    override suspend fun updateExerciseOrder(exerciseOrders: List<Pair<Long, Int>>) {
         exerciseOrders.forEach { (exerciseId, newOrder) ->
             val workoutExercise = workoutExerciseDao.getWorkoutExerciseById(exerciseId)
             workoutExercise?.let {
@@ -193,17 +182,13 @@ class WorkoutRepositoryImpl @Inject constructor(
         workoutExerciseDao.updateCompletionStatus(workoutExerciseId, isCompleted)
     }
 
-    override suspend fun recordWeight(
-        workoutExerciseId: Long,
-        exerciseId: Long,
-        weight: Float,
-        notes: String?
-    ): Long {
-        val progression = WeightProgressionModel(
-            exerciseId = exerciseId,
-            weight = weight,
-            notes = notes
-        )
+    override suspend fun recordWeight(workoutExerciseId: Long, exerciseId: Long, weight: Float, notes: String?): Long {
+        val progression =
+            WeightProgressionModel(
+                exerciseId = exerciseId,
+                weight = weight,
+                notes = notes
+            )
         weightProgressionDao.updateTargetWeight(
             workoutExerciseId,
             weight
@@ -227,7 +212,5 @@ class WorkoutRepositoryImpl @Inject constructor(
         return emptyList()
     }
 
-    override fun getWorkoutSummaries(): Flow<List<WorkoutSummary>> {
-        return workoutDao.getWorkoutSummaries()
-    }
+    override fun getWorkoutSummaries(): Flow<List<WorkoutSummary>> = workoutDao.getWorkoutSummaries()
 }

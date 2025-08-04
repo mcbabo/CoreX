@@ -45,27 +45,29 @@ fun AppearanceSettingsScreen(
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
             rememberTopAppBarState(),
-            canScroll = { true },
+            canScroll = { true }
         )
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = {
                     Text(modifier = Modifier, text = stringResource(R.string.appearance))
                 },
                 navigationIcon = { BackButton(onNavigateBack) },
-                scrollBehavior = scrollBehavior,
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
+            modifier =
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
         ) {
             PreferenceSwitch(
                 title = stringResource(R.string.dynamic_color),
@@ -79,13 +81,30 @@ fun AppearanceSettingsScreen(
 
             PreferenceSwitchWithDivider(
                 title = stringResource(R.string.dark_mode),
-                icon = if (settings.selectedTheme == ThemeMode.DARK) Icons.Outlined.DarkMode else Icons.Outlined.LightMode,
-                isChecked = (settings.selectedTheme == ThemeMode.DARK),
-                description = if (settings.selectedTheme.symbol == true) stringResource(R.string.on) else settings.selectedTheme.symbol?.let {
-                    if (!it) stringResource(
-                        R.string.off
-                    ) else "System"
+                icon = if (settings.selectedTheme ==
+                    ThemeMode.DARK
+                ) {
+                    Icons.Outlined.DarkMode
+                } else {
+                    Icons.Outlined.LightMode
                 },
+                isChecked = (settings.selectedTheme == ThemeMode.DARK),
+                description =
+                    if (settings.selectedTheme.symbol ==
+                        true
+                    ) {
+                        stringResource(R.string.on)
+                    } else {
+                        settings.selectedTheme.symbol?.let {
+                            if (!it) {
+                                stringResource(
+                                    R.string.off
+                                )
+                            } else {
+                                "System"
+                            }
+                        }
+                    },
                 onChecked = {
                     if (settings.selectedTheme == ThemeMode.LIGHT) {
                         viewModel.setTheme(ThemeMode.DARK)
@@ -93,7 +112,7 @@ fun AppearanceSettingsScreen(
                         viewModel.setTheme(ThemeMode.LIGHT)
                     }
                 },
-                onClick = { },
+                onClick = { }
             )
 
             PreferenceItem(

@@ -69,10 +69,12 @@ fun ExerciseInfo(exercise: ExerciseModel) {
         // Type badge
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = if (exercise.isBodyWeight)
-                MaterialTheme.colorScheme.secondaryContainer
-            else
-                MaterialTheme.colorScheme.tertiaryContainer,
+            color =
+                if (exercise.isBodyWeight) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.tertiaryContainer
+                },
             modifier = Modifier.weight(1f)
         ) {
             Column(
@@ -80,18 +82,25 @@ fun ExerciseInfo(exercise: ExerciseModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    imageVector = if (exercise.isBodyWeight)
-                        Icons.Default.Person
-                    else
-                        Icons.Default.FitnessCenter,
+                    imageVector =
+                        if (exercise.isBodyWeight) {
+                            Icons.Default.Person
+                        } else {
+                            Icons.Default.FitnessCenter
+                        },
                     contentDescription = null,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (exercise.isBodyWeight) stringResource(R.string.bodyweight) else stringResource(
-                        R.string.equipment
-                    ),
+                    text =
+                        if (exercise.isBodyWeight) {
+                            stringResource(R.string.bodyweight)
+                        } else {
+                            stringResource(
+                                R.string.equipment
+                            )
+                        },
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center
                 )
@@ -101,10 +110,12 @@ fun ExerciseInfo(exercise: ExerciseModel) {
         // Source badge
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = if (exercise.isCustom)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.surfaceVariant,
+            color =
+                if (exercise.isCustom) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceVariant
+                },
             modifier = Modifier.weight(1f)
         ) {
             Column(
@@ -112,18 +123,25 @@ fun ExerciseInfo(exercise: ExerciseModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    imageVector = if (exercise.isCustom)
-                        Icons.Default.Edit
-                    else
-                        Icons.Default.Verified,
+                    imageVector =
+                        if (exercise.isCustom) {
+                            Icons.Default.Edit
+                        } else {
+                            Icons.Default.Verified
+                        },
                     contentDescription = null,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (exercise.isCustom) stringResource(R.string.custom) else stringResource(
-                        R.string.built_in
-                    ),
+                    text =
+                        if (exercise.isCustom) {
+                            stringResource(R.string.custom)
+                        } else {
+                            stringResource(
+                                R.string.built_in
+                            )
+                        },
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center
                 )
@@ -136,9 +154,10 @@ fun ExerciseInfo(exercise: ExerciseModel) {
         Spacer(modifier = Modifier.height(16.dp))
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                )
         ) {
             Column(
                 modifier = Modifier.padding(12.dp)

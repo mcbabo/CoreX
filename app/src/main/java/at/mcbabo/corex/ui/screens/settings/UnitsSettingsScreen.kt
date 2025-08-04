@@ -31,36 +31,35 @@ import at.mcbabo.corex.ui.components.PreferencesHintCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UnitsSettingsScreen(
-    onNavigateBack: () -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel()
-) {
+fun UnitsSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
             rememberTopAppBarState(),
-            canScroll = { true },
+            canScroll = { true }
         )
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = {
                     Text(modifier = Modifier, text = stringResource(R.string.units))
                 },
                 navigationIcon = { BackButton(onNavigateBack) },
-                scrollBehavior = scrollBehavior,
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
+            modifier =
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
         ) {
             PreferencesHintCard(
                 title = "Under development",

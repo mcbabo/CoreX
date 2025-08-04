@@ -37,14 +37,12 @@ import at.mcbabo.corex.ui.components.PreferenceSwitchWithDivider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GeneralSettingsScreen(
-    onNavigateBack: () -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel()
-) {
+fun GeneralSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        rememberTopAppBarState()
-    )
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+            rememberTopAppBarState()
+        )
     var showDialog by remember { mutableStateOf(false) }
 
     val blurRadius by animateDpAsState(
@@ -54,22 +52,24 @@ fun GeneralSettingsScreen(
     )
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .blur(blurRadius)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .blur(blurRadius)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.general)) },
                 navigationIcon = { BackButton(onNavigateBack) },
-                scrollBehavior = scrollBehavior,
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
+            modifier =
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
         ) {
             PreferenceNumberSetting(
                 title = stringResource(R.string.default_reps),
@@ -89,7 +89,11 @@ fun GeneralSettingsScreen(
 
             PreferenceSwitchWithDivider(
                 title = stringResource(R.string.daily_reminder),
-                description = "${stringResource(R.string.daily_reminder_desc)} (${settings.reminderTime})",
+                description = "${
+                    stringResource(
+                        R.string.daily_reminder_desc
+                    )
+                } (${settings.reminderTime})",
                 icon = Icons.Outlined.Notifications,
                 isChecked = settings.notificationsEnabled,
                 onChecked = { viewModel.toggleNotifications() },

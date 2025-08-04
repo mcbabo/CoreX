@@ -5,10 +5,12 @@ sealed class Screen(val route: String) {
 
     // EXERCISES
     object Exercises : Screen(route = "exercises_screen")
+
     object CreateExercise : Screen(route = "create_exercise_screen")
 
     // WORKOUTS
     object CreateWorkout : Screen(route = "create_workout_screen")
+
     object EditWorkout : Screen(route = "edit_workout_screen/{workoutId}") {
         fun passWorkoutId(workoutId: Long) = "edit_workout_screen/$workoutId"
     }
@@ -19,9 +21,14 @@ sealed class Screen(val route: String) {
 
     // SETTINGS
     object SettingsGraph : Screen(route = "settings_graph")
+
     object Settings : Screen(route = "settings_screen")
+
     object GeneralSettings : Screen(route = "general_settings_screen")
+
     object AppearanceSettings : Screen(route = "appearance_settings_screen")
+
     object LanguageSettings : Screen(route = "language_settings_screen")
+
     object UnitsSettings : Screen(route = "units_settings_screen")
 }

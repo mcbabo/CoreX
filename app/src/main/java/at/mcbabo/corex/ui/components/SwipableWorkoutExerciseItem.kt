@@ -71,17 +71,23 @@ fun SwipeableWorkoutExerciseCard(
             val direction = dismissState.dismissDirection
 
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp),
-                contentAlignment = when (direction) {
-                    SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
-                    SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
-                    else -> Alignment.Center
-                }
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp),
+                contentAlignment =
+                    when (direction) {
+                        SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+                        SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+                        else -> Alignment.Center
+                    }
             ) {
                 Icon(
-                    imageVector = if (!exercise.workoutExercise.isCompleted) Icons.Default.Check else Icons.Default.Close,
+                    imageVector = if (!exercise.workoutExercise.isCompleted) {
+                        Icons.Default.Check
+                    } else {
+                        Icons.Default.Close
+                    },
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
@@ -90,23 +96,26 @@ fun SwipeableWorkoutExerciseCard(
         }
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .combinedClickable(
-                    onClick = onClick,
-                    onLongClick = { showWeightDialog = true },
-                )
-                .background(
-                    if (exercise.workoutExercise.isCompleted)
-                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-                    else
-                        MaterialTheme.colorScheme.surface
-                ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .combinedClickable(
+                        onClick = onClick,
+                        onLongClick = { showWeightDialog = true }
+                    )
+                    .background(
+                        if (exercise.workoutExercise.isCompleted) {
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        }
+                    )
         ) {
             Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .alpha(if (exercise.workoutExercise.isCompleted) 0.6f else 1f)
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .alpha(if (exercise.workoutExercise.isCompleted) 0.6f else 1f)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -124,22 +133,26 @@ fun SwipeableWorkoutExerciseCard(
                             Text(
                                 text = exercise.exercise.name,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Medium,
+                                fontWeight = FontWeight.Medium
                             )
                             Text(
-                                "${exercise.workoutExercise.targetSets ?: 0} ${stringResource(R.string.sets)} x ${exercise.workoutExercise.targetReps ?: 0} ${
+                                "${exercise.workoutExercise.targetSets ?: 0} ${
+                                    stringResource(
+                                        R.string.sets
+                                    )
+                                } x ${exercise.workoutExercise.targetReps ?: 0} ${
                                     stringResource(
                                         R.string.reps
                                     )
                                 }",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.bodySmall
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
                                 "${stringResource(R.string.weight)}: ${
                                     exercise.workoutExercise.targetWeight ?: 0.0F
                                 }kg",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.bodySmall
                             )
                         }
                     }

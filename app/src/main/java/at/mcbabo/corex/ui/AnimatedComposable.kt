@@ -13,7 +13,7 @@ import at.mcbabo.corex.ui.motion.materialSharedAxisXOut
 
 const val DURATION_ENTER = 400
 const val DURATION_EXIT = 200
-const val initialOffset = 0.10f
+const val INITIAL_OFFSET = 0.10f
 
 private val fadeTween = tween<Float>(durationMillis = DURATION_EXIT)
 
@@ -21,7 +21,7 @@ fun NavGraphBuilder.animatedComposable(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
 ) {
     animatedComposablePredictiveBack(route, arguments, deepLinks, content)
 }
@@ -30,24 +30,22 @@ fun NavGraphBuilder.animatedComposablePredictiveBack(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
-) =
-    composable(
-        route = route,
-        arguments = arguments,
-        deepLinks = deepLinks,
-        enterTransition = {
-            materialSharedAxisXIn(initialOffsetX = { (it * initialOffset).toInt() })
-        },
-        exitTransition = {
-            materialSharedAxisXOut(targetOffsetX = { -(it * initialOffset).toInt() })
-        },
-        popEnterTransition = {
-            materialSharedAxisXIn(initialOffsetX = { -(it * initialOffset).toInt() })
-        },
-        popExitTransition = {
-            materialSharedAxisXOut(targetOffsetX = { (it * initialOffset).toInt() })
-        },
-        content = content,
-    )
-
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
+) = composable(
+    route = route,
+    arguments = arguments,
+    deepLinks = deepLinks,
+    enterTransition = {
+        materialSharedAxisXIn(initialOffsetX = { (it * INITIAL_OFFSET).toInt() })
+    },
+    exitTransition = {
+        materialSharedAxisXOut(targetOffsetX = { -(it * INITIAL_OFFSET).toInt() })
+    },
+    popEnterTransition = {
+        materialSharedAxisXIn(initialOffsetX = { -(it * INITIAL_OFFSET).toInt() })
+    },
+    popExitTransition = {
+        materialSharedAxisXOut(targetOffsetX = { (it * INITIAL_OFFSET).toInt() })
+    },
+    content = content
+)

@@ -23,19 +23,21 @@ fun ExerciseListItem(
     onLongPress: () -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongPress
-            )
-            .then(modifier),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = onLongPress
+                )
+                .then(modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ExerciseAvatar(exercise.name)
         Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 10.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Text(text = exercise.name)
             Text(

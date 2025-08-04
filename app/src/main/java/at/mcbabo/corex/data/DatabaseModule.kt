@@ -18,24 +18,22 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): GymDatabase {
-        return Room.databaseBuilder(
+    fun provideDatabase(@ApplicationContext context: Context): GymDatabase = Room
+        .databaseBuilder(
             context.applicationContext,
             GymDatabase::class.java,
             "fitness_database"
-        )
-            .addCallback(object : RoomDatabase.Callback() {
+        ).addCallback(
+            object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     // Pre-populate with default exercises using raw SQL
                     insertDefaultExercises(db)
                 }
-            })
-            .build()
-    }
+            }
+        ).build()
 
     @Provides
     fun provideWorkoutDao(database: GymDatabase): WorkoutDao = database.workoutDao()
@@ -44,10 +42,8 @@ object DatabaseModule {
     fun provideExerciseDao(database: GymDatabase): ExerciseDao = database.exerciseDao()
 
     @Provides
-    fun provideWorkoutExerciseDao(database: GymDatabase): WorkoutExerciseDao =
-        database.workoutExerciseDao()
+    fun provideWorkoutExerciseDao(database: GymDatabase): WorkoutExerciseDao = database.workoutExerciseDao()
 
     @Provides
-    fun provideWeightProgressionDao(database: GymDatabase): WeightProgressionDao =
-        database.weightProgressionDao()
+    fun provideWeightProgressionDao(database: GymDatabase): WeightProgressionDao = database.weightProgressionDao()
 }

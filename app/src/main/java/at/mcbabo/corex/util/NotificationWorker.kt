@@ -29,15 +29,13 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class NotificationWorker(
-    private val appContext: Context,
-    private val workerParams: WorkerParameters
-) : CoroutineWorker(appContext, workerParams) {
-
+class NotificationWorker(private val appContext: Context, private val workerParams: WorkerParameters) :
+    CoroutineWorker(appContext, workerParams) {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface NotificationWorkerEntryPoint {
         fun workoutRepository(): WorkoutRepository
+
         fun settingsRepository(): SettingsRepository
     }
 
@@ -48,10 +46,11 @@ class NotificationWorker(
 
     override suspend fun doWork(): Result {
         return try {
-            val entryPoint = EntryPointAccessors.fromApplication(
-                appContext,
-                NotificationWorkerEntryPoint::class.java
-            )
+            val entryPoint =
+                EntryPointAccessors.fromApplication(
+                    appContext,
+                    NotificationWorkerEntryPoint::class.java
+                )
             val workoutRepository = entryPoint.workoutRepository()
             val settingsRepository = entryPoint.settingsRepository()
 
@@ -70,22 +69,23 @@ class NotificationWorker(
             // Log the scheduled time for debugging
             Log.d(
                 "NotificationWorker",
-                "Running notification worker scheduled for ${hour}:${minute}"
+                "Running notification worker scheduled for $hour:$minute"
             )
 
-            val data = withContext(Dispatchers.IO) {
-                val today = LocalDate.now().dayOfWeek.value
+            val data =
+                withContext(Dispatchers.IO) {
+                    val today = LocalDate.now().dayOfWeek.value
 
-                Log.d("NotificationWorker", "Fetching workouts for weekday: $today")
-                val workouts = workoutRepository.getWorkoutsByWeekday(today)
-                Log.d("NotificationWorker", "Fetched ${workouts.size} workouts for today")
+                    Log.d("NotificationWorker", "Fetching workouts for weekday: $today")
+                    val workouts = workoutRepository.getWorkoutsByWeekday(today)
+                    Log.d("NotificationWorker", "Fetched ${workouts.size} workouts for today")
 
-                if (workouts.isEmpty()) {
-                    null
-                } else {
-                    workouts.joinToString(separator = "\n") { it.name }
+                    if (workouts.isEmpty()) {
+                        null
+                    } else {
+                        workouts.joinToString(separator = "\n") { it.name }
+                    }
                 }
-            }
 
             if (!data.isNullOrEmpty()) {
                 createNotificationChannel()
@@ -110,9 +110,10 @@ class NotificationWorker(
         val name = "Workout Reminders"
         val descriptionText = "Daily workout reminder notifications"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-            description = descriptionText
-        }
+        val channel =
+            NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
 
         val notificationManager =
             appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -123,33 +124,37 @@ class NotificationWorker(
         val notificationManager =
             appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val intent = Intent(appContext, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
+        val intent =
+            Intent(appContext, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
 
-        val pendingIntent = PendingIntent.getActivity(
-            appContext,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent =
+            PendingIntent.getActivity(
+                appContext,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
 
-        val notification = NotificationCompat.Builder(appContext, CHANNEL_ID)
-            .setSmallIcon(R.drawable.corex)
-            .setContentText("${appContext.getString(R.string.daily_workout)}: $data")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .build()
+        val notification =
+            NotificationCompat
+                .Builder(appContext, CHANNEL_ID)
+                .setSmallIcon(R.drawable.corex)
+                .setContentText("${appContext.getString(R.string.daily_workout)}: $data")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 }
 
 @Singleton
-class NotificationScheduler @Inject constructor(
-    private val settingsRepository: SettingsRepository
-) {
+class NotificationScheduler
+@Inject
+constructor(private val settingsRepository: SettingsRepository) {
     companion object {
         private const val WORK_NAME = "notification_work"
     }
@@ -163,11 +168,13 @@ class NotificationScheduler @Inject constructor(
             "Scheduling daily work for ${"%02d:%02d".format(hour, minute)}"
         )
 
-        val dailyWork = PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS)
-            .setInitialDelay(calculateInitialDelay(hour, minute), TimeUnit.MILLISECONDS)
-            .build()
+        val dailyWork =
+            PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS)
+                .setInitialDelay(calculateInitialDelay(hour, minute), TimeUnit.MILLISECONDS)
+                .build()
 
-        WorkManager.getInstance(context)
+        WorkManager
+            .getInstance(context)
             .enqueueUniquePeriodicWork(
                 WORK_NAME,
                 ExistingPeriodicWorkPolicy.REPLACE,
@@ -185,14 +192,12 @@ class NotificationScheduler @Inject constructor(
         scheduleDailyWork(context)
     }
 
-    private fun parseReminderTime(reminderTime: String): Pair<Int, Int> {
-        return try {
-            val parts = reminderTime.split(":")
-            Pair(parts[0].toInt(), parts[1].toInt())
-        } catch (e: Exception) {
-            Log.e("NotificationScheduler", "Error parsing reminder time: $reminderTime", e)
-            Pair(9, 0) // Default to 9:00 AM
-        }
+    private fun parseReminderTime(reminderTime: String): Pair<Int, Int> = try {
+        val parts = reminderTime.split(":")
+        Pair(parts[0].toInt(), parts[1].toInt())
+    } catch (e: Exception) {
+        Log.e("NotificationScheduler", "Error parsing reminder time: $reminderTime", e)
+        Pair(9, 0) // Default to 9:00 AM
     }
 
     private fun calculateInitialDelay(targetHour: Int, targetMinute: Int): Long {

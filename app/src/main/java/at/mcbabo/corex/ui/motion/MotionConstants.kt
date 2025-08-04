@@ -4,6 +4,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object MotionConstants {
-    const val DefaultMotionDuration: Int = 300
-    val DefaultSlideDistance: Dp = 30.dp
+    const val DEFAULT_MOTION_DURATION: Int = 300
+    val DEFAULT_SLIDE_DISTANCE: Dp = 30.dp
 }

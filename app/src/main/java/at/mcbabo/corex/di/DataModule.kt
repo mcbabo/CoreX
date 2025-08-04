@@ -13,20 +13,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
+    @Provides
+    @Singleton
+    fun provideSettingsDataStore(@ApplicationContext context: Context): SettingsDataStore = SettingsDataStore(context)
 
     @Provides
     @Singleton
-    fun provideSettingsDataStore(
-        @ApplicationContext context: Context
-    ): SettingsDataStore {
-        return SettingsDataStore(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideSettingsRepository(
-        settingsDataStore: SettingsDataStore
-    ): SettingsRepository {
-        return SettingsRepository(settingsDataStore)
-    }
+    fun provideSettingsRepository(settingsDataStore: SettingsDataStore): SettingsRepository =
+        SettingsRepository(settingsDataStore)
 }

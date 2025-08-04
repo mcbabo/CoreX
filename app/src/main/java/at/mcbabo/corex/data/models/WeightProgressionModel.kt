@@ -27,5 +27,5 @@ data class WeightProgressionModel(
     val exerciseId: Long,
     val weight: Float,
     val date: Date = Date(),
-    val notes: String? = null // optional notes for this specific weight entry
+    val notes: String? = null
 )

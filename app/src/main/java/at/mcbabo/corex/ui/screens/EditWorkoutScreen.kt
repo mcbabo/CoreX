@@ -68,11 +68,12 @@ fun EditWorkoutScreen(
     val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
 
-    val weekdays = remember {
-        DayOfWeek.entries.associateWith {
-            it.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    val weekdays =
+        remember {
+            DayOfWeek.entries.associateWith {
+                it.getDisplayName(TextStyle.FULL, Locale.getDefault())
+            }
         }
-    }
 
 // Initialize with default values
     var selectedDayOfWeek by remember { mutableStateOf<DayOfWeek?>(LocalDate.now().dayOfWeek) }
@@ -116,12 +117,12 @@ fun EditWorkoutScreen(
 
             val selectedIds = selectedExercises.map { it.id }.toSet()
 
-            allExercises.asSequence()
+            allExercises
+                .asSequence()
                 .filter { it.id !in selectedIds }
                 .filter { exercise ->
                     selectedMuscleGroup?.let { exercise.muscleGroup == it } != false
-                }
-                .toList()
+                }.toList()
         }
     }
 
@@ -142,14 +143,16 @@ fun EditWorkoutScreen(
             val selectedExerciseIds = selectedExercises.map { it.id }.toSet()
 
             // Find exercises to remove (in original but not in selected)
-            val exercisesToRemove = currentWorkout.exercises.filter {
-                it.exercise.id !in selectedExerciseIds
-            }
+            val exercisesToRemove =
+                currentWorkout.exercises.filter {
+                    it.exercise.id !in selectedExerciseIds
+                }
 
             // Find exercises to add (in selected but not in original)
-            val exercisesToAdd = selectedExercises.filter {
-                it.id !in originalExerciseIds
-            }
+            val exercisesToAdd =
+                selectedExercises.filter {
+                    it.id !in originalExerciseIds
+                }
 
             // Delete removed workout exercises
             exercisesToRemove.forEach { workoutExercise ->
@@ -195,16 +198,18 @@ fun EditWorkoutScreen(
             }
         } else {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 workout?.let { workout ->
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
                     ) {
                         Text(
                             text = "Workout Details",
@@ -214,16 +219,18 @@ fun EditWorkoutScreen(
                         )
 
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
                         ) {
                             OutlinedTextField(
                                 value = workoutName,
                                 onValueChange = { workoutName = it },
                                 label = { Text("Workout Name") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 12.dp),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 12.dp),
                                 singleLine = true
                             )
                         }
@@ -238,12 +245,13 @@ fun EditWorkoutScreen(
                                 onValueChange = {},
                                 readOnly = true,
                                 label = { Text(stringResource(R.string.weekday)) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(
-                                        ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                                        true
-                                    ),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .menuAnchor(
+                                            ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                            true
+                                        ),
                                 trailingIcon = {
                                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                                 }
@@ -265,20 +273,21 @@ fun EditWorkoutScreen(
                             }
                         }
                     }
-
                 } ?: run {
                     Text(text = "Loading workout details...")
                 }
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 4.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -289,7 +298,11 @@ fun EditWorkoutScreen(
                         )
 
                         Text(
-                            text = "${selectedExercises.size} ${stringResource(R.string.exercises)}",
+                            text = "${selectedExercises.size} ${
+                                stringResource(
+                                    R.string.exercises
+                                )
+                            }",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -321,8 +334,9 @@ fun EditWorkoutScreen(
                             text = stringResource(R.string.add_exercise),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .padding(bottom = 12.dp)
+                            modifier =
+                                Modifier
+                                    .padding(bottom = 12.dp)
                         )
 
                         // Muscle Group Filter
@@ -333,19 +347,23 @@ fun EditWorkoutScreen(
                             modifier = Modifier.padding(bottom = 12.dp)
                         ) {
                             OutlinedTextField(
-                                value = selectedMuscleGroup
-                                    ?: stringResource(R.string.all_muscle_groups),
+                                value =
+                                    selectedMuscleGroup
+                                        ?: stringResource(R.string.all_muscle_groups),
                                 onValueChange = {},
                                 readOnly = true,
                                 label = { Text(stringResource(R.string.filter_by_muscle_group)) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(
-                                        ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                                        true
-                                    ),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .menuAnchor(
+                                            ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                            true
+                                        ),
                                 trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = muscleGroupExpanded)
+                                    ExposedDropdownMenuDefaults.TrailingIcon(
+                                        expanded = muscleGroupExpanded
+                                    )
                                 }
                             )
 
@@ -379,11 +397,12 @@ fun EditWorkoutScreen(
                         if (availableExercises.isEmpty()) {
                             item {
                                 Text(
-                                    text = if (selectedMuscleGroup != null) {
-                                        stringResource(R.string.no_filter_match)
-                                    } else {
-                                        stringResource(R.string.all_exercises_added)
-                                    },
+                                    text =
+                                        if (selectedMuscleGroup != null) {
+                                            stringResource(R.string.no_filter_match)
+                                        } else {
+                                            stringResource(R.string.all_exercises_added)
+                                        },
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(16.dp)

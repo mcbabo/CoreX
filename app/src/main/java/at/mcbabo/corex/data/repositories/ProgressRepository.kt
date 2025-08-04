@@ -9,21 +9,24 @@ import javax.inject.Inject
 interface ProgressRepository {
     // Basic progression operations
     fun getProgressionsForExercise(workoutExerciseId: Long): Flow<List<WeightProgressionModel>>
+
     suspend fun getLatestProgression(workoutExerciseId: Long): WeightProgressionModel?
+
     suspend fun addProgression(progression: WeightProgressionModel): Long
+
     suspend fun updateProgression(progression: WeightProgressionModel)
+
     suspend fun deleteProgression(progression: WeightProgressionModel)
 
     // Analytics and insights
     suspend fun getProgressStats(workoutExerciseId: Long): ProgressStats
+
     suspend fun getProgressTrend(workoutExerciseId: Long, days: Int = 30): ProgressTrend
+
     suspend fun getPersonalRecords(): List<PersonalRecord>
 
     // Date-based queries
-    suspend fun getProgressionsByDateRange(
-        startDate: Date,
-        endDate: Date
-    ): List<WeightProgressionModel>
+    suspend fun getProgressionsByDateRange(startDate: Date, endDate: Date): List<WeightProgressionModel>
 
     suspend fun getWeeklyProgress(): List<WeeklyProgressSummary>
 }
@@ -36,19 +39,11 @@ data class ProgressStats(
     val lastRecorded: Date?
 )
 
-data class ProgressTrend(
-    val direction: TrendDirection,
-    val changePercentage: Float,
-    val isConsistent: Boolean
-)
+data class ProgressTrend(val direction: TrendDirection, val changePercentage: Float, val isConsistent: Boolean)
 
 enum class TrendDirection { IMPROVING, DECLINING, STABLE }
 
-data class PersonalRecord(
-    val weight: Float,
-    val date: Date,
-    val notes: String?
-)
+data class PersonalRecord(val weight: Float, val date: Date, val notes: String?)
 
 data class WeeklyProgressSummary(
     val weekStart: Date,
@@ -57,21 +52,18 @@ data class WeeklyProgressSummary(
     val maxWeight: Float
 )
 
-class ProgressRepositoryImpl @Inject constructor(
-    private val progressionDao: WeightProgressionDao
-) : ProgressRepository {
+class ProgressRepositoryImpl
+@Inject
+constructor(private val progressionDao: WeightProgressionDao) :
+    ProgressRepository {
+    override fun getProgressionsForExercise(workoutExerciseId: Long): Flow<List<WeightProgressionModel>> =
+        progressionDao.getProgressionsByWorkoutExercise(workoutExerciseId)
 
-    override fun getProgressionsForExercise(workoutExerciseId: Long): Flow<List<WeightProgressionModel>> {
-        return progressionDao.getProgressionsByWorkoutExercise(workoutExerciseId)
-    }
+    override suspend fun getLatestProgression(workoutExerciseId: Long): WeightProgressionModel? =
+        progressionDao.getLatestProgression(workoutExerciseId)
 
-    override suspend fun getLatestProgression(workoutExerciseId: Long): WeightProgressionModel? {
-        return progressionDao.getLatestProgression(workoutExerciseId)
-    }
-
-    override suspend fun addProgression(progression: WeightProgressionModel): Long {
-        return progressionDao.insertWeightProgression(progression)
-    }
+    override suspend fun addProgression(progression: WeightProgressionModel): Long =
+        progressionDao.insertWeightProgression(progression)
 
     override suspend fun updateProgression(progression: WeightProgressionModel) {
         progressionDao.updateWeightProgression(progression)
@@ -86,11 +78,14 @@ class ProgressRepositoryImpl @Inject constructor(
         val avgWeight = progressionDao.getAverageWeight(workoutExerciseId)
         val recentProgressions = progressionDao.getRecentProgressions(workoutExerciseId, 10)
 
-        val improvementRate = if (recentProgressions.size >= 2) {
-            val oldestWeight = recentProgressions.last().weight
-            val newestWeight = recentProgressions.first().weight
-            (newestWeight - oldestWeight) / recentProgressions.size
-        } else 0f
+        val improvementRate =
+            if (recentProgressions.size >= 2) {
+                val oldestWeight = recentProgressions.last().weight
+                val newestWeight = recentProgressions.first().weight
+                (newestWeight - oldestWeight) / recentProgressions.size
+            } else {
+                0f
+            }
 
         return ProgressStats(
             maxWeight = maxWeight,
@@ -116,11 +111,12 @@ class ProgressRepositoryImpl @Inject constructor(
 
         val changePercentage = ((recentAvg - olderAvg) / olderAvg * 100).toFloat()
 
-        val direction = when {
-            changePercentage > 5 -> TrendDirection.IMPROVING
-            changePercentage < -5 -> TrendDirection.DECLINING
-            else -> TrendDirection.STABLE
-        }
+        val direction =
+            when {
+                changePercentage > 5 -> TrendDirection.IMPROVING
+                changePercentage < -5 -> TrendDirection.DECLINING
+                else -> TrendDirection.STABLE
+            }
 
         return ProgressTrend(direction, changePercentage, true)
     }
@@ -130,12 +126,8 @@ class ProgressRepositoryImpl @Inject constructor(
         return emptyList()
     }
 
-    override suspend fun getProgressionsByDateRange(
-        startDate: Date,
-        endDate: Date
-    ): List<WeightProgressionModel> {
-        return progressionDao.getProgressionsByDateRange(startDate, endDate)
-    }
+    override suspend fun getProgressionsByDateRange(startDate: Date, endDate: Date): List<WeightProgressionModel> =
+        progressionDao.getProgressionsByDateRange(startDate, endDate)
 
     override suspend fun getWeeklyProgress(): List<WeeklyProgressSummary> {
         // Implementation would group progressions by week

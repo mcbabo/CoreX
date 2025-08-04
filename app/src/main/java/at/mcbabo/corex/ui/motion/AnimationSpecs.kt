@@ -11,4 +11,3 @@ private val path =
     }
 
 val EmphasizeEasing = PathEasing(path)
-

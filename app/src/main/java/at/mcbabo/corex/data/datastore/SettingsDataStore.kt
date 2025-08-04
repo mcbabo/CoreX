@@ -21,35 +21,39 @@ private val Context.settingsDataStore: DataStore<Preferences> by preferencesData
 )
 
 @Singleton
-class SettingsDataStore @Inject constructor(
-    private val context: Context
-) {
-    private val json = Json {
-        ignoreUnknownKeys = true
-        encodeDefaults = true
-    }
+class SettingsDataStore
+@Inject
+constructor(private val context: Context) {
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+        }
 
     companion object {
         private val SETTINGS_JSON_KEY = stringPreferencesKey("settings_json")
     }
 
-    val settingsFlow: Flow<AppSettings> = context.settingsDataStore.data
-        .catch { exception ->
-            // Handle any errors gracefully
-            emit(androidx.datastore.preferences.core.emptyPreferences())
-        }
-        .map { preferences ->
-            val settingsJson = preferences[SETTINGS_JSON_KEY]
-            if (settingsJson != null) {
-                try {
-                    json.decodeFromString<AppSettings>(settingsJson)
-                } catch (e: Exception) {
-                    AppSettings() // Return defaults if parsing fails
+    val settingsFlow: Flow<AppSettings> =
+        context.settingsDataStore.data
+            .catch { exception ->
+                // Handle any errors gracefully
+                emit(
+                    androidx.datastore.preferences.core
+                        .emptyPreferences()
+                )
+            }.map { preferences ->
+                val settingsJson = preferences[SETTINGS_JSON_KEY]
+                if (settingsJson != null) {
+                    try {
+                        json.decodeFromString<AppSettings>(settingsJson)
+                    } catch (e: Exception) {
+                        AppSettings() // Return defaults if parsing fails
+                    }
+                } else {
+                    AppSettings() // Return defaults if no settings exist
                 }
-            } else {
-                AppSettings() // Return defaults if no settings exist
             }
-        }
 
     suspend fun updateSettings(settings: AppSettings) {
         context.settingsDataStore.edit { preferences ->
@@ -60,20 +64,20 @@ class SettingsDataStore @Inject constructor(
     suspend fun updateSettings(update: (AppSettings) -> AppSettings) {
         context.settingsDataStore.edit { preferences ->
             val currentSettingsJson = preferences[SETTINGS_JSON_KEY]
-            val currentSettings = if (currentSettingsJson != null) {
-                try {
-                    json.decodeFromString<AppSettings>(currentSettingsJson)
-                } catch (e: Exception) {
+            val currentSettings =
+                if (currentSettingsJson != null) {
+                    try {
+                        json.decodeFromString<AppSettings>(currentSettingsJson)
+                    } catch (e: Exception) {
+                        AppSettings()
+                    }
+                } else {
                     AppSettings()
                 }
-            } else {
-                AppSettings()
-            }
 
             val updatedSettings = update(currentSettings)
             preferences[SETTINGS_JSON_KEY] = json.encodeToString(updatedSettings)
             Log.d("SETTINGS", json.encodeToString(updatedSettings))
-
         }
     }
 }

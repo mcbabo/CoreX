@@ -63,11 +63,12 @@ fun CreateWorkoutScreen(
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
     // Workout basic info
-    val weekdays = remember {
-        DayOfWeek.entries.associateWith {
-            it.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    val weekdays =
+        remember {
+            DayOfWeek.entries.associateWith {
+                it.getDisplayName(TextStyle.FULL, Locale.getDefault())
+            }
         }
-    }
 
     var selectedDayOfWeek by remember { mutableStateOf<DayOfWeek?>(LocalDate.now().dayOfWeek) }
     val selectedWeekday = selectedDayOfWeek?.let { weekdays[it] } ?: ""
@@ -89,12 +90,12 @@ fun CreateWorkoutScreen(
 
             val selectedIds = selectedExercises.map { it.id }.toSet()
 
-            allExercises.asSequence()
+            allExercises
+                .asSequence()
                 .filter { it.id !in selectedIds }
                 .filter { exercise ->
                     selectedMuscleGroup?.let { exercise.muscleGroup == it } != false
-                }
-                .toList()
+                }.toList()
         }
     }
 
@@ -122,15 +123,17 @@ fun CreateWorkoutScreen(
                                 isCreating = true
 
                                 coroutineScope.launch {
-                                    workoutViewModel.createWorkoutWithExercises(
-                                        workoutName,
-                                        selectedDayOfWeek?.value ?: LocalDate.now().dayOfWeek.value,
-                                        selectedExercises
-                                    ).onSuccess {
-                                        navController.popBackStack()
-                                    }.onFailure {
-                                        // Show error
-                                    }
+                                    workoutViewModel
+                                        .createWorkoutWithExercises(
+                                            workoutName,
+                                            selectedDayOfWeek?.value
+                                                ?: LocalDate.now().dayOfWeek.value,
+                                            selectedExercises
+                                        ).onSuccess {
+                                            navController.popBackStack()
+                                        }.onFailure {
+                                            // Show error
+                                        }
                                     isCreating = false
                                 }
                             }
@@ -156,17 +159,19 @@ fun CreateWorkoutScreen(
             }
         } else {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(vertical = 4.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(vertical = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Workout Info Section
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                 ) {
                     Text(
                         text = "Workout Details",
@@ -179,9 +184,10 @@ fun CreateWorkoutScreen(
                         value = workoutName,
                         onValueChange = { workoutName = it },
                         label = { Text("Workout Name") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 12.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp),
                         singleLine = true
                     )
 
@@ -195,9 +201,13 @@ fun CreateWorkoutScreen(
                             onValueChange = {},
                             readOnly = true,
                             label = { Text(stringResource(R.string.weekday)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(
+                                        ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                        true
+                                    ),
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                             }
@@ -218,18 +228,19 @@ fun CreateWorkoutScreen(
                             }
                         }
                     }
-
                 }
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 4.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -240,7 +251,11 @@ fun CreateWorkoutScreen(
                         )
 
                         Text(
-                            text = "${selectedExercises.size} ${stringResource(R.string.exercises)}",
+                            text = "${selectedExercises.size} ${
+                                stringResource(
+                                    R.string.exercises
+                                )
+                            }",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -273,8 +288,9 @@ fun CreateWorkoutScreen(
                             text = stringResource(R.string.add_exercise),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .padding(bottom = 12.dp)
+                            modifier =
+                                Modifier
+                                    .padding(bottom = 12.dp)
                         )
 
                         // Muscle Group Filter
@@ -285,19 +301,23 @@ fun CreateWorkoutScreen(
                             modifier = Modifier.padding(bottom = 12.dp)
                         ) {
                             OutlinedTextField(
-                                value = selectedMuscleGroup
-                                    ?: stringResource(R.string.all_muscle_groups),
+                                value =
+                                    selectedMuscleGroup
+                                        ?: stringResource(R.string.all_muscle_groups),
                                 onValueChange = {},
                                 readOnly = true,
                                 label = { Text(stringResource(R.string.filter_by_muscle_group)) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(
-                                        ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                                        true
-                                    ),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .menuAnchor(
+                                            ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                            true
+                                        ),
                                 trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = muscleGroupExpanded)
+                                    ExposedDropdownMenuDefaults.TrailingIcon(
+                                        expanded = muscleGroupExpanded
+                                    )
                                 }
                             )
 
@@ -331,11 +351,12 @@ fun CreateWorkoutScreen(
                         if (availableExercises.isEmpty()) {
                             item {
                                 Text(
-                                    text = if (selectedMuscleGroup != null) {
-                                        stringResource(R.string.no_filter_match)
-                                    } else {
-                                        stringResource(R.string.all_exercises_added)
-                                    },
+                                    text =
+                                        if (selectedMuscleGroup != null) {
+                                            stringResource(R.string.no_filter_match)
+                                        } else {
+                                            stringResource(R.string.all_exercises_added)
+                                        },
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(16.dp)

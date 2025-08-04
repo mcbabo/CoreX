@@ -29,6 +29,8 @@
     <string name="default_sets">Default Sets</string>
     <string name="default_sets_desc">Default number of sets per exercise</string>
     <string name="delete">Delete</string>
+    <string name="delete_workout">Delete Workout</string>
+    <string name="delete_workout_desc">If you delete this workout, all associated exercises will also be removed. Are you sure you want to proceed?</string>
     <string name="description">Description</string>
     <string name="dynamic_color">Dynamic Color</string>
     <string name="dynamic_color_desc">Apply colors from wallpapers to the app theme</string>

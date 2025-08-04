@@ -85,77 +85,61 @@ fun WorkoutScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(workout?.workout?.name ?: "")
-                        workout?.workout?.weekday?.let { weekday ->
-                            Text(
-                                text = DayOfWeek.of(weekday)
-                                    .getDisplayName(TextStyle.FULL, Locale.getDefault()),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+            TopAppBar(title = {
+                Column {
+                    Text(workout?.workout?.name ?: "")
+                    workout?.workout?.weekday?.let { weekday ->
+                        Text(
+                            text = DayOfWeek.of(weekday).getDisplayName(TextStyle.FULL, Locale.getDefault()),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        workoutViewModel.resetWorkoutProgress(
-                            workout?.workout?.id ?: 0
-                        )
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.LocalFireDepartment,
-                            contentDescription = "Clear all Completed Exercises"
-                        )
-                    }
-
-                    // More options menu
-                    var showMenu by remember { mutableStateOf(false) }
-                    Box {
-                        IconButton(onClick = { showMenu = true }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "More Options"
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Edit Workout") },
-                                onClick = {
-                                    showMenu = false
-                                    navController.navigate(
-                                        route = Screen.EditWorkout.passWorkoutId(
-                                            workoutId
-                                        )
-                                    )
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Delete Workout") },
-                                onClick = {
-                                    showMenu = false
-                                    openAlertDialog.value = true
-                                }
-                            )
-                        }
                     }
                 }
-            )
-        }
-    ) { paddingValues ->
+            }, navigationIcon = {
+                IconButton(onClick = { onNavigateBack() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back"
+                    )
+                }
+            }, actions = {
+                IconButton(onClick = {
+                    workoutViewModel.resetWorkoutProgress(
+                        workout?.workout?.id ?: 0
+                    )
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.LocalFireDepartment,
+                        contentDescription = "Clear all Completed Exercises"
+                    )
+                }
+
+                // More options menu
+                var showMenu by remember { mutableStateOf(false) }
+                Box {
+                    IconButton(onClick = { showMenu = true }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert, contentDescription = "More Options"
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                        DropdownMenuItem(text = { Text("Edit Workout") }, onClick = {
+                            showMenu = false
+                            navController.navigate(
+                                route = Screen.EditWorkout.passWorkoutId(
+                                    workoutId
+                                )
+                            )
+                        })
+                        DropdownMenuItem(text = { Text("Delete Workout") }, onClick = {
+                            showMenu = false
+                            openAlertDialog.value = true
+                        })
+                    }
+                }
+            })
+        }) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -182,7 +166,11 @@ fun WorkoutScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${workoutData.exercises.size} ${stringResource(R.string.exercises)}",
+                            text = "${workoutData.exercises.size} ${
+                                stringResource(
+                                    R.string.exercises
+                                )
+                            }",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -192,35 +180,23 @@ fun WorkoutScreen(
                 if (workoutData.exercises.isEmpty()) {
                     item {
                         EmptyExercisesState(
-                            onAddExercise = { showAddExerciseDialog = true }
-                        )
+                            onAddExercise = { showAddExerciseDialog = true })
                     }
                 } else {
                     items(
-                        items = workoutData.exercises,
-                        key = { it.workoutExercise.id }
-                    ) { exercise ->
-                        SwipeableWorkoutExerciseCard(
-                            exercise = exercise,
-                            onClick = {
-                                selectedExercise = exercise
-                                showBottomSheet = true
-                            },
-                            onMarkCompleted = { isCompleted ->
-                                workoutViewModel.markExerciseCompleted(
-                                    exercise.workoutExercise.id,
-                                    isCompleted
-                                )
-                            },
-                            onRecordWeight = { weight, notes ->
-                                workoutViewModel.recordWeight(
-                                    exercise.workoutExercise.id,
-                                    exercise.exercise.id,
-                                    weight,
-                                    notes
-                                )
-                            }
-                        )
+                        items = workoutData.exercises, key = { it.workoutExercise.id }) { exercise ->
+                        SwipeableWorkoutExerciseCard(exercise = exercise, onClick = {
+                            selectedExercise = exercise
+                            showBottomSheet = true
+                        }, onMarkCompleted = { isCompleted ->
+                            workoutViewModel.markExerciseCompleted(
+                                exercise.workoutExercise.id, isCompleted
+                            )
+                        }, onRecordWeight = { weight, notes ->
+                            workoutViewModel.recordWeight(
+                                exercise.workoutExercise.id, exercise.exercise.id, weight, notes
+                            )
+                        })
                     }
                 }
 
@@ -233,8 +209,7 @@ fun WorkoutScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
+                            .padding(32.dp), contentAlignment = Alignment.Center
                     ) {
                         LoadingIndicator()
                     }
@@ -248,11 +223,10 @@ fun WorkoutScreen(
             onDismissRequest = {
                 showBottomSheet = false
                 selectedExercise = null
-            },
-            sheetState = bottomSheetState
+            }, sheetState = bottomSheetState
         ) {
             WorkoutExerciseDetailBottomSheet(
-                workoutExercise = selectedExercise!!,
+                workoutExercise = selectedExercise!!
             )
         }
     }
@@ -265,32 +239,26 @@ fun WorkoutScreen(
             onConfirmation = {
                 workoutViewModel.deleteWorkout(
                     WorkoutModel(
-                        workout?.workout?.id ?: 0,
-                        workout?.workout?.name ?: "",
-                        workout?.workout?.weekday ?: 0,
-                        true
+                        workout?.workout?.id ?: 0, workout?.workout?.name ?: "", workout?.workout?.weekday ?: 0, true
                     )
                 )
                 openAlertDialog.value = false
                 navController.popBackStack()
             },
-            dialogTitle = "Delete Workout",
-            dialogText = "If you delete this workout, all associated exercises will also be removed. Are you sure you want to proceed?",
+            dialogTitle = stringResource(R.string.delete_workout),
+            dialogText = stringResource(R.string.delete_workout_desc),
             icon = Icons.Default.Info
         )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun WorkoutSummaryCard(
-    workout: Workout
-) {
+fun WorkoutSummaryCard(workout: Workout) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
     ) {
         Column {
             Text(
@@ -304,26 +272,24 @@ fun WorkoutSummaryCard(
             // Progress indicator
             val completedExercises = workout.exercises.count { it.workoutExercise.isCompleted }
             val totalExercises = workout.exercises.size
-            val progress =
-                if (totalExercises > 0) completedExercises.toFloat() / totalExercises else 0f
-            val animatedProgress by
-            animateFloatAsState(
-                targetValue = progress,
-                animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+            val progress = if (totalExercises > 0) completedExercises.toFloat() / totalExercises else 0f
+            val animatedProgress by animateFloatAsState(
+                targetValue = progress, animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 LinearProgressIndicator(
-                    progress = { animatedProgress },
-                    modifier = Modifier.weight(1f),
+                    progress = { animatedProgress }, modifier = Modifier.weight(1f)
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "$completedExercises/$totalExercises ${stringResource(R.string.completed)}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "$completedExercises/$totalExercises ${
+                        stringResource(
+                            R.string.completed
+                        )
+                    }", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -331,18 +297,14 @@ fun WorkoutSummaryCard(
 }
 
 @Composable
-fun EmptyExercisesState(
-    onAddExercise: () -> Unit
-) {
+fun EmptyExercisesState(onAddExercise: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 imageVector = Icons.Default.FitnessCenter,
@@ -374,45 +336,31 @@ fun EmptyExercisesState(
     }
 }
 
-
 @Composable
 fun DeleteWorkoutDialog(
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-    dialogTitle: String,
-    dialogText: String,
-    icon: ImageVector,
+    onDismissRequest: () -> Unit, onConfirmation: () -> Unit, dialogTitle: String, dialogText: String, icon: ImageVector
 ) {
-    AlertDialog(
-        icon = {
-            Icon(icon, contentDescription = dialogTitle)
-        },
-        title = {
-            Text(text = dialogTitle)
-        },
-        text = {
-            Text(text = dialogText)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                }
-            ) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                Text("Dismiss")
-            }
+    AlertDialog(icon = {
+        Icon(icon, contentDescription = dialogTitle)
+    }, title = {
+        Text(text = dialogTitle)
+    }, text = {
+        Text(text = dialogText)
+    }, onDismissRequest = {
+        onDismissRequest()
+    }, confirmButton = {
+        TextButton(
+            onClick = {
+                onConfirmation()
+            }) {
+            Text("Confirm")
         }
-    )
+    }, dismissButton = {
+        TextButton(
+            onClick = {
+                onDismissRequest()
+            }) {
+            Text("Dismiss")
+        }
+    })
 }

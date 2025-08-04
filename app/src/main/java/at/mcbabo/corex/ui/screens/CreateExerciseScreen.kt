@@ -45,10 +45,7 @@ import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateExerciseScreen(
-    onNavigateBack: () -> Unit,
-    exerciseViewModel: ExerciseViewModel = hiltViewModel()
-) {
+fun CreateExerciseScreen(onNavigateBack: () -> Unit, exerciseViewModel: ExerciseViewModel = hiltViewModel()) {
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState(initial = emptyList())
     var selectedMuscleGroup = muscleGroups.firstOrNull() ?: ""
 
@@ -92,16 +89,18 @@ fun CreateExerciseScreen(
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(vertical = 4.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(vertical = 4.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
@@ -114,8 +113,9 @@ fun CreateExerciseScreen(
                     value = exerciseName,
                     onValueChange = { exerciseName = it },
                     label = { Text(stringResource(R.string.exercise_name)) },
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                     singleLine = true
                 )
 
@@ -129,9 +129,10 @@ fun CreateExerciseScreen(
                         onValueChange = {},
                         readOnly = true,
                         label = { Text(stringResource(R.string.all_muscle_groups)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                         }
@@ -154,10 +155,11 @@ fun CreateExerciseScreen(
                 }
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                        .defaultMinSize(minHeight = 40.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
+                            .defaultMinSize(minHeight = 40.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -173,26 +175,30 @@ fun CreateExerciseScreen(
                         }
                     },
                     label = { Text(stringResource(R.string.description)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
                     singleLine = false,
                     maxLines = 3
                 )
             }
 
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                ),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    )
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .defaultMinSize(minHeight = 56.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 56.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
@@ -208,9 +214,10 @@ fun CreateExerciseScreen(
                     }
 
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
@@ -223,7 +230,7 @@ fun CreateExerciseScreen(
                             modifier = Modifier.fillMaxWidth(),
                             text = stringResource(R.string.create_exercise_info),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }

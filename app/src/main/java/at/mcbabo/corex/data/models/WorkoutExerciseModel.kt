@@ -31,10 +31,10 @@ data class WorkoutExerciseModel(
     val id: Long = 0,
     val workoutId: Long,
     val exerciseId: Long,
-    val orderIndex: Int, // for ordering exercises within a workout
-    val targetWeight: Float? = null, // user's target weight for this exercise
-    val targetReps: Int? = null, // user's target reps for this exercise
-    val targetSets: Int? = null, // user's target sets for this exercise
-    val notes: String? = null, // user notes for this specific exercise in this workout
-    val isCompleted: Boolean = false // track if exercise was completed in current session
+    val orderIndex: Int,
+    val targetWeight: Float? = null,
+    val targetReps: Int? = null,
+    val targetSets: Int? = null,
+    val notes: String? = null,
+    val isCompleted: Boolean = false
 )

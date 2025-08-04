@@ -10,46 +10,43 @@ import javax.inject.Inject
 interface ExerciseRepository {
     // Basic exercise operations
     fun getAllExercises(): Flow<List<ExerciseModel>>
+
     suspend fun getExerciseById(id: Long): ExerciseModel?
+
     suspend fun createExercise(exercise: ExerciseModel): Long
+
     suspend fun updateExercise(exercise: ExerciseModel)
+
     suspend fun deleteExercise(exercise: ExerciseModel)
 
     // Filtered queries
     fun getExercisesByMuscleGroup(muscleGroup: String): Flow<List<ExerciseModel>>
+
     fun getCustomExercises(): Flow<List<ExerciseModel>>
+
     fun getBuiltInExercises(): Flow<List<ExerciseModel>>
+
     fun getBodyWeightExercises(): Flow<List<ExerciseModel>>
 
     // Search and discovery
     suspend fun searchExercises(query: String): List<ExerciseModel>
+
     suspend fun getAllMuscleGroups(): List<String>
 
     // Quick actions
-    suspend fun createCustomExercise(
-        name: String,
-        muscleGroup: String,
-        description: String? = null
-    ): Long
+    suspend fun createCustomExercise(name: String, muscleGroup: String, description: String? = null): Long
 
     suspend fun toggleFavorite(exerciseId: Long)
 }
 
-class ExerciseRepositoryImpl @Inject constructor(
-    private val exerciseDao: ExerciseDao
-) : ExerciseRepository {
+class ExerciseRepositoryImpl
+@Inject
+constructor(private val exerciseDao: ExerciseDao) : ExerciseRepository {
+    override fun getAllExercises(): Flow<List<ExerciseModel>> = exerciseDao.getAllExercises()
 
-    override fun getAllExercises(): Flow<List<ExerciseModel>> {
-        return exerciseDao.getAllExercises()
-    }
+    override suspend fun getExerciseById(id: Long): ExerciseModel? = exerciseDao.getExerciseById(id)
 
-    override suspend fun getExerciseById(id: Long): ExerciseModel? {
-        return exerciseDao.getExerciseById(id)
-    }
-
-    override suspend fun createExercise(exercise: ExerciseModel): Long {
-        return exerciseDao.insertExercise(exercise)
-    }
+    override suspend fun createExercise(exercise: ExerciseModel): Long = exerciseDao.insertExercise(exercise)
 
     override suspend fun updateExercise(exercise: ExerciseModel) {
         exerciseDao.updateExercise(exercise)
@@ -59,47 +56,34 @@ class ExerciseRepositoryImpl @Inject constructor(
         exerciseDao.deleteExercise(exercise)
     }
 
-    override fun getExercisesByMuscleGroup(muscleGroup: String): Flow<List<ExerciseModel>> {
-        return exerciseDao.getExercisesByMuscleGroup(muscleGroup)
+    override fun getExercisesByMuscleGroup(muscleGroup: String): Flow<List<ExerciseModel>> =
+        exerciseDao.getExercisesByMuscleGroup(muscleGroup)
+
+    override fun getCustomExercises(): Flow<List<ExerciseModel>> = exerciseDao.getExercisesByCustom(true)
+
+    override fun getBuiltInExercises(): Flow<List<ExerciseModel>> = exerciseDao.getExercisesByCustom(false)
+
+    override fun getBodyWeightExercises(): Flow<List<ExerciseModel>> = exerciseDao.getAllExercises().map { exercises ->
+        exercises.filter { it.isBodyWeight }
     }
 
-    override fun getCustomExercises(): Flow<List<ExerciseModel>> {
-        return exerciseDao.getExercisesByCustom(true)
-    }
-
-    override fun getBuiltInExercises(): Flow<List<ExerciseModel>> {
-        return exerciseDao.getExercisesByCustom(false)
-    }
-
-    override fun getBodyWeightExercises(): Flow<List<ExerciseModel>> {
-        return exerciseDao.getAllExercises().map { exercises ->
-            exercises.filter { it.isBodyWeight }
-        }
-    }
-
-    override suspend fun searchExercises(query: String): List<ExerciseModel> {
-        return exerciseDao.getAllExercises().first().filter { exercise ->
+    override suspend fun searchExercises(query: String): List<ExerciseModel> =
+        exerciseDao.getAllExercises().first().filter { exercise ->
             exercise.name.contains(query, ignoreCase = true) ||
                     exercise.muscleGroup.contains(query, ignoreCase = true) ||
                     exercise.description?.contains(query, ignoreCase = true) == true
         }
-    }
 
-    override suspend fun getAllMuscleGroups(): List<String> {
-        return exerciseDao.getAllMuscleGroups()
-    }
+    override suspend fun getAllMuscleGroups(): List<String> = exerciseDao.getAllMuscleGroups()
 
-    override suspend fun createCustomExercise(
-        name: String,
-        muscleGroup: String,
-        description: String?
-    ): Long {
-        val exercise = ExerciseModel(
-            name = name,
-            muscleGroup = muscleGroup,
-            description = description,
-            isCustom = true
-        )
+    override suspend fun createCustomExercise(name: String, muscleGroup: String, description: String?): Long {
+        val exercise =
+            ExerciseModel(
+                name = name,
+                muscleGroup = muscleGroup,
+                description = description,
+                isCustom = true
+            )
         return exerciseDao.insertExercise(exercise)
     }
 

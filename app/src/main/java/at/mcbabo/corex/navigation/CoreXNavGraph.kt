@@ -22,10 +22,7 @@ import at.mcbabo.corex.ui.screens.settings.appearance.AppearanceSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.appearance.LanguageSettingsScreen
 
 @Composable
-fun CoreXNavGraph(
-    navController: NavHostController,
-    startDestination: Screen = Screen.Home
-) {
+fun CoreXNavGraph(navController: NavHostController, startDestination: Screen = Screen.Home) {
     NavHost(
         navController = navController,
         startDestination = startDestination.route
@@ -43,7 +40,6 @@ fun CoreXNavGraph(
         animatedComposable(
             route = Screen.WorkoutDetail.route,
             arguments = listOf(navArgument("workoutId") { type = NavType.LongType })
-
         ) { backStackEntry ->
             val workoutId = backStackEntry.arguments?.getLong("workoutId") ?: 0
             WorkoutScreen(
@@ -80,10 +76,7 @@ fun CoreXNavGraph(
     }
 }
 
-fun NavGraphBuilder.settings(
-    navController: NavController,
-    onNavigateBack: () -> Unit
-) {
+fun NavGraphBuilder.settings(navController: NavController, onNavigateBack: () -> Unit) {
     navigation(
         startDestination = Screen.Settings.route,
         route = Screen.SettingsGraph.route

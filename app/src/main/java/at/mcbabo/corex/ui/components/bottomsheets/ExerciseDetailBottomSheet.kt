@@ -37,9 +37,10 @@ fun ExerciseDetailBottomSheet(
     onAddToWorkout: (ExerciseModel) -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
     ) {
         ExerciseInfo(exercise)
 
@@ -83,9 +84,10 @@ fun ExerciseDetailBottomSheet(
                         onDelete(exercise)
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    ),
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        ),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
                 ) {
                     Icon(

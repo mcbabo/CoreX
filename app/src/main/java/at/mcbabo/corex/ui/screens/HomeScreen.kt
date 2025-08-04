@@ -44,12 +44,8 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun HomeScreen(
-    navController: NavController,
-    workoutViewModel: WorkoutViewModel = hiltViewModel()
-) {
+fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel = hiltViewModel()) {
     val workouts by workoutViewModel.getWorkoutSummaries().collectAsState(initial = emptyList())
-
 
     val today = LocalDate.now().dayOfWeek.value
     val todayWorkouts = workouts.filter { it.weekday == today }
@@ -61,40 +57,48 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.my_workouts)) },
                 actions = {
-                    IconButton(onClick = { navController.navigate(route = Screen.Exercises.route) }) {
+                    IconButton(onClick = {
+                        navController.navigate(route = Screen.Exercises.route)
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Category,
-                            contentDescription = "Localized description",
+                            contentDescription = "Localized description"
                         )
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(route = Screen.SettingsGraph.route) }) {
+                    IconButton(onClick = {
+                        navController.navigate(route = Screen.SettingsGraph.route)
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
-                            contentDescription = "Settings",
+                            contentDescription = "Settings"
                         )
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(route = Screen.CreateWorkout.route) }) {
+            FloatingActionButton(onClick = {
+                navController.navigate(route = Screen.CreateWorkout.route)
+            }) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
         ) {
             if (workouts.isEmpty()) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .padding(bottom = 64.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(16.dp)
+                            .padding(bottom = 64.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -119,18 +123,18 @@ fun HomeScreen(
                     )
                 }
             } else {
-
                 if (todayWorkouts.isNotEmpty()) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = stringResource(R.string.todays_workouts),
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
 
@@ -149,21 +153,23 @@ fun HomeScreen(
                                         )
                                     )
                                 },
-                                {})
+                                {}
+                            )
                         }
                     }
                 }
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = stringResource(R.string.workouts),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium
                     )
                     Text(
                         text = "${workouts.size} ${stringResource(R.string.workouts)}",
@@ -185,7 +191,8 @@ fun HomeScreen(
                                     )
                                 )
                             },
-                            {})
+                            {}
+                        )
                     }
                 }
             }

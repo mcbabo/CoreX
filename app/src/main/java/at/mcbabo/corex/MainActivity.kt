@@ -35,34 +35,33 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    //lateinit var navController: NavHostController
-
     @Inject
     lateinit var settingsRepository: SettingsRepository
 
     @Inject
     lateinit var notificationScheduler: NotificationScheduler
 
-    private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        lifecycleScope.launch {
-            if (isGranted) {
-                Log.d("Permission", "Notification permission granted")
+    private val notificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            lifecycleScope.launch {
+                if (isGranted) {
+                    Log.d("Permission", "Notification permission granted")
 
-                settingsRepository.updateSettings { settings ->
-                    settings.copy(notificationsEnabled = true)
-                }
-                scheduleNotifications()
-            } else {
-                Log.d("Permission", "Notification permission denied")
+                    settingsRepository.updateSettings { settings ->
+                        settings.copy(notificationsEnabled = true)
+                    }
+                    scheduleNotifications()
+                } else {
+                    Log.d("Permission", "Notification permission denied")
 
-                settingsRepository.updateSettings { settings ->
-                    settings.copy(notificationsEnabled = false)
+                    settingsRepository.updateSettings { settings ->
+                        settings.copy(notificationsEnabled = false)
+                    }
                 }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,11 +83,12 @@ class MainActivity : AppCompatActivity() {
                 initialValue = AppSettings()
             )
 
-            val isDarkTheme = when (settings.selectedTheme) {
-                ThemeMode.LIGHT -> false
-                ThemeMode.DARK -> true
-                ThemeMode.SYSTEM -> isSystemInDarkTheme()
-            }
+            val isDarkTheme =
+                when (settings.selectedTheme) {
+                    ThemeMode.LIGHT -> false
+                    ThemeMode.DARK -> true
+                    ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                }
 
             val dynamicColorsEnabled = settings.dynamicColors
 
@@ -108,10 +108,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkNotificationPermission() {
-        when (ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.POST_NOTIFICATIONS
-        )) {
+        when (
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        ) {
             PackageManager.PERMISSION_GRANTED -> {
                 Log.d("Permission", "Notification permission already granted")
                 scheduleNotifications()
@@ -139,9 +141,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun SystemBarsTheme(
-    backgroundColor: Color = MaterialTheme.colorScheme.background
-) {
+fun SystemBarsTheme(backgroundColor: Color = MaterialTheme.colorScheme.background) {
     val activity = LocalActivity.current
 
     LaunchedEffect(backgroundColor) {

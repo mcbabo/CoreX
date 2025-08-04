@@ -21,7 +21,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
+class SettingsViewModel
+@Inject
+constructor(
     application: Application,
     private val settingsRepository: SettingsRepository,
     private val notificationScheduler: NotificationScheduler
@@ -29,12 +31,13 @@ class SettingsViewModel @Inject constructor(
     private val appContext = application.applicationContext
 
     // Expose settings as StateFlow for Compose
-    val settings: StateFlow<AppSettings> = settingsRepository.settingsFlow
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = AppSettings()
-        )
+    val settings: StateFlow<AppSettings> =
+        settingsRepository.settingsFlow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = AppSettings()
+            )
 
     fun setTheme(theme: ThemeMode) {
         viewModelScope.launch {
@@ -48,7 +51,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    /* TODO() */
+    // TODO()
     fun setWeightUnit(unit: WeightUnit) {
         viewModelScope.launch {
             settingsRepository.setWeightUnit(unit)

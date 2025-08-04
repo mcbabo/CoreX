@@ -44,9 +44,7 @@ import at.mcbabo.corex.ui.components.SettingItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    navController: NavController,
-    onNavigateBack: () -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel(),
+    navController: NavController, onNavigateBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -64,21 +62,16 @@ fun SettingsScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back"
                         )
                     }
-                }
-            )
-
-        }
-    ) { innerPadding ->
+                })
+        }) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-
             if (settings.notificationsEnabled) {
                 item {
                     BatteryOptimizationWarning()
@@ -89,7 +82,7 @@ fun SettingsScreen(
                 SettingItem(
                     title = stringResource(R.string.general),
                     description = stringResource(R.string.general_desc),
-                    icon = Icons.Outlined.Settings,
+                    icon = Icons.Outlined.Settings
                 ) {
                     navController.navigate(route = Screen.GeneralSettings.route)
                 }
@@ -99,7 +92,7 @@ fun SettingsScreen(
                 SettingItem(
                     title = stringResource(R.string.appearance),
                     description = stringResource(R.string.appearance_desc),
-                    icon = Icons.Outlined.Palette,
+                    icon = Icons.Outlined.Palette
                 ) {
                     navController.navigate(route = Screen.AppearanceSettings.route)
                 }
@@ -109,7 +102,7 @@ fun SettingsScreen(
                 SettingItem(
                     title = stringResource(R.string.units),
                     description = stringResource(R.string.units_desc),
-                    icon = Icons.Outlined.TypeSpecimen,
+                    icon = Icons.Outlined.TypeSpecimen
                 ) {
                     navController.navigate(route = Screen.UnitsSettings.route)
                 }
@@ -118,11 +111,9 @@ fun SettingsScreen(
             item {
                 SettingItem(
                     title = "Debug Info",
-                    description = "Version Name : ${BuildConfig.VERSION_NAME} | Version Code : ${BuildConfig.VERSION_CODE}",
-                    icon = Icons.Outlined.BugReport,
-                ) {
-
-                }
+                    description = "Version Name : ${BuildConfig.VERSION_NAME}" + " | Version Code : ${BuildConfig.VERSION_CODE}",
+                    icon = Icons.Outlined.BugReport
+                ) {}
             }
         }
     }
