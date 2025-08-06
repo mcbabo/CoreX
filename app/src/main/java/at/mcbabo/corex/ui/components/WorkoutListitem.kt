@@ -47,8 +47,9 @@ fun WorkoutListItem(
             Text(text = workout.name)
             Text(
                 "${
-                    DayOfWeek.of(workout.weekday)
-                        .getDisplayName(TextStyle.FULL, Locale.getDefault())
+                    workout.weekdays.joinToString(", ") {
+                        DayOfWeek.of(it).getDisplayName(TextStyle.FULL, Locale.getDefault())
+                    }
                 } - ${workout.exerciseCount} ${stringResource(R.string.exercises)}",
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,

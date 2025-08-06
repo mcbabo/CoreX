@@ -12,12 +12,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
@@ -45,14 +41,14 @@ import androidx.navigation.NavController
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.models.WorkoutModel
+import at.mcbabo.corex.data.models.toWeekdayInts
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.ui.components.ExerciseListItem
+import at.mcbabo.corex.ui.components.FilterChips
 import at.mcbabo.corex.ui.components.SelectedExerciseItem
+import at.mcbabo.corex.ui.components.WeekdaySelector
 import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -68,20 +64,19 @@ fun EditWorkoutScreen(
     val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
 
-    val weekdays =
-        remember {
-            DayOfWeek.entries.associateWith {
-                it.getDisplayName(TextStyle.FULL, Locale.getDefault())
-            }
-        }
+    var selectedWeekdays by remember(workout) {
+        mutableStateOf<Set<DayOfWeek>>(
+            workout?.weekdays?.map { weekdayModel ->
+                DayOfWeek.of(weekdayModel.weekday % 7)
+            }?.toSet() ?: emptySet()
+        )
+    }
 
-// Initialize with default values
-    var selectedDayOfWeek by remember { mutableStateOf<DayOfWeek?>(LocalDate.now().dayOfWeek) }
     var workoutName by remember { mutableStateOf("") }
     var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
     var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
 
-// Update state when workout data becomes available
+    // Update state when workout data becomes available
     LaunchedEffect(workout) {
         workout?.let { workoutData ->
             // Only update if not already set (to avoid overwriting user changes)
@@ -89,17 +84,11 @@ fun EditWorkoutScreen(
                 workoutName = workoutData.workout.name
             }
 
-            if (selectedDayOfWeek == LocalDate.now().dayOfWeek) {
-                selectedDayOfWeek = DayOfWeek.of(workoutData.workout.weekday)
-            }
-
             if (selectedExercises.isEmpty()) {
                 selectedExercises = workoutData.exercises.map { it.exercise }
             }
         }
     }
-
-    val selectedWeekday = selectedDayOfWeek?.let { weekdays[it] } ?: ""
 
     // Initialize selectedExercises with workout exercises when workout is available
     LaunchedEffect(workout) {
@@ -134,9 +123,9 @@ fun EditWorkoutScreen(
             workoutViewModel.updateWorkout(
                 WorkoutModel(
                     id = currentWorkout.workout.id,
-                    name = workoutName,
-                    weekday = selectedDayOfWeek?.value ?: LocalDate.now().dayOfWeek.value
-                )
+                    name = workoutName
+                ),
+                selectedWeekdays.toWeekdayInts()
             )
 
             val originalExerciseIds = currentWorkout.exercises.map { it.exercise.id }.toSet()
@@ -230,48 +219,15 @@ fun EditWorkoutScreen(
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
-                                        .padding(bottom = 12.dp),
+                                        .padding(bottom = 8.dp),
                                 singleLine = true
                             )
                         }
 
-                        var expanded by remember { mutableStateOf(false) }
-                        ExposedDropdownMenuBox(
-                            expanded = expanded,
-                            onExpandedChange = { expanded = !expanded }
-                        ) {
-                            OutlinedTextField(
-                                value = selectedWeekday,
-                                onValueChange = {},
-                                readOnly = true,
-                                label = { Text(stringResource(R.string.weekday)) },
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .menuAnchor(
-                                            ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                                            true
-                                        ),
-                                trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                                }
-                            )
-
-                            ExposedDropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                weekdays.forEach { (dayOfWeek, name) ->
-                                    DropdownMenuItem(
-                                        text = { Text(name) },
-                                        onClick = {
-                                            selectedDayOfWeek = dayOfWeek
-                                            expanded = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                        WeekdaySelector(
+                            selectedDays = selectedWeekdays,
+                            onSelectionChanged = { selectedWeekdays = it }
+                        )
                     }
                 } ?: run {
                     Text(text = "Loading workout details...")
@@ -324,101 +280,51 @@ fun EditWorkoutScreen(
                     }
                 }
 
-                Column(
-                    modifier = Modifier.fillMaxWidth()
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    ) {
+                    item {
                         Text(
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             text = stringResource(R.string.add_exercise),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            modifier =
-                                Modifier
-                                    .padding(bottom = 12.dp)
+                            fontWeight = FontWeight.Bold
                         )
-
-                        // Muscle Group Filter
-                        var muscleGroupExpanded by remember { mutableStateOf(false) }
-                        ExposedDropdownMenuBox(
-                            expanded = muscleGroupExpanded,
-                            onExpandedChange = { muscleGroupExpanded = !muscleGroupExpanded },
-                            modifier = Modifier.padding(bottom = 12.dp)
-                        ) {
-                            OutlinedTextField(
-                                value =
-                                    selectedMuscleGroup
-                                        ?: stringResource(R.string.all_muscle_groups),
-                                onValueChange = {},
-                                readOnly = true,
-                                label = { Text(stringResource(R.string.filter_by_muscle_group)) },
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .menuAnchor(
-                                            ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                                            true
-                                        ),
-                                trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(
-                                        expanded = muscleGroupExpanded
-                                    )
-                                }
-                            )
-
-                            ExposedDropdownMenu(
-                                expanded = muscleGroupExpanded,
-                                onDismissRequest = { muscleGroupExpanded = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.all_muscle_groups)) },
-                                    onClick = {
-                                        selectedMuscleGroup = null
-                                        muscleGroupExpanded = false
-                                    }
-                                )
-                                muscleGroups.forEach { muscleGroup ->
-                                    DropdownMenuItem(
-                                        text = { Text(muscleGroup) },
-                                        onClick = {
-                                            selectedMuscleGroup = muscleGroup
-                                            muscleGroupExpanded = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
                     }
 
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        if (availableExercises.isEmpty()) {
-                            item {
-                                Text(
-                                    text =
-                                        if (selectedMuscleGroup != null) {
-                                            stringResource(R.string.no_filter_match)
-                                        } else {
-                                            stringResource(R.string.all_exercises_added)
-                                        },
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                            }
-                        } else {
-                            items(availableExercises) { exercise ->
-                                ExerciseListItem(
-                                    exercise,
-                                    Modifier.padding(horizontal = 16.dp),
-                                    onClick = {
-                                        selectedExercises = selectedExercises + exercise
+                    item {
+                        FilterChips(
+                            muscleGroups = muscleGroups,
+                            selectedGroup = selectedMuscleGroup,
+                            onGroupSelected = { selectedMuscleGroup = it },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+
+                    if (availableExercises.isEmpty()) {
+                        item {
+                            Text(
+                                text =
+                                    if (selectedMuscleGroup != null) {
+                                        stringResource(R.string.no_filter_match)
+                                    } else {
+                                        stringResource(R.string.all_exercises_added)
                                     },
-                                    {}
-                                )
-                            }
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    } else {
+                        items(availableExercises) { exercise ->
+                            ExerciseListItem(
+                                exercise,
+                                Modifier.padding(horizontal = 16.dp),
+                                onClick = {
+                                    selectedExercises = selectedExercises + exercise
+                                },
+                                {}
+                            )
                         }
                     }
                 }

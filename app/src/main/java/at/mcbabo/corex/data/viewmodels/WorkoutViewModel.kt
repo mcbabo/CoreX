@@ -13,12 +13,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WorkoutViewModel
-@Inject
-constructor(private val workoutRepository: WorkoutRepository) : ViewModel() {
-    suspend fun createWorkoutWithExercises(name: String, weekday: Int, exercises: List<ExerciseModel>): Result<Long> =
+class WorkoutViewModel @Inject constructor(private val workoutRepository: WorkoutRepository) : ViewModel() {
+    suspend fun createWorkoutWithExercises(
+        name: String,
+        weekdays: List<Int>,
+        exercises: List<ExerciseModel>
+    ): Result<Long> =
         try {
-            val workoutId = createWorkoutAndGetId(name, weekday)
+            val workoutId = workoutRepository.insertWorkoutWithWeekdays(
+                WorkoutModel(
+                    name = name,
+                    isActive = true
+                ),
+                weekdays = weekdays
+            )
             exercises.forEachIndexed { index, exercise ->
                 addExerciseToWorkout(workoutId, exercise.id)
             }
@@ -33,9 +41,10 @@ constructor(private val workoutRepository: WorkoutRepository) : ViewModel() {
         }
     }
 
-    fun updateWorkout(workout: WorkoutModel) {
+    fun updateWorkout(workout: WorkoutModel, weekdays: List<Int>) {
         viewModelScope.launch {
             workoutRepository.updateWorkout(workout)
+            workoutRepository.updateWorkoutWeekdays(workout.id, weekdays)
         }
     }
 
@@ -76,14 +85,4 @@ constructor(private val workoutRepository: WorkoutRepository) : ViewModel() {
     }
 
     fun getWorkoutSummaries(): Flow<List<WorkoutSummary>> = workoutRepository.getWorkoutSummaries()
-
-    suspend fun createWorkoutAndGetId(name: String, weekday: Int): Long {
-        val workout =
-            WorkoutModel(
-                name = name,
-                weekday = weekday,
-                isActive = true
-            )
-        return workoutRepository.createWorkout(workout)
-    }
 }

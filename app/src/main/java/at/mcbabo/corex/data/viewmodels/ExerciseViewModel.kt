@@ -13,9 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ExerciseViewModel
-@Inject
-constructor(private val exerciseRepository: ExerciseRepository) : ViewModel() {
+class ExerciseViewModel @Inject constructor(private val exerciseRepository: ExerciseRepository) : ViewModel() {
     // Cache the muscle groups immediately
     private val _muscleGroups = MutableStateFlow<List<String>>(emptyList())
     val muscleGroups = _muscleGroups.asStateFlow()
@@ -23,10 +21,8 @@ constructor(private val exerciseRepository: ExerciseRepository) : ViewModel() {
     private val _selectedMuscleGroup = MutableStateFlow<String?>(null)
     val selectedMuscleGroup = _selectedMuscleGroup.asStateFlow()
 
-    // Get all exercises WITHOUT filtering - let the screen handle filtering
     val allExercises: Flow<List<ExerciseModel>> = exerciseRepository.getAllExercises()
 
-    // Keep the filtered version if you need it elsewhere
     val exercises: Flow<List<ExerciseModel>> =
         combine(
             allExercises,
@@ -38,7 +34,6 @@ constructor(private val exerciseRepository: ExerciseRepository) : ViewModel() {
         }
 
     init {
-        // Load muscle groups immediately when ViewModel is created
         loadMuscleGroups()
     }
 

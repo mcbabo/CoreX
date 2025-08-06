@@ -21,9 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel
-@Inject
-constructor(
+class SettingsViewModel @Inject constructor(
     application: Application,
     private val settingsRepository: SettingsRepository,
     private val notificationScheduler: NotificationScheduler

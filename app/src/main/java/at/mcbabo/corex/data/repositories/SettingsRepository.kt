@@ -11,9 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsRepository
-@Inject
-constructor(private val settingsDataStore: SettingsDataStore) {
+class SettingsRepository @Inject constructor(private val settingsDataStore: SettingsDataStore) {
     // Expose settings as Flow for reactive UI
     val settingsFlow: Flow<AppSettings> = settingsDataStore.settingsFlow
 

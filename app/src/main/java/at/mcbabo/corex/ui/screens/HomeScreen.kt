@@ -48,7 +48,7 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
     val workouts by workoutViewModel.getWorkoutSummaries().collectAsState(initial = emptyList())
 
     val today = LocalDate.now().dayOfWeek.value
-    val todayWorkouts = workouts.filter { it.weekday == today }
+    val todayWorkouts = workouts.filter { it.weekdays.contains(today) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -138,10 +138,7 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                         )
                     }
 
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
+                    LazyColumn {
                         items(todayWorkouts) { workout ->
                             WorkoutListItem(
                                 workout,
@@ -177,9 +174,8 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
+
+                LazyColumn {
                     items(workouts) { workout ->
                         WorkoutListItem(
                             workout,

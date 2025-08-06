@@ -12,13 +12,15 @@ import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.models.WeightProgressionModel
 import at.mcbabo.corex.data.models.WorkoutExerciseModel
 import at.mcbabo.corex.data.models.WorkoutModel
+import at.mcbabo.corex.data.models.WorkoutWeekdayModel
 
 @Database(
     entities = [
         WorkoutModel::class,
         ExerciseModel::class,
         WorkoutExerciseModel::class,
-        WeightProgressionModel::class
+        WeightProgressionModel::class,
+        WorkoutWeekdayModel::class
     ],
     version = 1,
     exportSchema = false
@@ -33,16 +35,18 @@ abstract class GymDatabase : RoomDatabase() {
 
     abstract fun weightProgressionDao(): WeightProgressionDao
 
+    @Suppress("unused")
     companion object {
+        @Suppress("unused")
         @Volatile
         private var instance: GymDatabase? = null
     }
 
     // Callback for database creation
+    @Suppress("unused")
     private class DatabaseCallback : Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            // You can add initial data here if needed
         }
     }
 }

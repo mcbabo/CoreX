@@ -88,9 +88,11 @@ fun WorkoutScreen(
             TopAppBar(title = {
                 Column {
                     Text(workout?.workout?.name ?: "")
-                    workout?.workout?.weekday?.let { weekday ->
+                    workout?.weekdays?.let { weekdays ->
                         Text(
-                            text = DayOfWeek.of(weekday).getDisplayName(TextStyle.FULL, Locale.getDefault()),
+                            text = weekdays.joinToString(", ") {
+                                DayOfWeek.of(it.weekday).getDisplayName(TextStyle.FULL, Locale.getDefault())
+                            },
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -239,7 +241,7 @@ fun WorkoutScreen(
             onConfirmation = {
                 workoutViewModel.deleteWorkout(
                     WorkoutModel(
-                        workout?.workout?.id ?: 0, workout?.workout?.name ?: "", workout?.workout?.weekday ?: 0, true
+                        workout?.workout?.id ?: 0, workout?.workout?.name ?: "", true
                     )
                 )
                 openAlertDialog.value = false
