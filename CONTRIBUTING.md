@@ -66,7 +66,7 @@ To get your environment ready:
 
 * Use **Kotlin** idiomatic practices
 * Follow **Jetpack Compose best practices** (e.g., composable naming, recomposition optimization)
-* Use `ktlint` or `detekt` for code formatting and linting (if applicable)
+* Use the default **Kotlin code style** settings in Android Studio
 * Ensure **null-safety** and **type-safety**
 
 ---
@@ -96,7 +96,7 @@ To get your environment ready:
 ### Before submitting a PR:
 
 * [ ] Ensure the app compiles
-* [ ] Run tests (`./gradlew test`)
+* [ ] Run tests (`./gradlew test`) if available
 * [ ] Follow the code style guidelines
 * [ ] Document your changes
 
