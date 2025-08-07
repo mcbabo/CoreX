@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.entities.WorkoutSummary
+import java.time.DateTimeException
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
@@ -47,9 +48,13 @@ fun WorkoutListItem(
             Text(text = workout.name)
             Text(
                 "${
-                    workout.weekdays.joinToString(", ") {
-                        DayOfWeek.of(it).getDisplayName(TextStyle.FULL, Locale.getDefault())
-                    }
+                    workout.weekdays.mapNotNull { value ->
+                        try {
+                            DayOfWeek.of(value).getDisplayName(TextStyle.FULL, Locale.getDefault())
+                        } catch (_: DateTimeException) {
+                            null
+                        }
+                    }.joinToString(", ")
                 } - ${workout.exerciseCount} ${stringResource(R.string.exercises)}",
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,

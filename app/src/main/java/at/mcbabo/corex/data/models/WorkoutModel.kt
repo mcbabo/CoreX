@@ -34,13 +34,13 @@ data class WorkoutWeekdayModel(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val workoutId: Long,
-    val weekday: Int // 0: Monday, 1: Tuesday, etc.
+    val weekday: Int
 )
 
 fun List<WorkoutWeekdayModel>.toDayOfWeekSet(): Set<DayOfWeek> {
-    return map { DayOfWeek.of((it.weekday % 7) + 1) }.toSet()
+    return map { DayOfWeek.of(it.weekday % 7) }.toSet()
 }
 
 fun Set<DayOfWeek>.toWeekdayInts(): List<Int> {
-    return map { it.value - 1 }.sorted() // Monday=1 -> 0, Tuesday=2 -> 1, etc.
+    return map { it.value }.sorted()
 }
