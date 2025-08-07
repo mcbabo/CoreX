@@ -23,8 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +42,8 @@ import at.mcbabo.corex.data.viewmodels.SettingsViewModel
 import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.PreferencesHintCard
 import at.mcbabo.corex.ui.components.SettingItem
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,8 +51,28 @@ fun SettingsScreen(
     navController: NavController, onNavigateBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val coroutineScope = rememberCoroutineScope()
 
     val settings by viewModel.settings.collectAsStateWithLifecycle()
+
+    val debugClickCount = remember { mutableIntStateOf(0) }
+
+    val clickThreshold = 5
+    val timeLimit = 2000L // 2 seconds
+
+    fun debugOnClick() {
+        debugClickCount.intValue++
+
+        if (debugClickCount.intValue >= clickThreshold) {
+            viewModel.setDebugModeEnabled(true)
+            debugClickCount.intValue = 0 // Reset the counter
+        }
+
+        coroutineScope.launch {
+            delay(timeLimit)
+            debugClickCount.intValue = 0
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -111,9 +135,12 @@ fun SettingsScreen(
             item {
                 SettingItem(
                     title = "Debug Info",
-                    description = "Version Name : ${BuildConfig.VERSION_NAME}" + " | Version Code : ${BuildConfig.VERSION_CODE}",
+                    description = "Version Name : ${BuildConfig.VERSION_NAME} | Version Code : ${BuildConfig.VERSION_CODE}" +
+                            if (settings.debugModeEnabled) " | Dev Mode" else "",
                     icon = Icons.Outlined.BugReport
-                ) {}
+                ) {
+                    debugOnClick()
+                }
             }
         }
     }

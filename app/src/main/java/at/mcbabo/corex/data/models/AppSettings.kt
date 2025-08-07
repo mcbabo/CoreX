@@ -14,7 +14,9 @@ data class AppSettings(
     val lastSyncTimestamp: Long = 0L,
     // Workout defaults
     val defaultReps: Int = 10,
-    val defaultSets: Int = 3
+    val defaultSets: Int = 3,
+    // Debug mode for development/testing (can be enabled in prod)
+    val debugModeEnabled: Boolean = false
 )
 
 @Serializable

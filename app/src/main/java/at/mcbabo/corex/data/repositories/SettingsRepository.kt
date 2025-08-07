@@ -76,6 +76,10 @@ class SettingsRepository @Inject constructor(private val settingsDataStore: Sett
         updateSettings(AppSettings())
     }
 
+    suspend fun setDebugModeEnabled(enabled: Boolean) {
+        updateSettings { it.copy(debugModeEnabled = enabled) }
+    }
+
     // Check specific conditions
     suspend fun isFirstLaunch(): Boolean = getCurrentSettings().firstLaunch
 }

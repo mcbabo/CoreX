@@ -104,4 +104,10 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
+
+    fun setDebugModeEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDebugModeEnabled(enabled)
+        }
+    }
 }
