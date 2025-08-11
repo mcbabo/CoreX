@@ -1,6 +1,6 @@
 [versions]
 accompanistDrawablepainter = "0.37.3"
-agp = "8.10.1"
+agp = "8.12.0"
 appcompat = "1.7.1"
 composeRememberSetting = "1.0.3"
 coreSplashscreen = "1.0.1"
@@ -72,4 +72,3 @@ work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "w
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
