@@ -56,17 +56,17 @@ at.mcbabo.corex/
 └── MainActivity.kt     # Entry point
 ```
 
-## 🧪 Testing
+## Testing
 
 - No testing yet lol
 
-## 🧰 Requirements
+## Requirements
 
 - Kotlin 2.20.0
 - Gradle 8.0+
 - Minimum SDK 33
 
-## ▶️ Getting Started
+## ▶Getting Started
 
 1. **Clone the repository**
     ```bash
@@ -79,7 +79,7 @@ at.mcbabo.corex/
 
 > Make sure to sync Gradle and have an emulator or device ready.
 
-## 📦 Libraries Used
+## Libraries Used
 
 | Library         | Purpose                    |
 |-----------------|----------------------------|
@@ -89,11 +89,17 @@ at.mcbabo.corex/
 | Coroutines      | Asynchronous programming   |
 | Navigation      | Jetpack Navigation Compose |
 
-## ✍️ Author
+## Author
 
 **mcbabo**  
 [GitHub](https://github.com/mcbabo)
 
-## 📄 License
+## Credits
+
+Huge shoutout to the [Seal](https://github.com/seal) team!
+
+The app is mostly inspired by [Seal](https://github.com/seal) and other Material 3 apps
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
