@@ -28,11 +28,22 @@ libraries, and Compose UI components.
 
 ```
 at.mcbabo.corex/
-├── di/               # Hilt modules
-├── ui/               # Composables and screens
-├── data/             # Repositories, Room, Models
-├── viewmodel/        # ViewModels
-└── MainActivity.kt   # Entry point
+├── data                # Data layer
+│     ├── dao
+│     ├── datastore
+│     ├── entities
+│     ├── models
+│     ├── repositories
+│     └── viewmodels
+├── di                  # Dagger / Hilt
+├── navigation          # Navigation components
+├── ui                  # UI layer
+│     ├── components
+│     ├── motion
+│     ├── screens
+│     └── theme
+├── util                # Utility classes and extensions
+└── MainActivity.kt     # Entry point
 ```
 
 ## 🧪 Testing
