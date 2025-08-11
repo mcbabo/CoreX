@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,6 +40,8 @@ fun LanguageSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewMo
             rememberTopAppBarState(),
             canScroll = { true }
         )
+
+    val localUriHandler = LocalUriHandler.current
 
     Scaffold(
         modifier =
@@ -65,7 +68,11 @@ fun LanguageSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewMo
                 title = stringResource(R.string.translate),
                 description = stringResource(R.string.translate_desc),
                 icon = Icons.Outlined.Translate
-            )
+            ) {
+                localUriHandler.openUri(
+                    "https://github.com/mcbabo/CoreX/blob/main/CONTRIBUTING.md"
+                )
+            }
 
             Language.entries.forEach { language ->
                 PreferenceSingleChoiceItem(
