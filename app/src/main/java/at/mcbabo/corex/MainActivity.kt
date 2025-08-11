@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
@@ -143,10 +145,18 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun SystemBarsTheme(backgroundColor: Color = MaterialTheme.colorScheme.background) {
     val activity = LocalActivity.current
+    val insetsController = WindowCompat.getInsetsController(activity?.window!!, activity.window.decorView)
+    val isLightBackground = backgroundColor.luminance() > 0.5f
 
     LaunchedEffect(backgroundColor) {
-        activity?.window?.setBackgroundDrawable(
+        activity.window?.setBackgroundDrawable(
             backgroundColor.toArgb().toDrawable()
         )
+
+        activity.window.setNavigationBarContrastEnforced(false)
+
+        insetsController.isAppearanceLightStatusBars = isLightBackground
+        insetsController.isAppearanceLightNavigationBars = isLightBackground
     }
 }
+
