@@ -1,13 +1,23 @@
 package at.mcbabo.corex.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,6 +25,7 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -25,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -34,6 +46,7 @@ import androidx.navigation.NavController
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
+import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.ExerciseListItem
 import at.mcbabo.corex.ui.components.FilterChips
@@ -44,9 +57,11 @@ import at.mcbabo.corex.ui.components.bottomsheets.ExerciseDetailBottomSheet
 fun ExercisesScreen(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    exerciseViewModel: ExerciseViewModel = hiltViewModel()
+    exerciseViewModel: ExerciseViewModel = hiltViewModel(),
+    workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
     val exercises by exerciseViewModel.exercises.collectAsState(initial = emptyList())
+    val workouts by workoutViewModel.getWorkoutSummaries().collectAsState(initial = emptyList())
 
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState(initial = emptyList())
 
@@ -57,6 +72,10 @@ fun ExercisesScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    var showDialog by remember { mutableStateOf<Boolean>(false) }
+
+    var checkedWorkouts by remember { mutableStateOf<List<Long>>(emptyList()) }
 
     Scaffold(
         modifier =
@@ -125,7 +144,6 @@ fun ExercisesScreen(
         ModalBottomSheet(
             onDismissRequest = {
                 showBottomSheet = false
-                selectedExercise = null
             },
             sheetState = bottomSheetState
         ) {
@@ -142,11 +160,65 @@ fun ExercisesScreen(
                     selectedExercise = null
                 },
                 onAddToWorkout = { exercise ->
-                    // Navigate to workout selection or add to current workout
-                    showBottomSheet = false
-                    selectedExercise = null
+                    showDialog = true
                 }
             )
         }
     }
+
+    if (showDialog) {
+        BasicAlertDialog(
+            onDismissRequest = { showDialog = false },
+        ) {
+            Surface(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight(),
+                shape = MaterialTheme.shapes.large,
+                tonalElevation = AlertDialogDefaults.TonalElevation
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = stringResource(R.string.add_to_workout),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    LazyColumn {
+                        items(workouts) { workout ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Checkbox(
+                                    checked = checkedWorkouts.contains(workout.id),
+                                    onCheckedChange = {
+                                        checkedWorkouts = if (it) {
+                                            checkedWorkouts + workout.id
+                                        } else {
+                                            checkedWorkouts - workout.id
+                                        }
+                                    },
+                                )
+                                Text(workout.name)
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    TextButton(
+                        onClick = {
+                            checkedWorkouts.forEach { id ->
+                                workoutViewModel.addExerciseToWorkout(id, selectedExercise?.id ?: 0)
+                            }
+                            showDialog = false
+                        },
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text(stringResource(R.string.confirm))
+                    }
+                }
+            }
+        }
+    }
+
 }

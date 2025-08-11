@@ -16,6 +16,7 @@ fun FilterChips(
     muscleGroups: List<String>,
     selectedGroup: String?,
     onGroupSelected: (String?) -> Unit,
+    showAllItem: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -23,12 +24,14 @@ fun FilterChips(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         // "All" chip
-        item {
-            FilterChip(
-                selected = selectedGroup == null,
-                onClick = { onGroupSelected(null) },
-                label = { Text(stringResource(R.string.all)) }
-            )
+        showAllItem.takeIf { it }?.let {
+            item {
+                FilterChip(
+                    selected = selectedGroup == null,
+                    onClick = { onGroupSelected(null) },
+                    label = { Text(stringResource(R.string.all)) }
+                )
+            }
         }
 
         // Muscle group chips

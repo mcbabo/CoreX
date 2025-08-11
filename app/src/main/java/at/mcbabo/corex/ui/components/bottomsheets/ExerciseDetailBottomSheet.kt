@@ -98,6 +98,7 @@ fun ExerciseDetailBottomSheet(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(stringResource(R.string.delete))
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

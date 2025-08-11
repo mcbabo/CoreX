@@ -342,27 +342,34 @@ fun EmptyExercisesState(onAddExercise: () -> Unit) {
 fun DeleteWorkoutDialog(
     onDismissRequest: () -> Unit, onConfirmation: () -> Unit, dialogTitle: String, dialogText: String, icon: ImageVector
 ) {
-    AlertDialog(icon = {
-        Icon(icon, contentDescription = dialogTitle)
-    }, title = {
-        Text(text = dialogTitle)
-    }, text = {
-        Text(text = dialogText)
-    }, onDismissRequest = {
-        onDismissRequest()
-    }, confirmButton = {
-        TextButton(
-            onClick = {
-                onConfirmation()
-            }) {
-            Text("Confirm")
+    AlertDialog(
+        icon = {
+            Icon(icon, contentDescription = dialogTitle)
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }) {
+                Text("Dismiss")
+            }
         }
-    }, dismissButton = {
-        TextButton(
-            onClick = {
-                onDismissRequest()
-            }) {
-            Text("Dismiss")
-        }
-    })
+    )
 }

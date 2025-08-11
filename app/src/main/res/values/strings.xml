@@ -69,4 +69,5 @@
     <string name="weight_progression">Weight Progression</string>
     <string name="workout_progress">Workout Progress</string>
     <string name="workouts">Workouts</string>
+    <string name="confirm">Confirm</string>
 </resources>
