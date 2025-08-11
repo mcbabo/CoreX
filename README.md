@@ -4,6 +4,16 @@ An Android app built using **Kotlin** and **Jetpack Compose** — Android's mode
 building native UIs. This app demonstrates best practices with a clean architecture, modern
 libraries, and Compose UI components.
 
+## Screenshots
+
+<div align="center">
+<img src="images/home_screen.png" width="30%"  alt=""/>
+<img src="images/workout_screen.png" width="30%"  alt=""/>
+<img src="images/create_workout_screen.png" width="30%"  alt=""/>
+<img src="images/exercises_screen.png" width="30%"  alt=""/>
+<img src="images/bottomsheet.png" width="30%"  alt=""/>
+</div>
+
 ## Features
 
 - Jetpack Compose UI
