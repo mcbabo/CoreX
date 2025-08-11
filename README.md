@@ -54,7 +54,7 @@ at.mcbabo.corex/
 
 - Kotlin 2.20.0
 - Gradle 8.0+
-- Minimum SDK 36
+- Minimum SDK 33
 
 ## ▶️ Getting Started
 
