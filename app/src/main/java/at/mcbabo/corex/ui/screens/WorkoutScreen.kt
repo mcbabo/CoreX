@@ -116,7 +116,6 @@ fun WorkoutScreen(
                     )
                 }
 
-                // More options menu
                 var showMenu by remember { mutableStateOf(false) }
                 Box {
                     IconButton(onClick = { showMenu = true }) {
@@ -148,12 +147,10 @@ fun WorkoutScreen(
                 .padding(paddingValues)
         ) {
             workout?.let { workoutData ->
-                // Workout summary header
                 item {
                     WorkoutSummaryCard(workout = workoutData)
                 }
 
-                // Section header
                 item {
                     Row(
                         modifier = Modifier
@@ -271,7 +268,6 @@ fun WorkoutSummaryCard(workout: Workout) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Progress indicator
             val completedExercises = workout.exercises.count { it.workoutExercise.isCompleted }
             val totalExercises = workout.exercises.size
             val progress = if (totalExercises > 0) completedExercises.toFloat() / totalExercises else 0f
@@ -282,16 +278,15 @@ fun WorkoutSummaryCard(workout: Workout) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 LinearProgressIndicator(
-                    progress = { animatedProgress }, modifier = Modifier.weight(1f)
+                    progress = { animatedProgress },
+                    modifier = Modifier.weight(1f)
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "$completedExercises/$totalExercises ${
-                        stringResource(
-                            R.string.completed
-                        )
-                    }", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "$completedExercises/$totalExercises ${stringResource(R.string.completed)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

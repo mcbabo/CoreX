@@ -150,7 +150,6 @@ fun ExercisesScreen(
             ExerciseDetailBottomSheet(
                 exercise = selectedExercise!!,
                 onEdit = { exercise ->
-                    // Navigate to edit exercise screen
                     showBottomSheet = false
                     selectedExercise = null
                 },

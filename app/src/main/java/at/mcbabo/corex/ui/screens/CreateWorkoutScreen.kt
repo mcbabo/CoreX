@@ -70,11 +70,9 @@ fun CreateWorkoutScreen(
     val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
 
-    // Local state for the screen's filtering (separate from ViewModel's filtering)
     var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
     var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
 
-    // Optimized filtering with derivedStateOf
     val availableExercises by remember {
         derivedStateOf {
             if (allExercises.isEmpty()) return@derivedStateOf emptyList()

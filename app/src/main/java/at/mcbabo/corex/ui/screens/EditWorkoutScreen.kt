@@ -76,10 +76,8 @@ fun EditWorkoutScreen(
     var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
     var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
 
-    // Update state when workout data becomes available
     LaunchedEffect(workout) {
         workout?.let { workoutData ->
-            // Only update if not already set (to avoid overwriting user changes)
             if (workoutName.isEmpty()) {
                 workoutName = workoutData.workout.name
             }
@@ -90,7 +88,6 @@ fun EditWorkoutScreen(
         }
     }
 
-    // Initialize selectedExercises with workout exercises when workout is available
     LaunchedEffect(workout) {
         workout?.let { workoutData ->
             if (selectedExercises.isEmpty()) {
@@ -99,7 +96,6 @@ fun EditWorkoutScreen(
         }
     }
 
-    // Optimized filtering with derivedStateOf
     val availableExercises by remember {
         derivedStateOf {
             if (allExercises.isEmpty()) return@derivedStateOf emptyList()
@@ -117,7 +113,6 @@ fun EditWorkoutScreen(
 
     val isLoading = allExercises.isEmpty() && muscleGroups.isEmpty()
 
-    // Function to update the workout with current selected exercises
     fun updateWorkout() {
         workout?.let { currentWorkout ->
             workoutViewModel.updateWorkout(
@@ -131,24 +126,20 @@ fun EditWorkoutScreen(
             val originalExerciseIds = currentWorkout.exercises.map { it.exercise.id }.toSet()
             val selectedExerciseIds = selectedExercises.map { it.id }.toSet()
 
-            // Find exercises to remove (in original but not in selected)
             val exercisesToRemove =
                 currentWorkout.exercises.filter {
                     it.exercise.id !in selectedExerciseIds
                 }
 
-            // Find exercises to add (in selected but not in original)
             val exercisesToAdd =
                 selectedExercises.filter {
                     it.id !in originalExerciseIds
                 }
 
-            // Delete removed workout exercises
             exercisesToRemove.forEach { workoutExercise ->
                 workoutViewModel.removeExerciseFromWorkout(workoutExercise.workoutExercise.id)
             }
 
-            // Create new workout exercises for added exercises
             exercisesToAdd.forEach { exercise ->
                 workoutViewModel.addExerciseToWorkout(workout?.workout?.id ?: 0, exercise.id)
             }
