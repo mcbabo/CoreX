@@ -16,23 +16,29 @@ libraries, and Compose UI components.
 
 ## Features
 
-- Jetpack Compose UI
-- Material3 Components
-- MVVM Architecture
-- Dependency Injection (Hilt)
-- Room database integration
-- Dark & Light theme support
-- Jetpack Navigation
+- Workouts
+- Custom exercises
+- Weight-Progression
+- Push-Notification of today's workout
+- Dynamic theming
 
-## Tech Stack
+## Contributing
 
-- **Language**: Kotlin
-- **UI**: Jetpack Compose
-- **Architecture**: MVVM (Model-View-ViewModel)
-- **DI**: Hilt
-- **Database**: Room
-- **Async**: Kotlin Coroutines
-- **Navigation**: Jetpack Navigation Compose
+Contributions are welcome!
+
+> For submitting bug reports, feature requests, questions, or any other ideas to improve, please
+> read [CONTRIBUTING.md](https://github.com/JunkFood02/Seal/blob/main/CONTRIBUTING.md) for instructions and guidelines
+> first.
+
+## Star History
+
+<a href="https://www.star-history.com/#mcbabo/CoreX&Timeline">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mcbabo/CoreX&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=mcbabo/CoreX&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=mcbabo/CoreX&type=Timeline" />
+ </picture>
+</a>
 
 ## Project Structure
 
@@ -55,39 +61,6 @@ at.mcbabo.corex/
 ├── util                # Utility classes and extensions
 └── MainActivity.kt     # Entry point
 ```
-
-## Testing
-
-- No testing yet lol
-
-## Requirements
-
-- Kotlin 2.20.0
-- Gradle 8.0+
-- Minimum SDK 33
-
-## ▶Getting Started
-
-1. **Clone the repository**
-    ```bash
-    git clone https://github.com/mcbabo/CoreX.git
-    ```
-
-2. **Open in Android Studio**
-
-3. **Build and run**
-
-> Make sure to sync Gradle and have an emulator or device ready.
-
-## Libraries Used
-
-| Library         | Purpose                    |
-|-----------------|----------------------------|
-| Jetpack Compose | UI toolkit                 |
-| Hilt            | Dependency Injection       |
-| Room            | Local database             |
-| Coroutines      | Asynchronous programming   |
-| Navigation      | Jetpack Navigation Compose |
 
 ## Author
 
