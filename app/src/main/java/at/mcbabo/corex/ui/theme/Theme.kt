@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.material.color.MaterialColors
 
-private val lightScheme =
+val lightScheme =
     lightColorScheme(
         primary = primaryLight,
         onPrimary = onPrimaryLight,
@@ -53,7 +53,7 @@ private val lightScheme =
         surfaceContainerHighest = surfaceContainerHighestLight
     )
 
-private val darkScheme =
+val darkScheme =
     darkColorScheme(
         primary = primaryDark,
         onPrimary = onPrimaryDark,

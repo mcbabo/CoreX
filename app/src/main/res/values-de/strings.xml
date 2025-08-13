@@ -70,4 +70,8 @@
     <string name="workout_progress">Workout Fortschritt</string>
     <string name="workouts">Workouts</string>
     <string name="confirm">Bestätigen</string>
+    <string name="no_workouts_today">Keine Workouts heute</string>
+    <string name="widget_settings">Widgeteinstellungen</string>
+    <string name="transparent_background">Transparenter Hintergrund</string>
+    <string name="background_color">Hintergrundfarbe</string>
 </resources>
