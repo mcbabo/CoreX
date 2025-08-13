@@ -5,6 +5,7 @@ appcompat = "1.7.1"
 composeRememberSetting = "1.0.3"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.7"
+glanceAppwidget = "1.1.1"
 hiltAndroid = "2.57"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.2.0"
@@ -33,6 +34,10 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-glance-appwidget-preview = { module = "androidx.glance:glance-appwidget-preview", version.ref = "glanceAppwidget" }
+androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glanceAppwidget" }
+androidx-glance-preview = { module = "androidx.glance:glance-preview", version.ref = "glanceAppwidget" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 compose-remember-setting = { module = "dev.burnoo:compose-remember-setting", version.ref = "composeRememberSetting" }

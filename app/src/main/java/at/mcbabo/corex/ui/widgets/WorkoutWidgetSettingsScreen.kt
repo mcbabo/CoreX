@@ -43,11 +43,13 @@ fun WidgetSettingsScreen(
     bgTransparent: Boolean,
     bgDarkMode: Boolean,
     bgTransparency: Float,
-    onSaveSettings: (Boolean, Boolean, Float) -> Unit
+    showIcon: Boolean,
+    onSaveSettings: (Boolean, Boolean, Float, Boolean) -> Unit
 ) {
     var bgTransparent by remember { mutableStateOf(bgTransparent) }
     var bgDarkMode by remember { mutableStateOf(bgDarkMode) }
     var bgTransparency by remember { mutableFloatStateOf(bgTransparency) }
+    var showIcon by remember { mutableStateOf(showIcon) }
 
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -72,7 +74,7 @@ fun WidgetSettingsScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        onSaveSettings(bgTransparent, bgDarkMode, bgTransparency)
+                        onSaveSettings(bgTransparent, bgDarkMode, bgTransparency, showIcon)
                     },
                 ) {
                     Icon(imageVector = Icons.Filled.Save, contentDescription = "")
@@ -139,8 +141,26 @@ fun WidgetSettingsScreen(
                         )
                     }
                 }
+
+                HorizontalDivider()
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Show Icon")
+                    Switch(
+                        checked = showIcon,
+                        onCheckedChange = { isChecked ->
+                            showIcon = isChecked
+                        },
+                    )
+                }
+
             }
         }
     }
-
 }

@@ -79,7 +79,8 @@ interface WidgetEntryPoint {
 val todayWorkoutKey = stringPreferencesKey("today_workout_name")
 val widgetBgTransparentKey = booleanPreferencesKey("widget_bg_transparent")
 val widgetBgDarkModeKey = booleanPreferencesKey("widget_bg_color")
-val widgetBgTransparency = floatPreferencesKey("widget_bg_transparency")
+val widgetBgTransparencyKey = floatPreferencesKey("widget_bg_transparency")
+val widgetShowIconKey = booleanPreferencesKey("widget_show_icon")
 
 class WorkoutWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -87,7 +88,7 @@ class WorkoutWidget : GlanceAppWidget() {
             val prefs = currentState<Preferences>()
             val workoutName = prefs[todayWorkoutKey] ?: context.getString(R.string.no_workouts_today)
 
-            val bgTransparency = prefs[widgetBgTransparency] ?: 1f
+            val bgTransparency = prefs[widgetBgTransparencyKey] ?: 1f
 
             val bgColor = if (prefs[widgetBgTransparentKey] == true) {
                 Color.Transparent.toArgb()
@@ -97,6 +98,8 @@ class WorkoutWidget : GlanceAppWidget() {
                     else MaterialTheme.colorScheme.background.copy(alpha = bgTransparency).toArgb()
                 } ?: MaterialTheme.colorScheme.background.copy(alpha = bgTransparency).toArgb()
             }
+
+            val widgetShowIconKey = prefs[widgetShowIconKey] ?: true
 
             val textColor = when (bgColor) {
                 Color.Transparent.toArgb() -> {
@@ -111,8 +114,14 @@ class WorkoutWidget : GlanceAppWidget() {
                     MaterialTheme.colorScheme.onSurface.toArgb()
                 }
             }
+
             GlanceTheme(colors = GlanceAppTheme.colors) {
-                WidgetContent(workoutName = workoutName, bgColor = bgColor, textColor = textColor)
+                WidgetContent(
+                    workoutName = workoutName,
+                    bgColor = bgColor,
+                    textColor = textColor,
+                    showIcon = widgetShowIconKey
+                )
             }
         }
     }
@@ -174,19 +183,22 @@ class WorkoutWidgetConfigActivity : ComponentActivity() {
             )
             val initialValue = prefs[widgetBgTransparentKey] ?: false
             val initialBgDarkMode = prefs[widgetBgDarkModeKey] ?: false
-            val initialBgTransparency = prefs[widgetBgTransparency] ?: 1f
+            val initialBgTransparency = prefs[widgetBgTransparencyKey] ?: 1f
+            val initialShowIcon = prefs[widgetShowIconKey] ?: true
 
             setContent {
                 WidgetSettingsScreen(
                     bgTransparent = initialValue,
                     bgDarkMode = initialBgDarkMode,
                     bgTransparency = initialBgTransparency,
-                ) { bgTransparent, bgDarkMode, bgTransparency ->
+                    showIcon = initialShowIcon
+                ) { bgTransparent, bgDarkMode, bgTransparency, showIcon ->
                     lifecycleScope.launch {
                         updateAppWidgetState(this@WorkoutWidgetConfigActivity, glanceId) { p ->
                             p[widgetBgTransparentKey] = bgTransparent
                             p[widgetBgDarkModeKey] = bgDarkMode
-                            p[widgetBgTransparency] = bgTransparency
+                            p[widgetBgTransparencyKey] = bgTransparency
+                            p[widgetShowIconKey] = showIcon
                         }
                         WorkoutWidget().update(this@WorkoutWidgetConfigActivity, glanceId)
                     }
@@ -208,7 +220,8 @@ class WorkoutWidgetConfigActivity : ComponentActivity() {
 fun WidgetContent(
     workoutName: String,
     bgColor: Int,
-    textColor: Int
+    textColor: Int,
+    showIcon: Boolean = true
 ) {
     val context = LocalContext.current
 
@@ -219,16 +232,20 @@ fun WidgetContent(
             .clickable(onClick = actionStartActivity<MainActivity>()),
         horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            provider = ImageProvider(
-                R.drawable.corex
-            ),
-            modifier = GlanceModifier.wrapContentSize().padding(12.dp),
-            colorFilter = ColorFilter.tint(ColorProvider(Color(textColor))),
-            contentDescription = "CoreX Logo",
-        )
+        if (showIcon) {
+            Image(
+                provider = ImageProvider(
+                    R.drawable.corex
+                ),
+                modifier = GlanceModifier.wrapContentSize().padding(12.dp),
+                colorFilter = ColorFilter.tint(ColorProvider(Color(textColor))),
+                contentDescription = "CoreX Logo",
+            )
+        }
+
         Column(
-            modifier = GlanceModifier.fillMaxHeight().padding(vertical = 16.dp),
+            modifier = GlanceModifier.fillMaxHeight()
+                .padding(vertical = 16.dp, horizontal = if (showIcon) 0.dp else 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -261,6 +278,7 @@ fun ContentPreview() {
     WidgetContent(
         workoutName = "Chest and Triceps",
         bgColor = MaterialTheme.colorScheme.background.toArgb(),
-        textColor = MaterialTheme.colorScheme.onBackground.toArgb()
+        textColor = MaterialTheme.colorScheme.onBackground.toArgb(),
+        showIcon = false
     )
 }

@@ -2,7 +2,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="at.mcbabo.corex.ui.widgets.WorkoutWidgetConfigActivity"
     android:maxResizeHeight="56dp"
-    android:minWidth="185dp"
+    android:minWidth="109dp"
     android:minHeight="56dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
