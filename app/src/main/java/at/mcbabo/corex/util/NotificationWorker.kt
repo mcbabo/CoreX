@@ -183,7 +183,7 @@ class NotificationScheduler
     private fun parseReminderTime(reminderTime: String): Pair<Int, Int> = try {
         val parts = reminderTime.split(":")
         Pair(parts[0].toInt(), parts[1].toInt())
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         Pair(9, 0) // Default to 9:00 AM
     }
 

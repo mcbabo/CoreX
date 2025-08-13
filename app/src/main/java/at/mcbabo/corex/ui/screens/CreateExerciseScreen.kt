@@ -131,11 +131,11 @@ fun CreateExerciseScreen(onNavigateBack: () -> Unit, exerciseViewModel: Exercise
                 )
 
                 FilterChips(
+                    modifier = Modifier.padding(horizontal = 4.dp),
                     muscleGroups = muscleGroups,
                     selectedGroup = selectedMuscleGroup,
                     onGroupSelected = { selectedMuscleGroup = it.toString() },
-                    showAllItem = false,
-                    modifier = Modifier.padding(horizontal = 4.dp)
+                    showAllItem = false
                 )
 
                 HorizontalDivider()

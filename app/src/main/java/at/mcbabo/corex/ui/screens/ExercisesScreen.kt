@@ -118,10 +118,10 @@ fun ExercisesScreen(
             if (showFilters) {
                 item {
                     FilterChips(
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         muscleGroups = muscleGroups,
                         selectedGroup = exerciseViewModel.selectedMuscleGroup.collectAsState().value,
-                        onGroupSelected = { exerciseViewModel.filterByMuscleGroup(it) },
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        onGroupSelected = { exerciseViewModel.filterByMuscleGroup(it) }
                     )
                 }
             }

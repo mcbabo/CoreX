@@ -13,11 +13,11 @@ import at.mcbabo.corex.R
 
 @Composable
 fun FilterChips(
+    modifier: Modifier = Modifier,
     muscleGroups: List<String>,
     selectedGroup: String?,
     onGroupSelected: (String?) -> Unit,
-    showAllItem: Boolean = true,
-    modifier: Modifier = Modifier
+    showAllItem: Boolean = true
 ) {
     LazyRow(
         modifier = modifier,

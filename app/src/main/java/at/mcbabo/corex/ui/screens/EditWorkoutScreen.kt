@@ -285,10 +285,10 @@ fun EditWorkoutScreen(
 
                     item {
                         FilterChips(
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             muscleGroups = muscleGroups,
                             selectedGroup = selectedMuscleGroup,
-                            onGroupSelected = { selectedMuscleGroup = it },
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            onGroupSelected = { selectedMuscleGroup = it }
                         )
                     }
 
