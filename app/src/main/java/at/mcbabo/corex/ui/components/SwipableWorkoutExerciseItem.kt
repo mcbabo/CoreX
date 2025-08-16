@@ -150,7 +150,7 @@ fun SwipeableWorkoutExerciseCard(
                             Spacer(Modifier.height(2.dp))
                             Text(
                                 "${stringResource(R.string.weight)}: ${
-                                    exercise.workoutExercise.targetWeight ?: 0.0F
+                                    exercise.weightProgressions.maxOfOrNull { it.weight } ?: 0.0F
                                 }kg",
                                 style = MaterialTheme.typography.bodySmall
                             )
