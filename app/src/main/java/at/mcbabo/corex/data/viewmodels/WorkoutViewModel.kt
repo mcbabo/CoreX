@@ -56,7 +56,10 @@ class WorkoutViewModel @Inject constructor(private val workoutRepository: Workou
             // Get current exercise count for ordering
             val workout = workoutRepository.getFullWorkout(workoutId)
             val orderIndex = workout?.exercises?.size ?: 0
-            workoutRepository.addExerciseToWorkout(workoutId, exerciseId, orderIndex)
+
+            if (workout?.exercises?.map { it.exercise.id }?.contains(exerciseId) == false) {
+                workoutRepository.addExerciseToWorkout(workoutId, exerciseId, orderIndex)
+            }
         }
     }
 
