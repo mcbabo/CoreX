@@ -43,18 +43,17 @@ import at.mcbabo.corex.data.entities.WorkoutExercise
 @Composable
 fun SwipeableWorkoutExerciseCard(
     exercise: WorkoutExercise,
+    arrangeMode: Boolean,
     onClick: () -> Unit,
     onMarkCompleted: (Boolean) -> Unit,
     onRecordWeight: (Float, String?) -> Unit
 ) {
     var showWeightDialog by remember { mutableStateOf(false) }
-
     val dismissState = rememberSwipeToDismissBoxState()
 
     LaunchedEffect(dismissState.currentValue) {
         when (dismissState.currentValue) {
             SwipeToDismissBoxValue.StartToEnd, SwipeToDismissBoxValue.EndToStart -> {
-                // Toggle completion status
                 onMarkCompleted(!exercise.workoutExercise.isCompleted)
                 dismissState.snapTo(SwipeToDismissBoxValue.Settled)
             }
@@ -65,8 +64,8 @@ fun SwipeableWorkoutExerciseCard(
 
     SwipeToDismissBox(
         state = dismissState,
-        enableDismissFromStartToEnd = true,
-        enableDismissFromEndToStart = true,
+        enableDismissFromStartToEnd = !arrangeMode,
+        enableDismissFromEndToStart = !arrangeMode,
         backgroundContent = {
             val direction = dismissState.dismissDirection
 
@@ -129,6 +128,7 @@ fun SwipeableWorkoutExerciseCard(
                         ExerciseAvatar(exercise.exercise.name)
 
                         Spacer(modifier = Modifier.width(12.dp))
+
                         Column {
                             Text(
                                 text = exercise.exercise.name,
@@ -147,7 +147,9 @@ fun SwipeableWorkoutExerciseCard(
                                 }",
                                 style = MaterialTheme.typography.bodySmall
                             )
+
                             Spacer(Modifier.height(2.dp))
+
                             Text(
                                 "${stringResource(R.string.weight)}: ${
                                     exercise.weightProgressions.maxOfOrNull { it.weight } ?: 0.0F

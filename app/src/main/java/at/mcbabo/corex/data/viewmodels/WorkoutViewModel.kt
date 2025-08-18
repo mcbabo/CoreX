@@ -87,5 +87,11 @@ class WorkoutViewModel @Inject constructor(private val workoutRepository: Workou
         }
     }
 
+    fun updateExerciseOrder(exerciseOrders: List<Pair<Long, Int>>) {
+        viewModelScope.launch {
+            workoutRepository.updateExerciseOrder(exerciseOrders)
+        }
+    }
+
     fun getWorkoutSummaries(): Flow<List<WorkoutSummary>> = workoutRepository.getWorkoutSummaries()
 }

@@ -133,6 +133,7 @@ dependencies {
     // UI Components
     implementation(libs.vico.compose.m3)
     implementation(libs.compose.remember.setting)
+    implementation(libs.reorderable)
 
     // Background Tasks
     implementation(libs.work.runtime.ktx)
