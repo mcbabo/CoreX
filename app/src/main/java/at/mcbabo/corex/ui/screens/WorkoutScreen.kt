@@ -163,13 +163,14 @@ fun WorkoutScreen(
                     Box {
                         IconButton(onClick = { showMenu = true }) {
                             Icon(
-                                imageVector = Icons.Default.MoreVert, contentDescription = "More Options"
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "More Options"
                             )
                         }
                         DropdownMenu(
                             expanded = showMenu, onDismissRequest = { showMenu = false }) {
                             DropdownMenuItem(
-                                text = { Text("Edit Workout") },
+                                text = { Text(stringResource(R.string.edit)) },
                                 onClick = {
                                     showMenu = false
                                     navController.navigate(
@@ -180,14 +181,14 @@ fun WorkoutScreen(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Arrange Exercises") },
+                                text = { Text(stringResource(R.string.arrange_exercises)) },
                                 onClick = {
                                     showMenu = false
                                     arrangeMode = true
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Delete Workout") },
+                                text = { Text(stringResource(R.string.delete_workout)) },
                                 onClick = {
                                     showMenu = false
                                     openAlertDialog.value = true
@@ -441,13 +442,13 @@ fun EmptyExercisesState(onAddExercise: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "No exercises yet",
+            text = stringResource(R.string.no_exercises_yet),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
-            text = "Add some exercises to get started",
+            text = stringResource(R.string.no_exercises_yet_desc),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -483,7 +484,7 @@ fun DeleteWorkoutDialog(
                     onConfirmation()
                 }
             ) {
-                Text("Confirm")
+                Text(stringResource(R.string.confirm))
             }
         },
         dismissButton = {
@@ -492,7 +493,7 @@ fun DeleteWorkoutDialog(
                     onDismissRequest()
                 }
             ) {
-                Text("Dismiss")
+                Text(stringResource(R.string.dismiss))
             }
         }
     )

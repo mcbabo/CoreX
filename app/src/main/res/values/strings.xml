@@ -74,4 +74,8 @@
     <string name="widget_settings">Widget Settings</string>
     <string name="transparent_background">Transparent Background</string>
     <string name="background_color">Backgroundcolor</string>
+    <string name="arrange_exercises">Arrange Exercises</string>
+    <string name="no_exercises_yet">No exercises yet</string>
+    <string name="no_exercises_yet_desc">Add some exercises to get started</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

@@ -74,4 +74,8 @@
     <string name="widget_settings">Widgeteinstellungen</string>
     <string name="transparent_background">Transparenter Hintergrund</string>
     <string name="background_color">Hintergrundfarbe</string>
+    <string name="arrange_exercises">Übungen anordnen</string>
+    <string name="no_exercises_yet">Keine Übungen bis jetzt</string>
+    <string name="no_exercises_yet_desc">Füge ein paar Übungen hinzu, um zu starten</string>
+    <string name="dismiss">Ablehnen</string>
 </resources>
