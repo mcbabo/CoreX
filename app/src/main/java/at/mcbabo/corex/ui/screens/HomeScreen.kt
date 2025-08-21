@@ -69,9 +69,6 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        navController.navigate(route = Screen.Exercises.route)
-                    }) {
                     IconButton(
                         onClick = {
                             navController.navigate(route = Screen.Exercises.route)
@@ -96,9 +93,11 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate(route = Screen.CreateWorkout.route)
-            }) {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(route = Screen.CreateWorkout.route)
+                }
+            ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
         }
@@ -158,18 +157,12 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                     LazyColumn {
                         items(todayWorkouts) { workout ->
                             WorkoutListItem(
-                                workout,
-                                Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                                {
-                                    navController.navigate(
-                                        Screen.WorkoutDetail.passWorkoutId(
-                                            workout.id
-                                        )
-                                    )
-                                },
-                                {}
-                            )
+                                workout = workout,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                                onClick = {
                                     navController.navigate(Screen.WorkoutDetail.createRoute(workout.id))
+                                }
+                            ) {}
                         }
                     }
                 }
@@ -196,18 +189,12 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                 LazyColumn {
                     items(workouts) { workout ->
                         WorkoutListItem(
-                            workout,
-                            Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                            {
-                                navController.navigate(
-                                    Screen.WorkoutDetail.passWorkoutId(
-                                        workout.id
-                                    )
-                                )
-                            },
-                            {}
-                        )
+                            workout = workout,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                            onClick = {
                                 navController.navigate(Screen.WorkoutDetail.createRoute(workout.id))
+                            }
+                        ) {}
                     }
                 }
             }
