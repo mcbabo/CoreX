@@ -79,6 +79,7 @@ import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.SwipeableWorkoutExerciseCard
 import at.mcbabo.corex.ui.components.bottomsheets.WorkoutExerciseDetailBottomSheet
+import at.mcbabo.corex.ui.components.dialogs.DeleteWorkoutDialog
 import io.github.vinceglb.confettikit.compose.ConfettiKit
 import io.github.vinceglb.confettikit.core.Angle
 import io.github.vinceglb.confettikit.core.Party

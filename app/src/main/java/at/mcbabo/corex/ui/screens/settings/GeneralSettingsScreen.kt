@@ -31,9 +31,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.viewmodels.SettingsViewModel
 import at.mcbabo.corex.ui.components.BackButton
-import at.mcbabo.corex.ui.components.DialWithDialog
 import at.mcbabo.corex.ui.components.PreferenceNumberSetting
 import at.mcbabo.corex.ui.components.PreferenceSwitchWithDivider
+import at.mcbabo.corex.ui.components.dialogs.DialWithDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
