@@ -188,7 +188,7 @@ fun WorkoutScreen(
                                 onClick = {
                                     showMenu = false
                                     navController.navigate(
-                                        route = Screen.EditWorkout.passWorkoutId(
+                                        route = Screen.EditWorkout.createRoute(
                                             workoutId
                                         )
                                     )
@@ -270,7 +270,7 @@ fun WorkoutScreen(
                     EmptyExercisesState(
                         onAddExercise = {
                             navController.navigate(
-                                route = Screen.EditWorkout.passWorkoutId(
+                                route = Screen.EditWorkout.createRoute(
                                     workoutId
                                 )
                             )
@@ -417,7 +417,7 @@ fun WorkoutScreen(
                     bottomSheetState.hide()
                 }
                 navController.navigate(
-                    Screen.WeightProgressionDetailScreen.passExerciseId(
+                    Screen.WeightProgressionDetail.createRoute(
                         selectedExercise?.exercise?.id ?: 0
                     )
                 )

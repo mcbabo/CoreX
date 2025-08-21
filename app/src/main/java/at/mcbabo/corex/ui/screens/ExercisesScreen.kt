@@ -94,9 +94,11 @@ fun ExercisesScreen(
                             contentDescription = "Filter"
                         )
                     }
-                    TextButton(onClick = {
-                        navController.navigate(route = Screen.CreateExercise.route)
-                    }) {
+                    TextButton(
+                        onClick = {
+                            navController.navigate(route = Screen.CreateExercise.route)
+                        }
+                    ) {
                         Text(stringResource(R.string.add_exercise))
                     }
                 },

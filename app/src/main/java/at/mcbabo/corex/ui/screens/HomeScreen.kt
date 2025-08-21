@@ -56,10 +56,27 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.my_workouts)) },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(route = Screen.SettingsGraph.route)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Settings,
+                            contentDescription = "Settings"
+                        )
+                    }
+                },
                 actions = {
                     IconButton(onClick = {
                         navController.navigate(route = Screen.Exercises.route)
                     }) {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(route = Screen.Exercises.route)
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.Category,
                             contentDescription = "Localized description"
@@ -152,6 +169,7 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                                 },
                                 {}
                             )
+                                    navController.navigate(Screen.WorkoutDetail.createRoute(workout.id))
                         }
                     }
                 }
@@ -189,6 +207,7 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                             },
                             {}
                         )
+                                navController.navigate(Screen.WorkoutDetail.createRoute(workout.id))
                     }
                 }
             }
