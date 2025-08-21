@@ -16,7 +16,7 @@ import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -42,9 +42,7 @@ fun ExerciseInfo(exercise: ExerciseModel) {
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = exercise.name,
                 style = MaterialTheme.typography.headlineSmall,
@@ -97,9 +95,7 @@ fun ExerciseInfo(exercise: ExerciseModel) {
                         if (exercise.isBodyWeight) {
                             stringResource(R.string.bodyweight)
                         } else {
-                            stringResource(
-                                R.string.equipment
-                            )
+                            stringResource(R.string.equipment)
                         },
                     style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Center
@@ -154,14 +150,11 @@ fun ExerciseInfo(exercise: ExerciseModel) {
         Spacer(modifier = Modifier.height(16.dp))
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors =
-                CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                )
+            colors = cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            )
         ) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
+            Column(modifier = Modifier.padding(12.dp)) {
                 Text(
                     text = stringResource(R.string.description),
                     style = MaterialTheme.typography.titleSmall,

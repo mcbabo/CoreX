@@ -79,4 +79,11 @@
     <string name="no_exercises_yet_desc">Füge ein paar Übungen hinzu, um zu starten</string>
     <string name="dismiss">Ablehnen</string>
     <string name="no_notes">Keine Notizen</string>
+    <string name="update">Speichern</string>
+    <string name="edit_workout">Workout bearbeiten</string>
+    <string name="workout_details">Workout Details</string>
+    <string name="workout_name">Workoutname</string>
+    <string name="loading_workout_details">Lade Workoutdetails</string>
+    <string name="show_icon">Zeige Icon</string>
+    <string name="transparency">Transparenz</string>
 </resources>

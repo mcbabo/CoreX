@@ -22,18 +22,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingItem(
+fun SettingsItem(
     title: String,
     description: String,
     icon: ImageVector?,
     backgroundColor: Color = Color.Transparent,
     onClick: () -> Unit
 ) {
-    Surface(
-        modifier =
-            Modifier
-                .clickable { onClick() }
-    ) {
+    Surface(modifier = Modifier.clickable { onClick() }) {
         Row(
             modifier =
                 Modifier
@@ -51,9 +47,7 @@ fun SettingItem(
                             .padding(end = 16.dp)
                             .size(24.dp),
                     tint =
-                        if (backgroundColor ==
-                            Color.Transparent
-                        ) {
+                        if (backgroundColor == Color.Transparent) {
                             MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onPrimaryContainer
@@ -71,9 +65,7 @@ fun SettingItem(
                     maxLines = 1,
                     style = MaterialTheme.typography.titleLarge,
                     color =
-                        if (backgroundColor ==
-                            Color.Transparent
-                        ) {
+                        if (backgroundColor == Color.Transparent) {
                             MaterialTheme.colorScheme.onSurface
                         } else {
                             MaterialTheme.colorScheme.onPrimaryContainer
@@ -84,9 +76,7 @@ fun SettingItem(
                 Text(
                     text = description,
                     color =
-                        if (backgroundColor ==
-                            Color.Transparent
-                        ) {
+                        if (backgroundColor == Color.Transparent) {
                             MaterialTheme.colorScheme.onSurfaceVariant
                         } else {
                             MaterialTheme.colorScheme.onPrimaryContainer

@@ -15,8 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.TopAppBarDefaults.exitUntilCollapsedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -43,11 +42,7 @@ fun AppearanceSettingsScreen(
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-            rememberTopAppBarState(),
-            canScroll = { true }
-        )
+    val scrollBehavior = exitUntilCollapsedScrollBehavior()
 
     Scaffold(
         modifier =
@@ -56,9 +51,7 @@ fun AppearanceSettingsScreen(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(modifier = Modifier, text = stringResource(R.string.appearance))
-                },
+                title = { Text(text = stringResource(R.string.appearance)) },
                 navigationIcon = { BackButton(onNavigateBack) },
                 scrollBehavior = scrollBehavior
             )

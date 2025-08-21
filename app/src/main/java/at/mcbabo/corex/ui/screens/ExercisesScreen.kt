@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
@@ -28,7 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.exitUntilCollapsedScrollBehavior
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -48,6 +47,7 @@ import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.navigation.Screen
+import at.mcbabo.corex.ui.components.BackButton
 import at.mcbabo.corex.ui.components.ExerciseListItem
 import at.mcbabo.corex.ui.components.FilterChips
 import at.mcbabo.corex.ui.components.bottomsheets.ExerciseDetailBottomSheet
@@ -62,31 +62,26 @@ fun ExercisesScreen(
 ) {
     val exercises by exerciseViewModel.exercises.collectAsState(initial = emptyList())
     val workouts by workoutViewModel.getWorkoutSummaries().collectAsState(initial = emptyList())
-
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState(initial = emptyList())
 
     var showFilters by remember { mutableStateOf(false) }
-
     val bottomSheetState = rememberModalBottomSheetState()
     var selectedExercise by remember { mutableStateOf<ExerciseModel?>(null) }
     var showBottomSheet by remember { mutableStateOf(false) }
-
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
-    var showDialog by remember { mutableStateOf<Boolean>(false) }
-
+    var showDialog by remember { mutableStateOf(false) }
     var checkedWorkouts by remember { mutableStateOf<List<Long>>(emptyList()) }
+
+    val scrollBehavior = exitUntilCollapsedScrollBehavior()
 
     Scaffold(
         modifier =
             Modifier
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
-        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.exercises)) },
-                scrollBehavior = scrollBehavior,
+                navigationIcon = { BackButton(onNavigateBack) },
                 actions = {
                     IconButton(onClick = { showFilters = !showFilters }) {
                         Icon(
@@ -102,14 +97,7 @@ fun ExercisesScreen(
                         Text(stringResource(R.string.add_exercise))
                     }
                 },
-                navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                }
+                scrollBehavior = scrollBehavior,
             )
         }
     ) { paddingValues ->
@@ -135,9 +123,8 @@ fun ExercisesScreen(
                     onClick = {
                         selectedExercise = exercise
                         showBottomSheet = true
-                    },
-                    onLongPress = { /* Handle long press */ }
-                )
+                    }
+                ) { }
             }
         }
     }
@@ -159,11 +146,10 @@ fun ExercisesScreen(
                     exerciseViewModel.deleteExercise(exercise)
                     showBottomSheet = false
                     selectedExercise = null
-                },
-                onAddToWorkout = { exercise ->
-                    showDialog = true
                 }
-            )
+            ) { exercise ->
+                showDialog = true
+            }
         }
     }
 
@@ -187,8 +173,7 @@ fun ExercisesScreen(
                     LazyColumn {
                         items(workouts) { workout ->
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Checkbox(
@@ -221,5 +206,4 @@ fun ExercisesScreen(
             }
         }
     }
-
 }

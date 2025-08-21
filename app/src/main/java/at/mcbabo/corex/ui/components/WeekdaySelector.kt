@@ -26,9 +26,7 @@ fun WeekdaySelector(
         }
     }
 
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         items(weekdays) { (dayOfWeek, displayName) ->
             FilterChip(
                 onClick = {

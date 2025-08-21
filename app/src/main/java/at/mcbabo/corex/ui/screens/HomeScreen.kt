@@ -52,7 +52,6 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.my_workouts)) },
@@ -77,16 +76,6 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                         Icon(
                             imageVector = Icons.Outlined.Category,
                             contentDescription = "Localized description"
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigate(route = Screen.SettingsGraph.route)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Settings,
-                            contentDescription = "Settings"
                         )
                     }
                 }

@@ -13,8 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.TopAppBarDefaults.exitUntilCollapsedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,10 +38,8 @@ import at.mcbabo.corex.ui.components.dialogs.DialWithDialog
 @Composable
 fun GeneralSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-            rememberTopAppBarState()
-        )
+
+    val scrollBehavior = exitUntilCollapsedScrollBehavior()
     var showDialog by remember { mutableStateOf(false) }
 
     val blurRadius by animateDpAsState(
@@ -89,11 +86,7 @@ fun GeneralSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewMod
 
             PreferenceSwitchWithDivider(
                 title = stringResource(R.string.daily_reminder),
-                description = "${
-                    stringResource(
-                        R.string.daily_reminder_desc
-                    )
-                } (${settings.reminderTime})",
+                description = "${stringResource(R.string.daily_reminder_desc)} (${settings.reminderTime})",
                 icon = Icons.Outlined.Notifications,
                 isChecked = settings.notificationsEnabled,
                 onChecked = { viewModel.toggleNotifications() },
@@ -105,10 +98,12 @@ fun GeneralSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewMod
     if (showDialog) {
         val context = LocalContext.current
 
-        DialWithDialog(onConfirm = {
-            showDialog = false
-            val selectedTime = "%02d:%02d".format(it.hour, it.minute)
-            viewModel.setReminderTime(selectedTime, context)
-        }, onDismiss = { showDialog = false })
+        DialWithDialog(
+            onConfirm = {
+                showDialog = false
+                val selectedTime = "%02d:%02d".format(it.hour, it.minute)
+                viewModel.setReminderTime(selectedTime, context)
+            }
+        ) { showDialog = false }
     }
 }

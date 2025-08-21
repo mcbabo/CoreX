@@ -21,8 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.TopAppBarDefaults.exitUntilCollapsedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -51,11 +50,7 @@ fun WidgetSettingsScreen(
     var bgTransparency by remember { mutableFloatStateOf(bgTransparency) }
     var showIcon by remember { mutableStateOf(showIcon) }
 
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-            rememberTopAppBarState(),
-            canScroll = { true }
-        )
+    val scrollBehavior = exitUntilCollapsedScrollBehavior()
 
     AppTheme(
         darkTheme = isSystemInDarkTheme(),
@@ -99,7 +94,7 @@ fun WidgetSettingsScreen(
                         checked = bgTransparent,
                         onCheckedChange = { isChecked ->
                             bgTransparent = isChecked
-                        },
+                        }
                     )
                 }
 
@@ -116,7 +111,7 @@ fun WidgetSettingsScreen(
                         enabled = !bgTransparent,
                         onCheckedChange = { isChecked ->
                             bgDarkMode = isChecked
-                        },
+                        }
                     )
                 }
 
@@ -130,7 +125,7 @@ fun WidgetSettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        Text("Transparency")
+                        Text(stringResource(R.string.transparency))
                         Slider(
                             value = bgTransparency,
                             onValueChange = { value ->
@@ -151,15 +146,14 @@ fun WidgetSettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Show Icon")
+                    Text(stringResource(R.string.show_icon))
                     Switch(
                         checked = showIcon,
                         onCheckedChange = { isChecked ->
                             showIcon = isChecked
-                        },
+                        }
                     )
                 }
-
             }
         }
     }

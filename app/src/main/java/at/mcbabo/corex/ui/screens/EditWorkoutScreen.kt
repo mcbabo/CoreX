@@ -10,12 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -44,6 +40,7 @@ import at.mcbabo.corex.data.models.WorkoutModel
 import at.mcbabo.corex.data.models.toWeekdayInts
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
+import at.mcbabo.corex.ui.components.BackButton
 import at.mcbabo.corex.ui.components.ExerciseListItem
 import at.mcbabo.corex.ui.components.FilterChips
 import at.mcbabo.corex.ui.components.SelectedExerciseItem
@@ -60,40 +57,20 @@ fun EditWorkoutScreen(
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
     val workout by workoutViewModel.getWorkoutDetails(workoutId).collectAsState(null)
-
     val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
-
-    var selectedWeekdays by remember(workout) {
-        mutableStateOf<Set<DayOfWeek>>(
-            workout?.weekdays?.map { weekdayModel ->
-                DayOfWeek.of(weekdayModel.weekday % 7)
-            }?.toSet() ?: emptySet()
-        )
-    }
 
     var workoutName by remember { mutableStateOf("") }
     var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
     var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
+    val isLoading = allExercises.isEmpty() && muscleGroups.isEmpty()
 
-    LaunchedEffect(workout) {
-        workout?.let { workoutData ->
-            if (workoutName.isEmpty()) {
-                workoutName = workoutData.workout.name
-            }
-
-            if (selectedExercises.isEmpty()) {
-                selectedExercises = workoutData.exercises.map { it.exercise }
-            }
-        }
-    }
-
-    LaunchedEffect(workout) {
-        workout?.let { workoutData ->
-            if (selectedExercises.isEmpty()) {
-                selectedExercises = workoutData.exercises.map { it.exercise }
-            }
-        }
+    var selectedWeekdays by remember(workout) {
+        mutableStateOf(
+            workout?.weekdays?.map { weekdayModel ->
+                DayOfWeek.of(weekdayModel.weekday % 7)
+            }?.toSet() ?: emptySet()
+        )
     }
 
     val availableExercises by remember {
@@ -111,7 +88,17 @@ fun EditWorkoutScreen(
         }
     }
 
-    val isLoading = allExercises.isEmpty() && muscleGroups.isEmpty()
+    LaunchedEffect(workout) {
+        workout?.let { workoutData ->
+            if (workoutName.isEmpty()) {
+                workoutName = workoutData.workout.name
+            }
+
+            if (selectedExercises.isEmpty()) {
+                selectedExercises = workoutData.exercises.map { it.exercise }
+            }
+        }
+    }
 
     fun updateWorkout() {
         workout?.let { currentWorkout ->
@@ -149,21 +136,16 @@ fun EditWorkoutScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Edit Workout") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
+                title = { Text(stringResource(R.string.edit_workout)) },
+                navigationIcon = { BackButton(onNavigateBack) },
                 actions = {
-                    TextButton(onClick = {
-                        updateWorkout()
-                        navController.popBackStack()
-                    }) {
-                        Text("Update")
+                    TextButton(
+                        onClick = {
+                            updateWorkout()
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Text(stringResource(R.string.update))
                     }
                 }
             )
@@ -192,7 +174,7 @@ fun EditWorkoutScreen(
                                 .padding(horizontal = 16.dp)
                     ) {
                         Text(
-                            text = "Workout Details",
+                            text = stringResource(R.string.workout_details),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 4.dp)
@@ -206,7 +188,7 @@ fun EditWorkoutScreen(
                             OutlinedTextField(
                                 value = workoutName,
                                 onValueChange = { workoutName = it },
-                                label = { Text("Workout Name") },
+                                label = { Text(stringResource(R.string.workout_name)) },
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
@@ -215,13 +197,10 @@ fun EditWorkoutScreen(
                             )
                         }
 
-                        WeekdaySelector(
-                            selectedDays = selectedWeekdays,
-                            onSelectionChanged = { selectedWeekdays = it }
-                        )
+                        WeekdaySelector(selectedDays = selectedWeekdays) { selectedWeekdays = it }
                     }
                 } ?: run {
-                    Text(text = "Loading workout details...")
+                    Text(text = stringResource(R.string.loading_workout_details))
                 }
 
                 Column(
@@ -245,11 +224,7 @@ fun EditWorkoutScreen(
                         )
 
                         Text(
-                            text = "${selectedExercises.size} ${
-                                stringResource(
-                                    R.string.exercises
-                                )
-                            }",
+                            text = "${selectedExercises.size} ${stringResource(R.string.exercises)}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -260,13 +235,9 @@ fun EditWorkoutScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(selectedExercises) { exercise ->
-                            SelectedExerciseItem(
-                                exercise = exercise,
-                                onRemove = {
-                                    selectedExercises =
-                                        selectedExercises.filter { it.id != exercise.id }
-                                }
-                            )
+                            SelectedExerciseItem(exercise = exercise) {
+                                selectedExercises = selectedExercises.filter { it.id != exercise.id }
+                            }
                         }
                     }
                 }
@@ -276,8 +247,8 @@ fun EditWorkoutScreen(
                 ) {
                     item {
                         Text(
-                            modifier = Modifier.padding(horizontal = 16.dp),
                             text = stringResource(R.string.add_exercise),
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -301,9 +272,9 @@ fun EditWorkoutScreen(
                                     } else {
                                         stringResource(R.string.all_exercises_added)
                                     },
+                                modifier = Modifier.padding(16.dp),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(16.dp)
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     } else {
@@ -313,9 +284,8 @@ fun EditWorkoutScreen(
                                 Modifier.padding(horizontal = 16.dp),
                                 onClick = {
                                     selectedExercises = selectedExercises + exercise
-                                },
-                                {}
-                            )
+                                }
+                            ) {}
                         }
                     }
                 }

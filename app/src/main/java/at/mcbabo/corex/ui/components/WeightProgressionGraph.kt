@@ -54,6 +54,9 @@ fun WeightProgressionGraph(weightProgressions: List<WeightProgressionModel>, onN
     val yValues = sorted.map { it.weight }
     val labels = sorted.map { dateFormatter.format(it.date) }
 
+    val minY = (yValues.minOrNull() ?: 0f) - 5f
+    val maxY = (yValues.maxOrNull() ?: 100f) + 5f
+
     LaunchedEffect(xValues, yValues) {
         if (xValues.isNotEmpty() && yValues.isNotEmpty()) {
             modelProducer.runTransaction {
@@ -61,9 +64,6 @@ fun WeightProgressionGraph(weightProgressions: List<WeightProgressionModel>, onN
             }
         }
     }
-
-    val minY = (yValues.minOrNull() ?: 0f) - 5f
-    val maxY = (yValues.maxOrNull() ?: 100f) + 5f
 
     Card(
         modifier = Modifier.fillMaxWidth()
