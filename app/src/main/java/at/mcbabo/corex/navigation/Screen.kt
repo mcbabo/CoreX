@@ -30,7 +30,10 @@ sealed class Screen(val route: String) {
 
     object GeneralSettings : Screen(route = "general_settings_screen")
 
+
+    object AppearanceSettingsGraph : Screen(route = "appearance_settings_graph")
     object AppearanceSettings : Screen(route = "appearance_settings_screen")
+    object ColorModeSettings : Screen(route = "color_mode_settings_screen")
 
     object LanguageSettings : Screen(route = "language_settings_screen")
 
