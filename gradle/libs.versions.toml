@@ -3,6 +3,7 @@ accompanistDrawablepainter = "0.37.3"
 agp = "8.12.0"
 appcompat = "1.7.1"
 composeRememberSetting = "1.0.3"
+confettikit = "0.6.0"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.7"
 glanceAppwidget = "1.1.1"
@@ -42,6 +43,7 @@ androidx-glance-preview = { module = "androidx.glance:glance-preview", version.r
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 compose-remember-setting = { module = "dev.burnoo:compose-remember-setting", version.ref = "composeRememberSetting" }
+confettikit = { module = "io.github.vinceglb:confettikit", version.ref = "confettikit" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
