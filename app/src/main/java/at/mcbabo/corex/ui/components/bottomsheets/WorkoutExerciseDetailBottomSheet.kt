@@ -25,7 +25,7 @@ import at.mcbabo.corex.ui.components.WeightProgressionGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WorkoutExerciseDetailBottomSheet(workoutExercise: WorkoutExercise) {
+fun WorkoutExerciseDetailBottomSheet(workoutExercise: WorkoutExercise, onNavigate: () -> Unit) {
     Column(
         modifier =
             Modifier
@@ -67,7 +67,7 @@ fun WorkoutExerciseDetailBottomSheet(workoutExercise: WorkoutExercise) {
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            WeightProgressionGraph(workoutExercise.weightProgressions)
+            WeightProgressionGraph(workoutExercise.weightProgressions, onNavigate = { onNavigate() })
 
             Spacer(modifier = Modifier.height(16.dp))
         }

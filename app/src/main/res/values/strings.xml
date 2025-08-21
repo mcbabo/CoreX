@@ -78,4 +78,5 @@
     <string name="no_exercises_yet">No exercises yet</string>
     <string name="no_exercises_yet_desc">Add some exercises to get started</string>
     <string name="dismiss">Dismiss</string>
+    <string name="no_notes">No notes</string>
 </resources>

@@ -19,6 +19,10 @@ sealed class Screen(val route: String) {
         fun passWorkoutId(workoutId: Long) = "workout_detail_screen/$workoutId"
     }
 
+    object WeightProgressionDetailScreen : Screen(route = "weight_progression_detail_screen/{exerciseId}") {
+        fun passExerciseId(exerciseId: Long) = "weight_progression_detail_screen/$exerciseId"
+    }
+
     // SETTINGS
     object SettingsGraph : Screen(route = "settings_graph")
 
