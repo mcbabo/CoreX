@@ -3,7 +3,6 @@ package at.mcbabo.corex.ui.screens.settings
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -51,7 +50,6 @@ fun GeneralSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewMod
     Scaffold(
         modifier =
             Modifier
-                .fillMaxSize()
                 .blur(blurRadius)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {

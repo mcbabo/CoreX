@@ -41,7 +41,6 @@ fun WeightProgressionDetailScreen(
     val formatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.weight_progression)) },

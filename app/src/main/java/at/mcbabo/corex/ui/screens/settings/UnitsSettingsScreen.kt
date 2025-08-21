@@ -2,7 +2,6 @@ package at.mcbabo.corex.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -36,10 +35,7 @@ fun UnitsSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewModel
     val scrollBehavior = exitUntilCollapsedScrollBehavior()
 
     Scaffold(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = { Text(text = stringResource(R.string.units)) },

@@ -51,7 +51,6 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
     val todayWorkouts = workouts.filter { it.weekdays.contains(today) }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.my_workouts)) },
