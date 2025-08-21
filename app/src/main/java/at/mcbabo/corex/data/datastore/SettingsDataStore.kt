@@ -43,7 +43,7 @@ constructor(private val context: Context) {
                 if (settingsJson != null) {
                     try {
                         json.decodeFromString<AppSettings>(settingsJson)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         AppSettings() // Return defaults if parsing fails
                     }
                 } else {
@@ -64,7 +64,7 @@ constructor(private val context: Context) {
                 if (currentSettingsJson != null) {
                     try {
                         json.decodeFromString<AppSettings>(currentSettingsJson)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         AppSettings()
                     }
                 } else {
