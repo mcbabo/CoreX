@@ -57,10 +57,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -77,11 +79,19 @@ import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.SwipeableWorkoutExerciseCard
 import at.mcbabo.corex.ui.components.bottomsheets.WorkoutExerciseDetailBottomSheet
+import io.github.vinceglb.confettikit.compose.ConfettiKit
+import io.github.vinceglb.confettikit.core.Angle
+import io.github.vinceglb.confettikit.core.Party
+import io.github.vinceglb.confettikit.core.Position
+import io.github.vinceglb.confettikit.core.Spread
+import io.github.vinceglb.confettikit.core.emitter.Emitter
+import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -92,6 +102,9 @@ fun WorkoutScreen(
     workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
     val workout by workoutViewModel.getWorkoutDetails(workoutId).collectAsState(null)
+
+    val coroutineScope = rememberCoroutineScope()
+    var isAnimating by remember { mutableStateOf(false) }
 
     val bottomSheetState = rememberModalBottomSheetState()
     var selectedExercise by remember { mutableStateOf<WorkoutExercise?>(null) }
@@ -148,6 +161,7 @@ fun WorkoutScreen(
                 actions = {
                     IconButton(
                         onClick = {
+                            isAnimating = true
                             workoutViewModel.resetWorkoutProgress(
                                 workout?.workout?.id ?: 0
                             )
@@ -346,6 +360,45 @@ fun WorkoutScreen(
                 }
             }
         }
+    }
+
+    if (isAnimating) {
+        ConfettiKit(
+            modifier = Modifier.fillMaxSize(),
+            parties = listOf(
+                Party(
+                    speed = 10f,
+                    maxSpeed = 30f,
+                    damping = 0.9f,
+                    angle = Angle.RIGHT - 45,
+                    spread = Spread.SMALL + 30,
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary.toArgb(),
+                        MaterialTheme.colorScheme.secondary.toArgb(),
+                        MaterialTheme.colorScheme.tertiary.toArgb(),
+                        MaterialTheme.colorScheme.primaryContainer.toArgb()
+                    ),
+                    emitter = Emitter(duration = 5.seconds).perSecond(50),
+                    position = Position.Relative(0.0, 0.5)
+                ),
+                Party(
+                    speed = 10f,
+                    maxSpeed = 30f,
+                    damping = 0.9f,
+                    angle = Angle.LEFT + 45,
+                    spread = Spread.SMALL + 30,
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary.toArgb(),
+                        MaterialTheme.colorScheme.secondary.toArgb(),
+                        MaterialTheme.colorScheme.tertiary.toArgb(),
+                        MaterialTheme.colorScheme.primaryContainer.toArgb()
+                    ),
+                    emitter = Emitter(duration = 5.seconds).perSecond(50),
+                    position = Position.Relative(1.0, 0.5)
+                )
+            ),
+            onParticleSystemEnded = { _, _ -> isAnimating = false }
+        )
     }
 
     if (showBottomSheet && selectedExercise != null) {
