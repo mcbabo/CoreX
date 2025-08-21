@@ -78,6 +78,7 @@ import at.mcbabo.corex.data.models.WorkoutModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.navigation.Screen
 import at.mcbabo.corex.ui.components.SwipeableWorkoutExerciseCard
+import at.mcbabo.corex.ui.components.WorkoutSummary
 import at.mcbabo.corex.ui.components.bottomsheets.WorkoutExerciseDetailBottomSheet
 import at.mcbabo.corex.ui.components.dialogs.DeleteWorkoutDialog
 import io.github.vinceglb.confettikit.compose.ConfettiKit
@@ -444,47 +445,6 @@ fun WorkoutScreen(
             dialogText = stringResource(R.string.delete_workout_desc),
             icon = Icons.Default.Info
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun WorkoutSummaryCard(workout: Workout) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = stringResource(R.string.workout_progress),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            val completedExercises = workout.exercises.count { it.workoutExercise.isCompleted }
-            val totalExercises = workout.exercises.size
-            val progress = if (totalExercises > 0) completedExercises.toFloat() / totalExercises else 0f
-            val animatedProgress by animateFloatAsState(
-                targetValue = progress, animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                LinearProgressIndicator(
-                    progress = { animatedProgress }, modifier = Modifier.weight(1f)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "$completedExercises/$totalExercises ${stringResource(R.string.completed)}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
     }
 }
 
