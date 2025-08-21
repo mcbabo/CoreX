@@ -1,4 +1,4 @@
-package at.mcbabo.corex.ui.components
+package at.mcbabo.corex.ui.components.dialogs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

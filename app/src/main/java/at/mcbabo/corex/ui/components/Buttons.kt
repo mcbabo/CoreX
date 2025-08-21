@@ -13,9 +13,7 @@ import at.mcbabo.corex.R
 fun BackButton(onClick: () -> Unit) {
     IconButton(
         modifier = Modifier,
-        onClick = {
-            onClick()
-        }
+        onClick = { onClick() }
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,

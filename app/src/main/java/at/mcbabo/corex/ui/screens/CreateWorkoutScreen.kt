@@ -10,12 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -45,6 +41,7 @@ import at.mcbabo.corex.R
 import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
+import at.mcbabo.corex.ui.components.BackButton
 import at.mcbabo.corex.ui.components.ExerciseListItem
 import at.mcbabo.corex.ui.components.FilterChips
 import at.mcbabo.corex.ui.components.SelectedExerciseItem
@@ -61,17 +58,15 @@ fun CreateWorkoutScreen(
     exerciseViewModel: ExerciseViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-
-    var selectedWeekdays by remember { mutableStateOf<Set<DayOfWeek>>(emptySet()) }
-
-    var workoutName by remember { mutableStateOf("") }
-    var isCreating by remember { mutableStateOf(false) }
-
     val allExercises by exerciseViewModel.allExercises.collectAsState(initial = emptyList())
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState()
 
+    var selectedWeekdays by remember { mutableStateOf<Set<DayOfWeek>>(emptySet()) }
+    var workoutName by remember { mutableStateOf("") }
+    var isCreating by remember { mutableStateOf(false) }
     var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
     var selectedExercises by remember { mutableStateOf<List<ExerciseModel>>(emptyList()) }
+    val isLoading = allExercises.isEmpty() && muscleGroups.isEmpty()
 
     val availableExercises by remember {
         derivedStateOf {
@@ -88,28 +83,14 @@ fun CreateWorkoutScreen(
         }
     }
 
-    val isLoading = allExercises.isEmpty() && muscleGroups.isEmpty()
-
     val coroutineScope = rememberCoroutineScope()
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.create_workout)) },
-                navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
+                navigationIcon = { BackButton(onNavigateBack) },
                 actions = {
                     TextButton(
                         onClick = {
@@ -141,7 +122,8 @@ fun CreateWorkoutScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         if (isLoading) {
             Box(
@@ -175,7 +157,7 @@ fun CreateWorkoutScreen(
                     OutlinedTextField(
                         value = workoutName,
                         onValueChange = { workoutName = it },
-                        label = { Text("Workout Name") },
+                        label = { Text(stringResource(R.string.workout_name)) },
                         modifier =
                             Modifier
                                 .fillMaxWidth()
@@ -183,10 +165,7 @@ fun CreateWorkoutScreen(
                         singleLine = true
                     )
 
-                    WeekdaySelector(
-                        selectedDays = selectedWeekdays,
-                        onSelectionChanged = { selectedWeekdays = it }
-                    )
+                    WeekdaySelector(selectedDays = selectedWeekdays) { selectedWeekdays = it }
                 }
 
                 Column(
@@ -210,11 +189,7 @@ fun CreateWorkoutScreen(
                         )
 
                         Text(
-                            text = "${selectedExercises.size} ${
-                                stringResource(
-                                    R.string.exercises
-                                )
-                            }",
+                            text = "${selectedExercises.size} ${stringResource(R.string.exercises)}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -225,13 +200,9 @@ fun CreateWorkoutScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(selectedExercises) { exercise ->
-                            SelectedExerciseItem(
-                                exercise = exercise,
-                                onRemove = {
-                                    selectedExercises =
-                                        selectedExercises.filter { it.id != exercise.id }
-                                }
-                            )
+                            SelectedExerciseItem(exercise = exercise) {
+                                selectedExercises = selectedExercises.filter { it.id != exercise.id }
+                            }
                         }
                     }
                 }
@@ -276,11 +247,8 @@ fun CreateWorkoutScreen(
                             ExerciseListItem(
                                 exercise,
                                 Modifier.padding(horizontal = 16.dp),
-                                onClick = {
-                                    selectedExercises = selectedExercises + exercise
-                                },
-                                {}
-                            )
+                                onClick = { selectedExercises = selectedExercises + exercise }
+                            ) {}
                         }
                     }
                 }

@@ -8,19 +8,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.EnergySavingsLeaf
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TypeSpecimen
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.exitUntilCollapsedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.databinding.library.BuildConfig
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,8 +36,9 @@ import androidx.navigation.NavController
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.viewmodels.SettingsViewModel
 import at.mcbabo.corex.navigation.Screen
+import at.mcbabo.corex.ui.components.BackButton
 import at.mcbabo.corex.ui.components.PreferencesHintCard
-import at.mcbabo.corex.ui.components.SettingItem
+import at.mcbabo.corex.ui.components.SettingsItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -50,15 +47,14 @@ import kotlinx.coroutines.launch
 fun SettingsScreen(
     navController: NavController, onNavigateBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val coroutineScope = rememberCoroutineScope()
-
     val settings by viewModel.settings.collectAsStateWithLifecycle()
-
-    val debugClickCount = remember { mutableIntStateOf(0) }
 
     val clickThreshold = 5
     val timeLimit = 2000L // 2 seconds
+
+    val debugClickCount = remember { mutableIntStateOf(0) }
+    val scrollBehavior = exitUntilCollapsedScrollBehavior()
+    val coroutineScope = rememberCoroutineScope()
 
     fun debugOnClick() {
         debugClickCount.intValue++
@@ -75,22 +71,15 @@ fun SettingsScreen(
     }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.settings)) },
+                navigationIcon = { BackButton(onNavigateBack) },
                 scrollBehavior = scrollBehavior,
-                expandedHeight = TopAppBarDefaults.LargeAppBarExpandedHeight + 24.dp,
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back"
-                        )
-                    }
-                })
-        }) { innerPadding ->
+            )
+        }
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,7 +92,7 @@ fun SettingsScreen(
             }
 
             item {
-                SettingItem(
+                SettingsItem(
                     title = stringResource(R.string.general),
                     description = stringResource(R.string.general_desc),
                     icon = Icons.Outlined.Settings
@@ -113,7 +102,7 @@ fun SettingsScreen(
             }
 
             item {
-                SettingItem(
+                SettingsItem(
                     title = stringResource(R.string.appearance),
                     description = stringResource(R.string.appearance_desc),
                     icon = Icons.Outlined.Palette
@@ -123,7 +112,7 @@ fun SettingsScreen(
             }
 
             item {
-                SettingItem(
+                SettingsItem(
                     title = stringResource(R.string.units),
                     description = stringResource(R.string.units_desc),
                     icon = Icons.Outlined.TypeSpecimen
@@ -133,7 +122,7 @@ fun SettingsScreen(
             }
 
             item {
-                SettingItem(
+                SettingsItem(
                     title = "Debug Info",
                     description = "Version Name : ${BuildConfig.VERSION_NAME} | Version Code : ${BuildConfig.VERSION_CODE}" +
                             if (settings.debugModeEnabled) " | Dev Mode" else "",

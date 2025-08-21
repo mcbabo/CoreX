@@ -1,41 +1,36 @@
 package at.mcbabo.corex.navigation
 
 sealed class Screen(val route: String) {
-    object Home : Screen(route = "home_screen")
+    object Home : Screen("home")
 
     // EXERCISES
-    object Exercises : Screen(route = "exercises_screen")
-
-    object CreateExercise : Screen(route = "create_exercise_screen")
+    object Exercises : Screen("exercises")
+    object CreateExercise : Screen("create_exercise")
 
     // WORKOUTS
-    object CreateWorkout : Screen(route = "create_workout_screen")
+    object CreateWorkout : Screen("create_workout")
 
-    object EditWorkout : Screen(route = "edit_workout_screen/{workoutId}") {
-        fun passWorkoutId(workoutId: Long) = "edit_workout_screen/$workoutId"
+    object EditWorkout : Screen("edit_workout/{workoutId}") {
+        fun createRoute(workoutId: Long) = "edit_workout/$workoutId"
     }
 
-    object WorkoutDetail : Screen(route = "workout_detail_screen/{workoutId}") {
-        fun passWorkoutId(workoutId: Long) = "workout_detail_screen/$workoutId"
+    object WorkoutDetail : Screen("workout_detail/{workoutId}") {
+        fun createRoute(workoutId: Long) = "workout_detail/$workoutId"
     }
 
-    object WeightProgressionDetailScreen : Screen(route = "weight_progression_detail_screen/{exerciseId}") {
-        fun passExerciseId(exerciseId: Long) = "weight_progression_detail_screen/$exerciseId"
+    object WeightProgressionDetail : Screen("weight_progression_detail/{exerciseId}") {
+        fun createRoute(exerciseId: Long) = "weight_progression_detail/$exerciseId"
     }
 
-    // SETTINGS
-    object SettingsGraph : Screen(route = "settings_graph")
+    // SETTINGS - Graph routes
+    object SettingsGraph : Screen("settings_graph")
+    object AppearanceSettingsGraph : Screen("appearance_settings_graph")
 
-    object Settings : Screen(route = "settings_screen")
-
-    object GeneralSettings : Screen(route = "general_settings_screen")
-
-
-    object AppearanceSettingsGraph : Screen(route = "appearance_settings_graph")
-    object AppearanceSettings : Screen(route = "appearance_settings_screen")
-    object ColorModeSettings : Screen(route = "color_mode_settings_screen")
-
-    object LanguageSettings : Screen(route = "language_settings_screen")
-
-    object UnitsSettings : Screen(route = "units_settings_screen")
+    // SETTINGS - Screen routes
+    object Settings : Screen("settings")
+    object GeneralSettings : Screen("general_settings")
+    object AppearanceSettings : Screen("appearance_settings")
+    object ColorModeSettings : Screen("color_mode_settings")
+    object LanguageSettings : Screen("language_settings")
+    object UnitsSettings : Screen("units_settings")
 }

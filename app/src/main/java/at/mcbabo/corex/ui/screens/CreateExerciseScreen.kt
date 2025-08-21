@@ -9,12 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -40,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import at.mcbabo.corex.R
 import at.mcbabo.corex.data.models.ExerciseModel
 import at.mcbabo.corex.data.viewmodels.ExerciseViewModel
+import at.mcbabo.corex.ui.components.BackButton
 import at.mcbabo.corex.ui.components.FilterChips
 import at.mcbabo.corex.ui.components.PreferencesHintCard
 import kotlinx.coroutines.launch
@@ -48,8 +46,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateExerciseScreen(onNavigateBack: () -> Unit, exerciseViewModel: ExerciseViewModel = hiltViewModel()) {
     val muscleGroups by exerciseViewModel.muscleGroups.collectAsState(initial = emptyList())
-    var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
 
+    var selectedMuscleGroup by remember { mutableStateOf<String?>(null) }
     var isBodyWeight by remember { mutableStateOf(false) }
     var exerciseName by remember { mutableStateOf("") }
     var exerciseDescription by remember { mutableStateOf("") }
@@ -58,46 +56,39 @@ fun CreateExerciseScreen(onNavigateBack: () -> Unit, exerciseViewModel: Exercise
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.add_exercise)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
+                navigationIcon = { BackButton(onNavigateBack) },
                 actions = {
-                    TextButton(onClick = {
-                        if (exerciseDescription.isNotBlank() && !selectedMuscleGroup.isNullOrEmpty()) {
-                            exerciseViewModel.createExercise(
-                                ExerciseModel(
-                                    name = exerciseName,
-                                    description = exerciseDescription,
-                                    muscleGroup = selectedMuscleGroup.toString(),
-                                    isCustom = true, // Every created exercise is custom except built-in ones
-                                    isBodyWeight = false
+                    TextButton(
+                        onClick = {
+                            if (exerciseDescription.isNotBlank() && !selectedMuscleGroup.isNullOrEmpty()) {
+                                exerciseViewModel.createExercise(
+                                    ExerciseModel(
+                                        name = exerciseName,
+                                        description = exerciseDescription,
+                                        muscleGroup = selectedMuscleGroup.toString(),
+                                        isCustom = true, // Every created exercise is custom except built-in ones
+                                        isBodyWeight = false
+                                    )
                                 )
-                            )
-                            onNavigateBack()
-                        } else {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    "Please fill in all fields before creating an exercise."
-                                )
+                                onNavigateBack()
+                            } else {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        "Please fill in all fields before creating an exercise."
+                                    )
+                                }
                             }
                         }
-                    }) {
+                    ) {
                         Text(stringResource(R.string.create))
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         Column(
             modifier =
@@ -124,9 +115,7 @@ fun CreateExerciseScreen(onNavigateBack: () -> Unit, exerciseViewModel: Exercise
                     value = exerciseName,
                     onValueChange = { exerciseName = it },
                     label = { Text(stringResource(R.string.exercise_name)) },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
 
@@ -148,10 +137,9 @@ fun CreateExerciseScreen(onNavigateBack: () -> Unit, exerciseViewModel: Exercise
                         }
                     },
                     label = { Text(stringResource(R.string.description)) },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(120.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
                     singleLine = false,
                     maxLines = 3
                 )

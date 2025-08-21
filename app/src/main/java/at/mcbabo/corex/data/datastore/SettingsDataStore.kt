@@ -1,10 +1,10 @@
 package at.mcbabo.corex.data.datastore
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import at.mcbabo.corex.data.models.AppSettings
@@ -37,17 +37,13 @@ constructor(private val context: Context) {
     val settingsFlow: Flow<AppSettings> =
         context.settingsDataStore.data
             .catch { exception ->
-                // Handle any errors gracefully
-                emit(
-                    androidx.datastore.preferences.core
-                        .emptyPreferences()
-                )
+                emit(emptyPreferences())
             }.map { preferences ->
                 val settingsJson = preferences[SETTINGS_JSON_KEY]
                 if (settingsJson != null) {
                     try {
                         json.decodeFromString<AppSettings>(settingsJson)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         AppSettings() // Return defaults if parsing fails
                     }
                 } else {
@@ -68,7 +64,7 @@ constructor(private val context: Context) {
                 if (currentSettingsJson != null) {
                     try {
                         json.decodeFromString<AppSettings>(currentSettingsJson)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         AppSettings()
                     }
                 } else {
@@ -77,7 +73,6 @@ constructor(private val context: Context) {
 
             val updatedSettings = update(currentSettings)
             preferences[SETTINGS_JSON_KEY] = json.encodeToString(updatedSettings)
-            Log.d("SETTINGS", json.encodeToString(updatedSettings))
         }
     }
 }

@@ -51,37 +51,41 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
     val todayWorkouts = workouts.filter { it.weekdays.contains(today) }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.my_workouts)) },
-                actions = {
-                    IconButton(onClick = {
-                        navController.navigate(route = Screen.Exercises.route)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Category,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigate(route = Screen.SettingsGraph.route)
-                    }) {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(route = Screen.SettingsGraph.route)
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
                             contentDescription = "Settings"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(route = Screen.Exercises.route)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Category,
+                            contentDescription = "Localized description"
                         )
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate(route = Screen.CreateWorkout.route)
-            }) {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(route = Screen.CreateWorkout.route)
+                }
+            ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
         }
@@ -141,17 +145,12 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                     LazyColumn {
                         items(todayWorkouts) { workout ->
                             WorkoutListItem(
-                                workout,
-                                Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                                {
-                                    navController.navigate(
-                                        Screen.WorkoutDetail.passWorkoutId(
-                                            workout.id
-                                        )
-                                    )
-                                },
-                                {}
-                            )
+                                workout = workout,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                                onClick = {
+                                    navController.navigate(Screen.WorkoutDetail.createRoute(workout.id))
+                                }
+                            ) {}
                         }
                     }
                 }
@@ -178,17 +177,12 @@ fun HomeScreen(navController: NavController, workoutViewModel: WorkoutViewModel 
                 LazyColumn {
                     items(workouts) { workout ->
                         WorkoutListItem(
-                            workout,
-                            Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                            {
-                                navController.navigate(
-                                    Screen.WorkoutDetail.passWorkoutId(
-                                        workout.id
-                                    )
-                                )
-                            },
-                            {}
-                        )
+                            workout = workout,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                            onClick = {
+                                navController.navigate(Screen.WorkoutDetail.createRoute(workout.id))
+                            }
+                        ) {}
                     }
                 }
             }

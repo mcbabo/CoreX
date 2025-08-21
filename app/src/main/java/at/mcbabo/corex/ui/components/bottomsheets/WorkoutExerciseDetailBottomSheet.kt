@@ -67,7 +67,7 @@ fun WorkoutExerciseDetailBottomSheet(workoutExercise: WorkoutExercise, onNavigat
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            WeightProgressionGraph(workoutExercise.weightProgressions, onNavigate = { onNavigate() })
+            WeightProgressionGraph(workoutExercise.weightProgressions) { onNavigate() }
 
             Spacer(modifier = Modifier.height(16.dp))
         }

@@ -2,7 +2,6 @@ package at.mcbabo.corex.ui.screens.settings.appearance
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,8 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.TopAppBarDefaults.exitUntilCollapsedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -33,26 +31,16 @@ import at.mcbabo.corex.ui.components.PreferencesHintCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LanguageSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
+    val localUriHandler = LocalUriHandler.current
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-            rememberTopAppBarState(),
-            canScroll = { true }
-        )
-
-    val localUriHandler = LocalUriHandler.current
+    val scrollBehavior = exitUntilCollapsedScrollBehavior()
 
     Scaffold(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(modifier = Modifier, text = stringResource(R.string.language))
-                },
+                title = { Text(text = stringResource(R.string.language)) },
                 navigationIcon = { BackButton(onNavigateBack) },
                 scrollBehavior = scrollBehavior
             )
@@ -78,11 +66,10 @@ fun LanguageSettingsScreen(onNavigateBack: () -> Unit, viewModel: SettingsViewMo
                 PreferenceSingleChoiceItem(
                     text = language.displayName,
                     selected = (language == settings.language),
-                    onClick = {
-                        viewModel.setLanguage(language)
-                    },
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
-                )
+                ) {
+                    viewModel.setLanguage(language)
+                }
             }
         }
     }

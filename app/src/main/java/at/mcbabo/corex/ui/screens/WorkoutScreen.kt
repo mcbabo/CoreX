@@ -3,7 +3,6 @@ package at.mcbabo.corex.ui.screens
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,19 +18,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.LocalFireDepartment
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -40,15 +36,12 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -63,7 +56,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
@@ -72,13 +64,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import at.mcbabo.corex.R
-import at.mcbabo.corex.data.entities.Workout
 import at.mcbabo.corex.data.entities.WorkoutExercise
 import at.mcbabo.corex.data.models.WorkoutModel
 import at.mcbabo.corex.data.viewmodels.WorkoutViewModel
 import at.mcbabo.corex.navigation.Screen
+import at.mcbabo.corex.ui.components.BackButton
 import at.mcbabo.corex.ui.components.SwipeableWorkoutExerciseCard
+import at.mcbabo.corex.ui.components.WorkoutSummary
 import at.mcbabo.corex.ui.components.bottomsheets.WorkoutExerciseDetailBottomSheet
+import at.mcbabo.corex.ui.components.dialogs.DeleteWorkoutDialog
 import io.github.vinceglb.confettikit.compose.ConfettiKit
 import io.github.vinceglb.confettikit.core.Angle
 import io.github.vinceglb.confettikit.core.Party
@@ -101,26 +95,25 @@ fun WorkoutScreen(
     onNavigateBack: () -> Unit,
     workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     val workout by workoutViewModel.getWorkoutDetails(workoutId).collectAsState(null)
 
     val coroutineScope = rememberCoroutineScope()
     var isAnimating by remember { mutableStateOf(false) }
-
+    var showMenu by remember { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
-    var selectedExercise by remember { mutableStateOf<WorkoutExercise?>(null) }
     var showBottomSheet by remember { mutableStateOf(false) }
-    var arrangeMode by remember { mutableStateOf(false) }
-
     val openAlertDialog = remember { mutableStateOf(false) }
 
-    val hapticFeedback = LocalHapticFeedback.current
-    var orderedExercises by remember { mutableStateOf(emptyList<WorkoutExercise>()) }
+    var selectedExercise by remember { mutableStateOf<WorkoutExercise?>(null) }
+
     val lazyListState = rememberLazyListState()
+    var arrangeMode by remember { mutableStateOf(false) }
+    var orderedExercises by remember { mutableStateOf(emptyList<WorkoutExercise>()) }
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
         orderedExercises = orderedExercises.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
-
         hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
     }
 
@@ -151,13 +144,7 @@ fun WorkoutScreen(
                         }
                     }
                 },
-                navigationIcon = {
-                    IconButton(onClick = { onNavigateBack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back"
-                        )
-                    }
-                },
+                navigationIcon = { BackButton(onNavigateBack) },
                 actions = {
                     IconButton(
                         onClick = {
@@ -173,7 +160,6 @@ fun WorkoutScreen(
                         )
                     }
 
-                    var showMenu by remember { mutableStateOf(false) }
                     Box {
                         IconButton(onClick = { showMenu = true }) {
                             Icon(
@@ -188,7 +174,7 @@ fun WorkoutScreen(
                                 onClick = {
                                     showMenu = false
                                     navController.navigate(
-                                        route = Screen.EditWorkout.passWorkoutId(
+                                        route = Screen.EditWorkout.createRoute(
                                             workoutId
                                         )
                                     )
@@ -243,7 +229,7 @@ fun WorkoutScreen(
                 .padding(paddingValues)
         ) {
             workout?.let { workoutData ->
-                WorkoutSummaryCard(workout = workoutData)
+                WorkoutSummary(workout = workoutData)
 
                 Row(
                     modifier = Modifier
@@ -270,7 +256,7 @@ fun WorkoutScreen(
                     EmptyExercisesState(
                         onAddExercise = {
                             navController.navigate(
-                                route = Screen.EditWorkout.passWorkoutId(
+                                route = Screen.EditWorkout.createRoute(
                                     workoutId
                                 )
                             )
@@ -331,16 +317,15 @@ fun WorkoutScreen(
                                                     exercise.workoutExercise.id,
                                                     isCompleted
                                                 )
-                                            },
-                                            onRecordWeight = { weight, notes ->
-                                                workoutViewModel.recordWeight(
-                                                    exercise.workoutExercise.id,
-                                                    exercise.exercise.id,
-                                                    weight,
-                                                    notes
-                                                )
                                             }
-                                        )
+                                        ) { weight, notes ->
+                                            workoutViewModel.recordWeight(
+                                                exercise.workoutExercise.id,
+                                                exercise.exercise.id,
+                                                weight,
+                                                notes
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -417,7 +402,7 @@ fun WorkoutScreen(
                     bottomSheetState.hide()
                 }
                 navController.navigate(
-                    Screen.WeightProgressionDetailScreen.passExerciseId(
+                    Screen.WeightProgressionDetail.createRoute(
                         selectedExercise?.exercise?.id ?: 0
                     )
                 )
@@ -443,47 +428,6 @@ fun WorkoutScreen(
             dialogText = stringResource(R.string.delete_workout_desc),
             icon = Icons.Default.Info
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun WorkoutSummaryCard(workout: Workout) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = stringResource(R.string.workout_progress),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            val completedExercises = workout.exercises.count { it.workoutExercise.isCompleted }
-            val totalExercises = workout.exercises.size
-            val progress = if (totalExercises > 0) completedExercises.toFloat() / totalExercises else 0f
-            val animatedProgress by animateFloatAsState(
-                targetValue = progress, animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                LinearProgressIndicator(
-                    progress = { animatedProgress }, modifier = Modifier.weight(1f)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "$completedExercises/$totalExercises ${stringResource(R.string.completed)}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
     }
 }
 
@@ -522,42 +466,4 @@ fun EmptyExercisesState(onAddExercise: () -> Unit) {
             Text(stringResource(R.string.add_exercise))
         }
     }
-}
-
-@Composable
-fun DeleteWorkoutDialog(
-    onDismissRequest: () -> Unit, onConfirmation: () -> Unit, dialogTitle: String, dialogText: String, icon: ImageVector
-) {
-    AlertDialog(
-        icon = {
-            Icon(icon, contentDescription = dialogTitle)
-        },
-        title = {
-            Text(text = dialogTitle)
-        },
-        text = {
-            Text(text = dialogText)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                }
-            ) {
-                Text(stringResource(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                Text(stringResource(R.string.dismiss))
-            }
-        }
-    )
 }

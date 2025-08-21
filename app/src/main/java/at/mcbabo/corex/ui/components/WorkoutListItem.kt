@@ -40,11 +40,7 @@ fun WorkoutListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         ExerciseAvatar(workout.name)
-        Column(
-            modifier =
-                Modifier
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
-        ) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
             Text(text = workout.name)
             Text(
                 "${

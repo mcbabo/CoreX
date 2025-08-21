@@ -25,9 +25,7 @@ fun SelectedExerciseItem(exercise: ExerciseModel, onRemove: () -> Unit) {
         modifier =
             Modifier
                 .size(90.dp)
-                .clickable(
-                    onClick = onRemove
-                ),
+                .clickable { onRemove },
         shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.secondaryContainer
     ) {
