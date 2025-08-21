@@ -66,7 +66,7 @@
     <string name="units_desc">Wähle zwischen verschiedenen Einheiten</string>
     <string name="weekday">Wochentag</string>
     <string name="weight">Gewicht</string>
-    <string name="weight_progression">Gewichtverlauf</string>
+    <string name="weight_progression">Gewichtsverlauf</string>
     <string name="workout_progress">Workout Fortschritt</string>
     <string name="workouts">Workouts</string>
     <string name="confirm">Bestätigen</string>
@@ -78,4 +78,5 @@
     <string name="no_exercises_yet">Keine Übungen bis jetzt</string>
     <string name="no_exercises_yet_desc">Füge ein paar Übungen hinzu, um zu starten</string>
     <string name="dismiss">Ablehnen</string>
+    <string name="no_notes">Keine Notizen</string>
 </resources>

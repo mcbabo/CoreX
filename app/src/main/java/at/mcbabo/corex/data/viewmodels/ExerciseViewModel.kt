@@ -3,6 +3,7 @@ package at.mcbabo.corex.data.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mcbabo.corex.data.models.ExerciseModel
+import at.mcbabo.corex.data.models.WeightProgressionModel
 import at.mcbabo.corex.data.repositories.ExerciseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -57,5 +58,9 @@ class ExerciseViewModel @Inject constructor(private val exerciseRepository: Exer
         viewModelScope.launch {
             exerciseRepository.createExercise(exercise)
         }
+    }
+
+    fun getWeightProgressionByExercise(exerciseId: Long): Flow<List<WeightProgressionModel>> {
+        return exerciseRepository.getWeightProgressionByExercise(exerciseId)
     }
 }

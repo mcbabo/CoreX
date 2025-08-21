@@ -15,6 +15,7 @@ import at.mcbabo.corex.ui.screens.EditWorkoutScreen
 import at.mcbabo.corex.ui.screens.ExercisesScreen
 import at.mcbabo.corex.ui.screens.HomeScreen
 import at.mcbabo.corex.ui.screens.SettingsScreen
+import at.mcbabo.corex.ui.screens.WeightProgressionDetailScreen
 import at.mcbabo.corex.ui.screens.WorkoutScreen
 import at.mcbabo.corex.ui.screens.settings.GeneralSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.UnitsSettingsScreen
@@ -55,6 +56,17 @@ fun CoreXNavGraph(navController: NavHostController, startDestination: Screen = S
         ) { backStackEntry ->
             val workoutId = backStackEntry.arguments?.getLong("workoutId") ?: 0
             EditWorkoutScreen(navController, workoutId, { navController.popBackStack() })
+        }
+
+        animatedComposable(
+            route = Screen.WeightProgressionDetailScreen.route,
+            arguments = listOf(navArgument("exerciseId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val exerciseId = backStackEntry.arguments?.getLong("exerciseId") ?: 0
+            WeightProgressionDetailScreen(
+                exerciseId = exerciseId,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         animatedComposable(
