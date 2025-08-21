@@ -75,46 +75,42 @@ fun AppearanceSettingsScreen(
                 icon = Icons.Outlined.Colorize,
                 description = stringResource(R.string.dynamic_color_desc),
                 isChecked = settings.dynamicColors,
-                onClick = {
-                    viewModel.setDynamicColors(!settings.dynamicColors)
-                }
-            )
+            ) {
+                viewModel.setDynamicColors(!settings.dynamicColors)
+            }
 
             PreferenceSwitchWithDivider(
                 title = stringResource(R.string.dark_mode),
-                icon = if (settings.selectedTheme ==
-                    ThemeMode.DARK
-                ) {
+                icon = if (settings.selectedTheme == ThemeMode.DARK) {
                     Icons.Outlined.DarkMode
                 } else {
                     Icons.Outlined.LightMode
                 },
                 isChecked = (settings.selectedTheme == ThemeMode.DARK || (settings.selectedTheme == ThemeMode.SYSTEM && isSystemInDarkTheme())),
                 description =
-                    if (settings.selectedTheme.symbol ==
-                        true
-                    ) {
-                        stringResource(R.string.on)
-                    } else {
-                        settings.selectedTheme.symbol?.let {
-                            if (!it) {
-                                stringResource(
-                                    R.string.off
-                                )
-                            } else {
-                                "System"
-                            }
+                    when (settings.selectedTheme) {
+                        ThemeMode.DARK -> {
+                            stringResource(R.string.on)
+                        }
+
+                        ThemeMode.LIGHT -> {
+                            stringResource(R.string.off)
+                        }
+
+                        else -> {
+                            "System"
                         }
                     },
-                onChecked = {
-                    if (settings.selectedTheme == ThemeMode.LIGHT) {
-                        viewModel.setTheme(ThemeMode.DARK)
-                    } else {
-                        viewModel.setTheme(ThemeMode.LIGHT)
-                    }
-                },
-                onClick = { }
-            )
+                onClick = {
+                    navController.navigate(Screen.ColorModeSettings.route)
+                }
+            ) {
+                if (settings.selectedTheme == ThemeMode.LIGHT) {
+                    viewModel.setTheme(ThemeMode.DARK)
+                } else {
+                    viewModel.setTheme(ThemeMode.LIGHT)
+                }
+            }
 
             PreferenceItem(
                 title = stringResource(R.string.language),

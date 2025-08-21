@@ -20,6 +20,7 @@ import at.mcbabo.corex.ui.screens.WorkoutScreen
 import at.mcbabo.corex.ui.screens.settings.GeneralSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.UnitsSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.appearance.AppearanceSettingsScreen
+import at.mcbabo.corex.ui.screens.settings.appearance.ColorModeSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.appearance.LanguageSettingsScreen
 
 @Composable
@@ -105,11 +106,10 @@ fun NavGraphBuilder.settings(navController: NavController, onNavigateBack: () ->
             GeneralSettingsScreen(onNavigateBack)
         }
 
-        animatedComposable(
-            route = Screen.AppearanceSettings.route
-        ) { backStackEntry ->
-            AppearanceSettingsScreen(navController, onNavigateBack)
-        }
+        appearanceSettings(
+            navController = navController,
+            onNavigateBack = onNavigateBack
+        )
 
         animatedComposable(
             route = Screen.LanguageSettings.route
@@ -121,6 +121,31 @@ fun NavGraphBuilder.settings(navController: NavController, onNavigateBack: () ->
             route = Screen.UnitsSettings.route
         ) { backStackEntry ->
             UnitsSettingsScreen(onNavigateBack)
+        }
+    }
+}
+
+fun NavGraphBuilder.appearanceSettings(
+    navController: NavController,
+    onNavigateBack: () -> Unit
+) {
+    navigation(
+        startDestination = Screen.AppearanceSettings.route,
+        route = Screen.AppearanceSettingsGraph.route
+    ) {
+        animatedComposable(
+            route = Screen.AppearanceSettings.route
+        ) { backStackEntry ->
+            AppearanceSettingsScreen(
+                navController = navController,
+                onNavigateBack = onNavigateBack
+            )
+        }
+
+        animatedComposable(
+            route = Screen.ColorModeSettings.route
+        ) { backStackEntry ->
+            ColorModeSettingsScreen(onNavigateBack)
         }
     }
 }
