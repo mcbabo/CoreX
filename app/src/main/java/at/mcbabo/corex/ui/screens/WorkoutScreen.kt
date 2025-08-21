@@ -357,8 +357,18 @@ fun WorkoutScreen(
             sheetState = bottomSheetState
         ) {
             WorkoutExerciseDetailBottomSheet(
-                workoutExercise = selectedExercise!!
-            )
+                workoutExercise = selectedExercise!!,
+            ) {
+                coroutineScope.launch {
+                    showBottomSheet = false
+                    bottomSheetState.hide()
+                }
+                navController.navigate(
+                    Screen.WeightProgressionDetailScreen.passExerciseId(
+                        selectedExercise?.exercise?.id ?: 0
+                    )
+                )
+            }
         }
     }
 
