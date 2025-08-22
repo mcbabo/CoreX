@@ -70,7 +70,6 @@ android {
         compose = true
     }
 
-    // Custom APK naming
     applicationVariants.all {
         outputs.all {
             val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
