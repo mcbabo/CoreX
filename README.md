@@ -22,6 +22,10 @@ libraries, and Compose UI components.
 - Push-Notification of today's workout
 - Dynamic theming
 
+## Download
+
+- Download the latest APK from the [Releases](https://github.com/mcbabo/CoreX/releases/latest) page.
+
 ## Contributing
 
 Contributions are welcome!
