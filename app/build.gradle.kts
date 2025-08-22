@@ -15,30 +15,27 @@ plugins {
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 
 android {
-    if (keystorePropertiesFile.exists()) {
-        val keystoreProperties = Properties()
-        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-        signingConfigs {
-            create("upload") {
-                keyAlias = keystoreProperties["keyAlias"].toString()
-                keyPassword = keystoreProperties["keyPassword"].toString()
+    signingConfigs {
+        create("release") {
+            val storeFileEnv = System.getenv("KEYSTORE_PATH")
+            if (storeFileEnv != null) {
+                storeFile = file(storeFileEnv)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            } else if (keystorePropertiesFile.exists()) {
+                val keystoreProperties = Properties()
+                keystoreProperties.load(FileInputStream(keystorePropertiesFile))
                 storeFile = file(keystoreProperties["storeFile"]!!)
                 storePassword = keystoreProperties["storePassword"].toString()
+                keyAlias = keystoreProperties["keyAlias"].toString()
+                keyPassword = keystoreProperties["keyPassword"].toString()
             }
         }
     }
 
     namespace = "at.mcbabo.corex"
     compileSdk = 36
-
-    applicationVariants.all {
-        outputs.all {
-            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            val appName = "CoreX"
-            val version = versionName
-            output.outputFileName = "$appName-$version.apk"
-        }
-    }
 
     defaultConfig {
         applicationId = "at.mcbabo.corex"
@@ -53,18 +50,13 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            if (keystorePropertiesFile.exists()) {
-                signingConfig = signingConfigs.getByName("upload")
-            }
         }
         debug {
-            if (keystorePropertiesFile.exists()) {
-                signingConfig = signingConfigs.getByName("upload")
-            }
             versionNameSuffix = "-debug"
         }
     }
@@ -82,7 +74,7 @@ android {
     applicationVariants.all {
         outputs.all {
             val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            output.outputFileName = "CoreX-$versionName.apk"
+            output.outputFileName = "CoreX-${versionName}.apk"
         }
     }
 }
