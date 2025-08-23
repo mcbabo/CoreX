@@ -1,0 +1,12 @@
+Modern Workout App for tracking workouts, exercises and weight progression.
+
+- Workouts
+- Custom exercises
+- Weight-Progression
+- Push-Notification of today's workout
+- Homescreen widgets
+- Dynamic theming
+
+Built using **Kotlin** and **Jetpack Compose** — Android's modern toolkit for
+building native UIs. This app demonstrates best practices with a clean architecture, modern
+libraries, and Compose UI components.

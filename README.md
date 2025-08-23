@@ -1,17 +1,19 @@
-# CoreX Android App
+# CoreX
 
-An Android app built using **Kotlin** and **Jetpack Compose** — Android's modern toolkit for
+Modern Workout App for tracking workouts, exercises and weight progression.
+
+Built using **Kotlin** and **Jetpack Compose** — Android's modern toolkit for
 building native UIs. This app demonstrates best practices with a clean architecture, modern
 libraries, and Compose UI components.
 
 ## Screenshots
 
 <div align="center">
-<img src="images/home_screen.png" width="30%"  alt=""/>
-<img src="images/workout_screen.png" width="30%"  alt=""/>
-<img src="images/create_workout_screen.png" width="30%"  alt=""/>
-<img src="images/exercises_screen.png" width="30%"  alt=""/>
-<img src="images/bottomsheet.png" width="30%"  alt=""/>
+<img src="metadata/en-US/images/phoneScreenshots/home_screen.png" width="30%"  alt=""/>
+<img src="metadata/en-US/images/phoneScreenshots/workout_screen.png" width="30%"  alt=""/>
+<img src="metadata/en-US/images/phoneScreenshots/create_workout_screen.png" width="30%"  alt=""/>
+<img src="metadata/en-US/images/phoneScreenshots/exercises_screen.png" width="30%"  alt=""/>
+<img src="metadata/en-US/images/phoneScreenshots/bottomsheet.png" width="30%"  alt=""/>
 </div>
 
 ## Features
