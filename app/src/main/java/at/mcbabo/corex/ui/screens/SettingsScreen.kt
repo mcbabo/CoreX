@@ -57,6 +57,8 @@ fun SettingsScreen(
     val coroutineScope = rememberCoroutineScope()
 
     fun debugOnClick() {
+        if (settings.debugModeEnabled) navController.navigate(Screen.DevSettings.route)
+
         debugClickCount.intValue++
 
         if (debugClickCount.intValue >= clickThreshold) {

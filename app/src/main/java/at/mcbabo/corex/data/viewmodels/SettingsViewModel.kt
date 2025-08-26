@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.sqlite.db.SimpleSQLiteQuery
+import at.mcbabo.corex.data.dao.BackupDao
 import at.mcbabo.corex.data.models.AppSettings
 import at.mcbabo.corex.data.models.Language
 import at.mcbabo.corex.data.models.ThemeMode
@@ -14,17 +16,21 @@ import at.mcbabo.corex.data.models.WeightUnit
 import at.mcbabo.corex.data.repositories.SettingsRepository
 import at.mcbabo.corex.util.NotificationScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     application: Application,
     private val settingsRepository: SettingsRepository,
-    private val notificationScheduler: NotificationScheduler
+    private val notificationScheduler: NotificationScheduler,
+    private val backupDao: BackupDao
 ) : ViewModel() {
     private val appContext = application.applicationContext
 
@@ -108,6 +114,34 @@ class SettingsViewModel @Inject constructor(
     fun setDebugModeEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setDebugModeEnabled(enabled)
+        }
+    }
+
+    suspend fun exportSettingsToJson(): String {
+        return settingsRepository.exportAllSettingsToJson()
+    }
+
+    suspend fun importSettingsFromJson(jsonString: String) {
+        try {
+            val json = Json {
+                ignoreUnknownKeys = true
+                encodeDefaults = true
+            }
+            val importedSettings = json.decodeFromString<AppSettings>(jsonString)
+            settingsRepository.updateSettings(importedSettings)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun checkpointDatabase() {
+        withContext(Dispatchers.IO) {
+            try {
+                val query = SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)")
+                backupDao.checkpoint(query)
+            } catch (e: Exception) {
+                throw e
+            }
         }
     }
 }
