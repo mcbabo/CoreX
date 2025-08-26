@@ -17,6 +17,7 @@ import at.mcbabo.corex.ui.screens.HomeScreen
 import at.mcbabo.corex.ui.screens.SettingsScreen
 import at.mcbabo.corex.ui.screens.WeightProgressionDetailScreen
 import at.mcbabo.corex.ui.screens.WorkoutScreen
+import at.mcbabo.corex.ui.screens.settings.DevSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.GeneralSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.UnitsSettingsScreen
 import at.mcbabo.corex.ui.screens.settings.appearance.AppearanceSettingsScreen
@@ -130,6 +131,10 @@ fun NavGraphBuilder.settingsNavGraph(navController: NavController, onNavigateBac
 
         animatedComposable(Screen.UnitsSettings.route) {
             UnitsSettingsScreen(onNavigateBack = onNavigateBack)
+        }
+
+        animatedComposable(Screen.DevSettings.route) {
+            DevSettingsScreen(onNavigateBack = onNavigateBack)
         }
 
         // Nested appearance settings graph

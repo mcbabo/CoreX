@@ -33,4 +33,5 @@ sealed class Screen(val route: String) {
     object ColorModeSettings : Screen("color_mode_settings")
     object LanguageSettings : Screen("language_settings")
     object UnitsSettings : Screen("units_settings")
+    object DevSettings : Screen("dev_settings")
 }
