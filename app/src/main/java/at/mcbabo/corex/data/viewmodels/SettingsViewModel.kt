@@ -140,6 +140,7 @@ class SettingsViewModel @Inject constructor(
                 val query = SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)")
                 backupDao.checkpoint(query)
             } catch (e: Exception) {
+                throw e
             }
         }
     }
