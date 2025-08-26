@@ -86,4 +86,11 @@
     <string name="loading_workout_details">Lade Workoutdetails</string>
     <string name="show_icon">Zeige Icon</string>
     <string name="transparency">Transparenz</string>
+    <string name="developer_settings">Entwickeroptionen</string>
+    <string name="backup">Sicherung</string>
+    <string name="import_database_or_settings">Datenbank und Einstellungen importieren</string>
+    <string name="restore">Wiederherstellung</string>
+    <string name="export_database_settings">Datenbank und Einstellungen exportieren</string>
+    <string name="export_desc">Erstelle eine Sicherungskopie deiner Datenbank und Einstellungen.</string>
+    <string name="import_desc">Aus Sicherungsdateien wiederherstellen. Dadurch werden deine aktuellen Daten vollständig ersetzt.</string>
 </resources>

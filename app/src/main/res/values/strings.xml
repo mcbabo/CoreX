@@ -86,4 +86,11 @@
     <string name="loading_workout_details">Loading workout details...</string>
     <string name="show_icon">Show Icon</string>
     <string name="transparency">Transparency</string>
+    <string name="developer_settings">Developer Settings</string>
+    <string name="backup">Backup</string>
+    <string name="export_database_settings">Export Database and Settings</string>
+    <string name="import_database_or_settings">Import Database or Settings</string>
+    <string name="restore">Restore</string>
+    <string name="export_desc">Create a backup of your database and settings</string>
+    <string name="import_desc">Restore from backup files.️ This will completely replace your current data.</string>
 </resources>
