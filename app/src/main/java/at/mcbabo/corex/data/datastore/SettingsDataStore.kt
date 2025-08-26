@@ -10,14 +10,16 @@ import androidx.datastore.preferences.preferencesDataStore
 import at.mcbabo.corex.data.models.AppSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// Extension property to create DataStore instance
+const val SETTINGS_NAME = "app_settings"
+
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(
-    name = "app_settings"
+    name = SETTINGS_NAME
 )
 
 @Singleton
@@ -32,6 +34,12 @@ constructor(private val context: Context) {
 
     companion object {
         private val SETTINGS_JSON_KEY = stringPreferencesKey("settings_json")
+    }
+
+    suspend fun exportSettingsToJson(): String {
+        val currentSettings = settingsFlow.first()
+        val jsonString = json.encodeToString(currentSettings)
+        return jsonString
     }
 
     val settingsFlow: Flow<AppSettings> =

@@ -3,7 +3,7 @@ package at.mcbabo.corex.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
+import at.mcbabo.corex.data.dao.BackupDao
 import at.mcbabo.corex.data.dao.ExerciseDao
 import at.mcbabo.corex.data.dao.WeightProgressionDao
 import at.mcbabo.corex.data.dao.WorkoutDao
@@ -35,6 +35,8 @@ abstract class GymDatabase : RoomDatabase() {
 
     abstract fun weightProgressionDao(): WeightProgressionDao
 
+    abstract fun backupDao(): BackupDao
+
     @Suppress("unused")
     companion object {
         @Suppress("unused")
@@ -44,9 +46,5 @@ abstract class GymDatabase : RoomDatabase() {
 
     // Callback for database creation
     @Suppress("unused")
-    private class DatabaseCallback : Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-        }
-    }
+    private class DatabaseCallback : Callback()
 }

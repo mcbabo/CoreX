@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import at.mcbabo.corex.data.dao.BackupDao
 import at.mcbabo.corex.data.dao.ExerciseDao
 import at.mcbabo.corex.data.dao.WeightProgressionDao
 import at.mcbabo.corex.data.dao.WorkoutDao
@@ -15,6 +16,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+const val DATABASE_NAME = "fitness_database"
+
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
@@ -24,7 +27,7 @@ object DatabaseModule {
         .databaseBuilder(
             context.applicationContext,
             GymDatabase::class.java,
-            "fitness_database"
+            DATABASE_NAME
         ).addCallback(
             object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
@@ -46,4 +49,7 @@ object DatabaseModule {
 
     @Provides
     fun provideWeightProgressionDao(database: GymDatabase): WeightProgressionDao = database.weightProgressionDao()
+
+    @Provides
+    fun provideBackupDao(database: GymDatabase): BackupDao = database.backupDao()
 }

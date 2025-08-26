@@ -82,4 +82,8 @@ class SettingsRepository @Inject constructor(private val settingsDataStore: Sett
 
     // Check specific conditions
     suspend fun isFirstLaunch(): Boolean = getCurrentSettings().firstLaunch
+
+    suspend fun exportAllSettingsToJson(): String {
+        return settingsDataStore.exportSettingsToJson()
+    }
 }
