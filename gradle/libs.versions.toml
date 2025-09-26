@@ -1,6 +1,6 @@
 [versions]
 accompanistDrawablepainter = "0.37.3"
-agp = "8.12.1"
+agp = "8.13.0"
 appcompat = "1.7.1"
 composeRememberSetting = "1.0.3"
 confettikit = "0.6.0"
